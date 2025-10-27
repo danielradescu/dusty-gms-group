@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\GameSession;
+use App\Models\GameSessionType;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $env = app()->environment();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $roles = \App\Enums\Role::cases();
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name' => $role]);
+        }
+
+        if ($env == 'local') {
+            User::factory()->count(100)->create();
+            GameSession::factory()->count(100)->create();
+        }
+
     }
+
 }
