@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\GameSessionType;
+use App\Enums\Role;
 use App\Models\GameSession;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,7 +21,7 @@ class GameSessionFactory extends Factory
     public function definition(): array
     {
         // Generate a random datetime between -1 year and +1 year
-        $randomDate = $this->faker->dateTimeBetween('-1 year', '+1 year');
+        $randomDate = $this->faker->dateTimeBetween('-1 week', '+1 week');
 
         return [
             'uuid' => $this->faker->uuid(),
@@ -31,7 +32,7 @@ class GameSessionFactory extends Factory
             'complexity' => $this->faker->randomFloat(2, 0, 5),
             'type' => collect(GameSessionType::cases())->random(),
             'start_at' => $randomDate,
-            'organized_by' => User::role(['Organizer', 'Admin'])->inRandomOrder()->first()->id,
+            'organized_by' => User::role([Role::ORGANIZER->value, Role::ADMIN->value])->inRandomOrder()->first()->id,
             'location' => $this->faker->company(),
 
             // Randomized timestamps

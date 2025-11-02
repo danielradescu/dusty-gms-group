@@ -1,20 +1,27 @@
 <?php
 
+use App\Http\Controllers\GameSessionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/dashboard');
+    return redirect(['name' => 'dashboard']);
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware('auth', 'verified')->group(function () {
+    //dashboard:
+    Route::get('/dashboard', [GameSessionController::class, 'thisWeekGameSessions'])->name('dashboard');
+
+    //boardgame sessions:
+    Route::get('/create-game-session', [GameSessionController::class, 'index'])->name('create.game-session');
+    Route::get('/game-session/{uuid}', [GameSessionController::class, 'show'])->name('show.game-session');
+    Route::post('/game-session/{uuid}', [GameSessionController::class, 'handle'])->name('game-session.handle');
 });
 
 require __DIR__.'/auth.php';

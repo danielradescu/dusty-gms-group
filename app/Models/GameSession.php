@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Enums\GameSessionType;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GameSession extends Model
 {
@@ -26,6 +27,12 @@ class GameSession extends Model
     protected $casts = [
         'complexity' => 'decimal:2',
         'type' => GameSessionType::class,
+        'start_at' => 'datetime',
     ];
+
+    public function organizer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'organized_by');
+    }
 
 }

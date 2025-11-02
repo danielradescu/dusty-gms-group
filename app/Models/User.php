@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'photo',
     ];
 
     /**
@@ -46,5 +47,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getPhotoURL()
+    {
+        return 'images/profile/profile' . rand(1,10) . '.jpg';//$this->photo;
     }
 }

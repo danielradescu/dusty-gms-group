@@ -13,12 +13,24 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            // Foreign key column
-            $table->foreignId('game_session_id')
-                ->constrained('game_sessions')
+
+            // Link directly to registration
+            $table->foreignId('registration_id')
+                ->constrained()
                 ->onDelete('cascade');
+
+            // Type of notification
             $table->tinyInteger('type')->unsigned();
-            $table->text('description')->nullable();
+
+            // Whether the notification was sent
+            $table->boolean('sent')->default(false);
+
+            // Optional custom message (for updated sessions)
+            $table->longText('custom_message')->nullable();
+
+            // Prevent duplicate notifications of the same type for one registration
+            $table->unique(['registration_id', 'type']);
+
             $table->timestamps();
         });
     }

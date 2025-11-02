@@ -4,20 +4,26 @@ namespace App\Enums;
 
 enum NotificationType: int
 {
-    case NEW = 1;
-    case REMINDER = 2;
-    case POSITION_OPEN = 3;
-    case CANCELLED = 4;
-    case CUSTOM = 5;
+    case Confirmed = 0;
+    case ConfirmationReminder2Days = 1;
+    case SessionUpdated = 2;
+    case SessionCancelled = 3;
+    case OrganizerConfirmedSession = 4;
+    case OrganizerChanged = 5;
+    case Reminder1Day = 6;
+    case OpenPosition = 7;
 
     public function label(): string
     {
-        return match ($this) {
-            self::REMINDER => 'Reminder',
-            self::NEW => 'New',
-            self::POSITION_OPEN => 'Open',
-            self::CANCELLED => 'Cancelled',
-            self::CUSTOM => 'Custom',
+        return match($this) {
+            self::Confirmed => 'Registration confirmed',
+            self::ConfirmationReminder2Days => '2-day confirmation reminder',
+            self::SessionUpdated => 'Game session updated',
+            self::SessionCancelled => 'Game session cancelled',
+            self::OrganizerConfirmedSession => 'Game session will be held',
+            self::OrganizerChanged => 'Organizer changed',
+            self::Reminder1Day => '1-day reminder',
+            self::OpenPosition => 'Let me know as soon as a position is opened',
         };
     }
 }
