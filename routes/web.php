@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\GameSessionController;
 use App\Http\Controllers\ProfileController;
+use \App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect(['name' => 'dashboard']);
+    return redirect('dashboard');
 });
 
 Route::middleware('auth')->group(function () {
@@ -22,6 +23,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/create-game-session', [GameSessionController::class, 'index'])->name('create.game-session');
     Route::get('/game-session/{uuid}', [GameSessionController::class, 'show'])->name('show.game-session');
     Route::post('/game-session/{uuid}', [GameSessionController::class, 'handle'])->name('game-session.handle');
+
+    //comments:
+    Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
 });
 
 require __DIR__.'/auth.php';

@@ -7,13 +7,14 @@
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
             {{ __("Update your account's profile information and email address.") }}
         </p>
+
     </header>
 
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" enctype="multipart/form-data" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -44,6 +45,34 @@
                         </p>
                     @endif
                 </div>
+            @endif
+        </div>
+
+        <div>
+            <x-input-label for="profile_image" :value="__('Profile Image')" />
+
+            <input id="profile_image"
+                   name="profile_image"
+                   type="file"
+                   accept="image/*"
+                   class="mt-1 block w-full text-sm text-gray-900 dark:text-gray-100
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-md file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-indigo-50 file:text-indigo-700
+                  hover:file:bg-indigo-100
+                  dark:file:bg-gray-700 dark:file:text-gray-200" />
+
+            <x-input-error class="mt-2" :messages="$errors->get('profile_image')" />
+
+            @if($user->photo)
+                <img src="{{ asset($user->getPhotoURL()) }}" alt="Profile image"
+                     class="mt-3 w-16 h-16 rounded-full object-cover">
+            @else
+                <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
+                    -No image, random image will be used-
+                </p>
+
             @endif
         </div>
 
