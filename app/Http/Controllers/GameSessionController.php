@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\NotificationType;
 use App\Enums\RegistrationStatus;
+use App\Models\Comment;
 use App\Models\GameSession;
 use App\Models\Notification;
 use App\Models\Registration;
@@ -20,7 +21,7 @@ class GameSessionController extends Controller
 
         // get sessions from Monday to Sunday of this week
         $toReturn['gameSessions'] = GameSession::whereBetween('start_at', [
-            Carbon::now()->startOfWeek(),
+            Carbon::now(),
             Carbon::now()->endOfWeek(),
         ])->with('organizer')->orderBy('created_at', 'asc')->get();
 
@@ -29,7 +30,7 @@ class GameSessionController extends Controller
 
     public function show($uuid)
     {
-        $gameSession = GameSession::where('uuid', $uuid)->firstOrFail();
+        $gameSession = GameSession::where('uuid', $uuid)->with('comments', 'comments.user')->firstOrFail();
         $myRegistration = Registration::where('user_id', Auth::user()->id)
             ->where('game_session_id', $gameSession->id)->first();
         $allRegistrations = Registration::where('game_session_id', $gameSession->id)
@@ -40,6 +41,7 @@ class GameSessionController extends Controller
             'gameSession' => GameSession::where('uuid', $uuid)->firstOrFail(),
             'registrationStatus' => $myRegistration ? $myRegistration->status : null,
             'registrations' => $allRegistrations,
+            'comments' => $gameSession->comments()->orderBy('created_at', 'desc')->get(),
         ]);
     }
 

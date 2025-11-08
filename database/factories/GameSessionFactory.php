@@ -49,6 +49,14 @@ class GameSessionFactory extends Factory
                 $gameSession->note = $this->faker->text();
                 $gameSession->save();
             }
+            // Add between 3 and 5 comments using the factory
+            \App\Models\Comment::factory()
+                ->count(rand(3, 5))
+                ->create([
+                    'game_session_id' => $gameSession->id,
+                ]);
+
+
         });
     }
 }
