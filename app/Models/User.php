@@ -4,9 +4,11 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -51,6 +53,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getPhotoURL()
     {
-        return 'images/profile/profile' . rand(1,10) . '.jpg';//$this->photo;
+        if (is_null($this->photo))
+            return Storage::disk('random_profile_photo')->url('profile' . $this->id % 10 . '.jpg');
+        else
+            return Storage::disk('profile_photo')->url($this->photo);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }

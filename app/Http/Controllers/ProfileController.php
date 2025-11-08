@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -30,6 +31,22 @@ class ProfileController extends Controller
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
+        }
+
+        if ($request->hasFile('profile_image')) {
+            // Delete old image if it exists
+            if ($request->user()->photo && Storage::disk('profile_photo')->exists($request->user()->photo)) {
+                Storage::disk('profile_photo')->delete($request->user()->photo);
+            }
+
+            $extension = $request->file('profile_image')->getClientOriginalExtension();
+            $fileName = 'profile' . $request->user()->id . '.' . $extension;
+
+            // Store new image
+            // Store file in custom disk (will go to storage/app/public/profile_photo)
+            Storage::disk('profile_photo')->putFileAs('', $request->file('profile_image'), $fileName);
+
+            $request->user()->photo = $fileName;
         }
 
         $request->user()->save();

@@ -47,6 +47,24 @@ return [
             'report' => false,
         ],
 
+        'profile_photo' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/images/profile'),
+            'url' => env('APP_URL').'/storage/images/profile',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'random_profile_photo' => [
+            'driver' => 'local',
+            'root' => public_path('images/meeples'),
+            'url' => env('APP_URL') . '/images/meeples',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
