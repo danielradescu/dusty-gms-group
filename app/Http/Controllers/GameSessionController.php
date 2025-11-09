@@ -6,8 +6,10 @@ use App\Enums\NotificationType;
 use App\Enums\RegistrationStatus;
 use App\Models\Comment;
 use App\Models\GameSession;
+use App\Models\GameSessionRequest;
 use App\Models\Notification;
 use App\Models\Registration;
+use App\Services\GameSessionSlotService;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,8 +27,14 @@ class GameSessionController extends Controller
             Carbon::now()->endOfWeek(),
         ])->with('organizer')->orderBy('created_at', 'asc')->get();
 
+        if (! $toReturn['gameSessions']->count()) {
+            $toReturn['gameSessionRequests'] = \Illuminate\Support\Facades\Auth::user()->gameSessionRequests;
+            $toReturn['slots'] = GameSessionSlotService::getCurrentWeekSlots($toReturn['gameSessionRequests']);
+        }
+
         return view('game-session.thisWeekGameSessions')->with($toReturn);
     }
+
 
     public function show($uuid)
     {

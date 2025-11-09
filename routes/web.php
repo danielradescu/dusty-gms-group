@@ -3,6 +3,7 @@
 use App\Http\Controllers\GameSessionController;
 use App\Http\Controllers\ProfileController;
 use \App\Http\Controllers\CommentController;
+use \App\Http\Controllers\GameSessionRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,6 +27,9 @@ Route::middleware('auth', 'verified')->group(function () {
 
     //comments:
     Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
+
+    //game session request
+    Route::post('/game-session-request', [GameSessionRequestController::class, 'store'])->name('game-session-request.store');
 });
 
 require __DIR__.'/auth.php';

@@ -63,4 +63,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function gameSessionRequests(): HasMany
+    {
+        return $this->hasMany(GameSessionRequest::class);
+    }
 }
