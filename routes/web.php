@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GameSessionController;
+use App\Http\Controllers\NotificationSubscriptionController;
 use App\Http\Controllers\ProfileController;
 use \App\Http\Controllers\CommentController;
 use \App\Http\Controllers\GameSessionRequestController;
@@ -30,6 +31,10 @@ Route::middleware('auth', 'verified')->group(function () {
 
     //game session request
     Route::post('/game-session-request', [GameSessionRequestController::class, 'store'])->name('game-session-request.store');
+
+    //notification subscriptions
+    Route::get('/notification', [NotificationSubscriptionController::class, 'edit'])->name('notification.edit');
+    Route::post('/notification', [NotificationSubscriptionController::class, 'update'])->name('notification.update');
 });
 
 require __DIR__.'/auth.php';

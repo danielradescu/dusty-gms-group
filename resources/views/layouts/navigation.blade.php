@@ -15,6 +15,9 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('notification.edit')" :active="request()->routeIs('notification.edit')">
+                        {{ __('Notifications') }}
+                    </x-nav-link>
                     @if(Auth::user()->can('create event'))
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('create.boardgame-session')">
                             {{ __('Create Board Game Session') }}
@@ -77,6 +80,14 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('notification.edit')" :active="request()->routeIs('notification.edit')">
+                {{ __('Notifications') }}
+            </x-responsive-nav-link>
+            @if(Auth::user()->can('create event'))
+                <x-responsive-nav-link :href="route('create.boardgame-session')" :active="request()->routeIs('create.boardgame-session')">
+                    {{ __('Create Board Game Session') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

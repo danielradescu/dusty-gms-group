@@ -4,20 +4,51 @@ namespace App\Enums;
 
 enum NotificationSubscriptionType: int
 {
-    case NEW = 1;
-    case REMINDER_1DAY = 2;
-    case POSITION_OPEN = 3;
-    case CANCELLED = 4;
-    case UPDATED = 5;
+    // 👥 Participants only
+    case NEW_GAME_SESSION = 1;
+
+    // 🧩 Participants + Organizers
+    case GAME_SESSION_REQUESTS = 10;
+
+    // 🛡️ Participants + Organizers + Admins
 
     public function label(): string
     {
         return match ($this) {
-            self::NEW => 'Notify me about any NEW game sessions',
-            self::REMINDER_1DAY => 'Remind me about boardgames session I subscribed 1 DAY BEFORE.',
-            self::POSITION_OPEN => 'Notify me about OPEN POSITION(s) at boardgames session I subscribed.',
-            self::CANCELLED => 'Notify me about CANCELLED game sessions I subscribed.',
-            self::UPDATED => 'Notify me about CHANGES for the game sessions I subscribed',
+            self::NEW_GAME_SESSION => 'Notify me about new game sessions',
+
+            self::GAME_SESSION_REQUESTS => 'Let me know when a specific day reaches the interest threshold (usually 2 requests), so I can evaluate and organize a session.',
+
         };
+    }
+
+    /**
+     * Notifications visible to participants.
+     */
+    public static function participantOptions(): array
+    {
+        return [
+            self::NEW_GAME_SESSION,
+        ];
+    }
+
+    /**
+     * Notifications visible to organizers.
+     */
+    public static function organizerOptions(): array
+    {
+        return [
+            self::GAME_SESSION_REQUESTS,
+        ];
+    }
+
+    /**
+     * Notifications visible to organizers.
+     */
+    public static function adminOptions(): array
+    {
+        return [
+
+        ];
     }
 }

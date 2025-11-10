@@ -68,4 +68,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(GameSessionRequest::class);
     }
+
+    public function isOrganizer(): bool
+    {
+        return true;
+    }
+
+    public function isAdmin(): bool
+    {
+        return true;
+    }
+
+    public function notificationSubscription(): HasMany
+    {
+        return $this->hasMany(NotificationSubscription::class);
+    }
 }
