@@ -14,7 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -82,5 +82,19 @@ class User extends Authenticatable implements MustVerifyEmail
     public function notificationSubscription(): HasMany
     {
         return $this->hasMany(NotificationSubscription::class);
+    }
+
+    /**
+     * Control where mail notifications are sent — or block them entirely.
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // If user disabled all notifications, block delivery
+        if ($this->notifications_disabled) {
+            return null; // Returning null stops Laravel from sending any mail
+        }
+
+        // Otherwise, return their email address as usual
+        return $this->email;
     }
 }

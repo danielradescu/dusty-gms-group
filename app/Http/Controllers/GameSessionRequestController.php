@@ -24,10 +24,6 @@ class GameSessionRequestController extends Controller
             ];
         }
 
-        if (empty($toCreate)) {
-            return redirect()->back();
-        }
-
         DB::transaction(function () use ($toCreate) {
             $user = Auth::user();
 

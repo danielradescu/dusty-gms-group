@@ -23,9 +23,14 @@ class ProfileUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                'profile_image' => ['nullable', 'image', 'max:2048'], // limit to 2MB
                 Rule::unique(User::class)->ignore($this->user()->id),
+                function ($attribute, $value, $fail) {
+                    if (\Auth::user()->notifications_disabled) {
+                        $fail("All notifications are disabled. Email can't be updated! Check notification settings.");
+                    }
+                }
             ],
+            'profile_image' => ['nullable', 'image', 'max:2048'], // limit to 2MB
         ];
     }
 }

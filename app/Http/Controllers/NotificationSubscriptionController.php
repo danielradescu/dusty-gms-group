@@ -10,14 +10,16 @@ class NotificationSubscriptionController extends Controller
 {
     public function edit()
     {
-        $subscribedTypes = auth()
+        $toReturn = [];
+        $toReturn["subscribedTypes"] = auth()
             ->user()
             ->notificationSubscription
             ->pluck('type')
             ->map(fn($t) => $t->value)
             ->toArray();
+        $toReturn["user"] = auth()->user();
 
-        return view('notification.edit')->with(compact('subscribedTypes'));
+        return view('notification.edit')->with($toReturn);
     }
 
     public function update(NotificationUpdateRequest $request)
@@ -25,6 +27,15 @@ class NotificationSubscriptionController extends Controller
         $user = auth()->user();
 
         $user->notificationSubscription()->delete(); // Clear old
+
+        if ($request->has('no_notifications') && $request->get('no_notifications')) {
+            $user->notifications_disabled = true;
+            $user->save();
+            return redirect()->route('notification.edit');
+        } else {
+            $user->notifications_disabled = false;
+            $user->save();
+        }
 
         if ($request->filled('subscriptions')) {
             $subscriptions = collect($request->input('subscriptions'))
