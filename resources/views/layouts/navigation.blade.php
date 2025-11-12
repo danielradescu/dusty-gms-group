@@ -12,18 +12,22 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('notification.edit')" :active="request()->routeIs('notification.edit')">
-                        {{ __('Notifications') }}
-                    </x-nav-link>
-                    @if(Auth::user()->isOrganizer())
-                        <x-nav-link :href="route('game-sessions.create')" :active="request()->routeIs('game-sessions.create')">
-                            {{ __('Create Board Game Session') }}
+                    @if (Auth::user())
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('notification.edit')" :active="request()->routeIs('notification.edit')">
+                            {{ __('Notifications') }}
+                        </x-nav-link>
+                        @if(Auth::user()->isOrganizer())
+                            <x-nav-link :href="route('game-sessions.create')" :active="request()->routeIs('game-sessions.create')">
+                                {{ __('Create Board Game Session') }}
+                            </x-nav-link>
+                        @endif
                     @endif
-
+                    <x-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')">
+                        {{ __('About Us') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -77,17 +81,23 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('notification.edit')" :active="request()->routeIs('notification.edit')">
-                {{ __('Notifications') }}
-            </x-responsive-nav-link>
-            @if(Auth::user()->isOrganizer())
-                <x-responsive-nav-link :href="route('game-sessions.create')" :active="request()->routeIs('game-sessions.create')">
-                    {{ __('Create Board Game Session') }}
+            @if(Auth::user())
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('notification.edit')" :active="request()->routeIs('notification.edit')">
+                    {{ __('Notifications') }}
+                </x-responsive-nav-link>
+                @if(Auth::user()->isOrganizer())
+                    <x-responsive-nav-link :href="route('game-sessions.create')" :active="request()->routeIs('game-sessions.create')">
+                        {{ __('Create Board Game Session') }}
+                    </x-responsive-nav-link>
+                @endif
+                <x-responsive-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')">
+                    {{ __('About Us') }}
                 </x-responsive-nav-link>
             @endif
+
         </div>
 
         <!-- Responsive Settings Options -->

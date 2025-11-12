@@ -3,8 +3,10 @@
 use App\Http\Controllers\GameSessionController;
 use App\Http\Controllers\NotificationSubscriptionController;
 use App\Http\Controllers\ProfileController;
-use \App\Http\Controllers\CommentController;
-use \App\Http\Controllers\GameSessionRequestController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\GameSessionRequestController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AboutUsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,7 +21,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth', 'verified')->group(function () {
     //dashboard:
-    Route::get('/dashboard', [GameSessionController::class, 'thisWeekGameSessions'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //boardgame sessions:
     Route::get('/create-game-session', [GameSessionController::class, 'create'])->name('game-sessions.create');
@@ -38,5 +40,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/notification', [NotificationSubscriptionController::class, 'edit'])->name('notification.edit');
     Route::post('/notification', [NotificationSubscriptionController::class, 'update'])->name('notification.update');
 });
+
+//dashboard:
+Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
 
 require __DIR__.'/auth.php';
