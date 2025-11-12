@@ -18,17 +18,26 @@ class GameSession extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'uuid',
         'name',
         'description',
         'min_players',
         'max_players',
         'event_type_id',
+        'complexity',
+        'organized_by',
+        'type',
+        'delay_until',
+        'location',
+        'start_at',
+        'name',
     ];
 
     protected $casts = [
         'complexity' => 'decimal:2',
         'type' => GameSessionType::class,
         'start_at' => 'datetime',
+        'delay_until' => 'datetime',
     ];
 
     public function organizer(): BelongsTo

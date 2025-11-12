@@ -19,7 +19,7 @@
                         {{ __('Notifications') }}
                     </x-nav-link>
                     @if(Auth::user()->isOrganizer())
-                        <x-nav-link :href="route('create.game-session')" :active="request()->routeIs('create.game-session')">
+                        <x-nav-link :href="route('game-sessions.create')" :active="request()->routeIs('game-sessions.create')">
                             {{ __('Create Board Game Session') }}
                         </x-nav-link>
                     @endif
@@ -84,7 +84,7 @@
                 {{ __('Notifications') }}
             </x-responsive-nav-link>
             @if(Auth::user()->isOrganizer())
-                <x-responsive-nav-link :href="route('create.game-session')" :active="request()->routeIs('create.game-session')">
+                <x-responsive-nav-link :href="route('game-sessions.create')" :active="request()->routeIs('game-sessions.create')">
                     {{ __('Create Board Game Session') }}
                 </x-responsive-nav-link>
             @endif

@@ -22,7 +22,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/dashboard', [GameSessionController::class, 'thisWeekGameSessions'])->name('dashboard');
 
     //boardgame sessions:
-    Route::get('/create-game-session', [GameSessionController::class, 'index'])->name('create.game-session');
+    Route::get('/create-game-session', [GameSessionController::class, 'create'])->name('game-sessions.create');
+    Route::post('/create-game-session', [GameSessionController::class, 'store'])->name('game-sessions.store');
+    Route::get('/game-sessions/{uuid}/created', [GameSessionController::class, 'created'])->name('game-session.created');
     Route::get('/game-session/{uuid}', [GameSessionController::class, 'show'])->name('show.game-session');
     Route::post('/game-session/{uuid}', [GameSessionController::class, 'handle'])->name('game-session.handle');
 

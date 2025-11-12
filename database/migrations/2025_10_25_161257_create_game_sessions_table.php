@@ -22,6 +22,7 @@ return new class extends Migration
             $table->smallInteger('max_players')->default(10);
             $table->decimal('complexity', 3, 2)->nullable();
             $table->tinyInteger('type')->unsigned()->default(1);
+            $table->dateTime('delay_until')->nullable();
             // Foreign key column
             $table->foreignId('organized_by')
                 ->constrained('users')

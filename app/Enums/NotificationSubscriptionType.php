@@ -15,7 +15,7 @@ enum NotificationSubscriptionType: int
     public function label(): string
     {
         return match ($this) {
-            self::NEW_GAME_SESSION => 'Notify me about new game sessions',
+            self::NEW_GAME_SESSION => 'Always notify me about new game sessions',
 
             self::GAME_SESSION_REQUESTS => 'Let me know when a specific day reaches the interest threshold (usually 2 requests), so I can evaluate and organize a session.',
 

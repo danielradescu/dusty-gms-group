@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Enums\NotificationType;
 use App\Enums\RegistrationStatus;
+use App\Enums\Role;
+use App\Http\Requests\StoreGameSessionRequest;
 use App\Models\Comment;
 use App\Models\GameSession;
 use App\Models\GameSessionRequest;
 use App\Models\Notification;
 use App\Models\Registration;
+use App\Models\User;
 use App\Services\GameSessionSlotService;
 use Auth;
 use Carbon\Carbon;
@@ -100,6 +103,67 @@ class GameSessionController extends Controller
 
     public function create()
     {
-        var_dump("create POST");
+        if (! auth()->user()->isOrganizer()) {
+            abort(403);
+        }
+// Get this week’s defined slot times (Friday/Saturday/Sunday)
+        $slotDefinitions = GameSessionSlotService::getSlotDefinitions();
+        $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY);
+
+        $interestStats = collect($slotDefinitions)->map(function ($slot) use ($weekStart) {
+            $dt = $weekStart->copy()->addDays($slot['dayOffset'])->setTime($slot['hour'], $slot['minute']);
+
+            return [
+                'label' => $slot['label'],
+                'time' => $dt,
+                'count' => GameSessionRequest::where('preferred_time', $dt)->count(),
+            ];
+        });
+
+
+
+        $toReturn = [
+            'organizers' => auth()->user()->isAdmin() ? User::role([Role::ORGANIZER->value])->get() : [],
+            'interestStats' => $interestStats,
+        ];
+
+        return view('game-session.create', $toReturn);
+    }
+
+    public function store(StoreGameSessionRequest $request)
+    {
+        $validated = $request->validated();
+
+        $session = GameSession::create([
+            'uuid' => \Str::uuid()->toString(),
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'location' => $validated['location'],
+            'start_at' => $validated['start_at'],
+            'min_players' => $validated['min_players'],
+            'max_players' => $validated['max_players'],
+            'complexity' => $validated['complexity'],
+            'organized_by' => $validated['organized_by'] ?? auth()->id(),
+            'type' => \App\Enums\GameSessionType::RECRUITING_PARTICIPANTS->value,
+            'delay_until' => $request->has('delay_publication')
+                ? now()->addHours(6)
+                : null,
+        ]);
+
+        // Redirect to the confirmation/preview route
+        return redirect()->route('game-session.created', $session->uuid);
+    }
+
+    public function created(string $uuid)
+    {
+        $session = GameSession::where('uuid', $uuid)->firstOrFail();
+
+        $toReturn = [
+            'gameSession' => $session,
+            'autoJoinCount' => rand(2, 5),
+            'notifyCount' => rand(2, 10),
+        ];
+
+        return view('game-session.create-report', $toReturn);
     }
 }
