@@ -41,7 +41,10 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/notification', [NotificationSubscriptionController::class, 'update'])->name('notification.update');
 });
 
-//dashboard:
+//About Us:
 Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+
+//Magic link with auto login
+Route::get('/magic-login', MagicLoginController::class);
 
 require __DIR__.'/auth.php';
