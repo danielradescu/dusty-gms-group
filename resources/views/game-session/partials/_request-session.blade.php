@@ -59,9 +59,10 @@
         <form action="{{ route('game-session-request.store') }}" method="POST" class="space-y-4">
             @csrf
             <p class="text-sm text-gray-600 dark:text-gray-300">
-                Pick the days you’re interested in. For each day, choose whether you want to <b>auto-join</b> a session
-                if it’s created,
-                or <b>only receive a notification</b>.
+                Pick the days you're interested in.
+                For each day, choose whether you want to <strong>auto-join</strong> a session if it’s created, or <strong>only receive a notification</strong> about it.
+                <br/>
+                <strong>Note:</strong> The listed hours are reference times only — the organizer may adjust the final start time when creating the session.
             </p>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -139,7 +140,7 @@
                 </div>
                 <button type="submit"
                         class="px-4 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-500">
-                    Save Preferences
+                    💾 Save Preferences
                 </button>
             </div>
         </form>

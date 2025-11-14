@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GameSession;
 use App\Services\GameSessionSlotService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -16,12 +17,10 @@ class DashboardController extends Controller
         $toReturn['gameSessions'] = GameSession::whereBetween('start_at', [
             Carbon::now(),
             Carbon::now()->endOfWeek(),
-        ])->with('organizer')->orderBy('created_at', 'asc')->get();
+        ])->with('organizer')->orderBy('start_at', 'asc')->get();
 
-        if (! $toReturn['gameSessions']->count()) {
-            $toReturn['gameSessionRequests'] = \Illuminate\Support\Facades\Auth::user()->gameSessionRequests;
-            $toReturn['slots'] = GameSessionSlotService::getCurrentWeekSlots($toReturn['gameSessionRequests']);
-        }
+        $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests;
+        $toReturn['slots'] = GameSessionSlotService::getCurrentWeekSlots($toReturn['gameSessionRequests']);
 
         return view('dashboard')->with($toReturn);
     }

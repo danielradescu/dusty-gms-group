@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\GameSession;
 use App\Models\GameSessionRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -42,43 +43,62 @@ class GameSessionSlotService
         $weekStart = $reference->copy()->startOfWeek(Carbon::MONDAY);
         $now = now();
 
-        // Get all requests for this week in one query (avoid per-slot queries)
-        $weekStartDate = $weekStart->copy()->toDateString();
-        $weekEndDate = $weekStart->copy()->addDays(6)->endOfDay();
+        $weekStartDate = $weekStart->copy();
+        $weekEndDate   = $weekStart->copy()->addDays(6)->endOfDay();
 
+        // 🔍 1) Get ALL session requests for that week in a single query
         $requestsThisWeek = GameSessionRequest::whereBetween('preferred_time', [$weekStartDate, $weekEndDate])
             ->get()
             ->groupBy(fn($r) => $r->preferred_time->format('Y-m-d H:i'));
 
+        // 🔍 2) Get ALL *game sessions* this week to exclude those dates
+        $sessionsThisWeek = GameSession::whereBetween('start_at', [$weekStartDate, $weekEndDate])
+            ->get()
+            ->groupBy(fn($s) => $s->start_at->toDateString());
+
         return collect(self::getSlotDefinitions())
-            ->map(function ($slot) use ($weekStart, $userGameSessionRequests, $requestsThisWeek, $now) {
-                $dt = $weekStart->copy()->addDays($slot['dayOffset'])->setTime($slot['hour'], $slot['minute']);
+            ->map(function ($slot) use ($weekStart, $userGameSessionRequests, $requestsThisWeek, $sessionsThisWeek, $now) {
 
+                // Calculate slot datetime
+                $dt = $weekStart->copy()
+                    ->addDays($slot['dayOffset'])
+                    ->setTime($slot['hour'], $slot['minute']);
+
+                $dateKey = $dt->toDateString();   // For checking game sessions (same day)
+                $slotKey = $dt->format('Y-m-d H:i'); // For checking requests (same exact timestamp)
+
+                // ❌ Skip slot if a real game session exists on that day
+                if ($sessionsThisWeek->has($dateKey)) {
+                    return null;
+                }
+
+                // Check if still available
                 $isAvailable = $dt->isFuture() && $now->diffInHours($dt, false) > 2;
+                if (! $isAvailable) {
+                    return null;
+                }
 
-                // User's current setting for this slot
+                // User’s selection for this slot
                 $userRequest = $userGameSessionRequests->first(fn($r) => $r->preferred_time->equalTo($dt));
-                $value = $userRequest
-                    ? ($userRequest->auto_join ? 'auto' : 'notify')
-                    : '';
+                $value = $userRequest ? ($userRequest->auto_join ? 'auto' : 'notify') : '';
 
-                // Aggregate counts from grouped results
-                $slotKey = $dt->format('Y-m-d H:i');
+                // Requests grouped by slot
                 $allRequests = $requestsThisWeek->get($slotKey, collect());
 
                 return [
-                    'label'           => $slot['label'],
-                    'dt'              => $dt,
-                    'isAvailable'     => $isAvailable,
-                    'value'           => $value,
-                    'total_interested'=> $allRequests->count(),
-                    'auto_joiners'    => $allRequests->where('auto_join', true)->count(),
+                    'label'            => $slot['label'],
+                    'dt'               => $dt,
+                    'isAvailable'      => true,
+                    'value'            => $value,
+                    'total_interested' => $allRequests->count(),
+                    'auto_joiners'     => $allRequests->where('auto_join', true)->count(),
                 ];
             })
-            ->filter(fn($slot) => $slot['isAvailable'])
+            ->filter()
             ->values()
             ->toArray();
     }
+
 
     /**
      * Optionally, get next week’s slots (for planning ahead)
