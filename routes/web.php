@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GameSessionRequestController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\MagicLoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -45,6 +46,6 @@ Route::middleware('auth', 'verified')->group(function () {
 Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
 
 //Magic link with auto login
-Route::get('/magic-login', MagicLoginController::class);
+Route::get('/magic-login', MagicLoginController::class)->name('magic-login');
 
 require __DIR__.'/auth.php';
