@@ -89,7 +89,9 @@ class GameSessionController extends Controller
     public function show($uuid)
     {
         $gameSession = GameSession::where('uuid', $uuid)->with('comments', 'comments.user')->firstOrFail();
-        $myRegistration = Registration::where('user_id', Auth::user()->id)
+        $authUserId = auth()->id() ?? null;
+
+        $myRegistration = Registration::where('user_id', $authUserId)
             ->where('game_session_id', $gameSession->id)->first();
         $allRegistrations = Registration::where('game_session_id', $gameSession->id)
             ->with('user')

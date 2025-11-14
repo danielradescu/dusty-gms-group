@@ -3,30 +3,33 @@
         💬 Comments
     </h3>
 
-    <!-- Comment form -->
-    <form id="post-comment" method="POST" action="{{ route('comment.store') }}" class="mb-6">
-        @csrf
-        <textarea
-            name="body"
-            rows="3"
-            placeholder="Share your thoughts about this session..."
-            class="w-full p-3 rounded-lg border border-gray-700 bg-gray-900 text-gray-200
-                   placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-        ></textarea>
-        @error('body')
-            <p class="text-sm text-red-400 mt-1">{{ $message }}</p>
-        @enderror
-        <input type="hidden" name="game_session_uuid" value="{{$gameSession->uuid}}">
+    @if(auth()->check())
+        <!-- Comment form -->
+        <form id="post-comment" method="POST" action="{{ route('comment.store') }}" class="mb-6">
+            @csrf
+            <textarea
+                name="body"
+                rows="3"
+                placeholder="Share your thoughts about this session..."
+                class="w-full p-3 rounded-lg border border-gray-700 bg-gray-900 text-gray-200
+                       placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+            ></textarea>
+            @error('body')
+                <p class="text-sm text-red-400 mt-1">{{ $message }}</p>
+            @enderror
+            <input type="hidden" name="game_session_uuid" value="{{$gameSession->uuid}}">
 
-        <div class="mt-2 flex justify-end">
-            <button
-                type="submit"
-                class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            >
-                Post Comment
-            </button>
-        </div>
-    </form>
+            <div class="mt-2 flex justify-end">
+                <button
+                    type="submit"
+                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                >
+                    Post Comment
+                </button>
+            </div>
+        </form>
+    @endif
+
     <!-- Comment List -->
     <div class="space-y-5">
         @forelse($comments as $comment)

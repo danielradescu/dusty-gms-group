@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GameSessionRequestController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\MagicLoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +28,6 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/create-game-session', [GameSessionController::class, 'create'])->name('game-sessions.create');
     Route::post('/create-game-session', [GameSessionController::class, 'store'])->name('game-sessions.store');
     Route::get('/game-sessions/{uuid}/created', [GameSessionController::class, 'created'])->name('game-session.created');
-    Route::get('/game-session/{uuid}', [GameSessionController::class, 'show'])->name('show.game-session');
     Route::post('/game-session/{uuid}', [GameSessionController::class, 'handle'])->name('game-session.handle');
 
     //comments:
@@ -42,8 +41,13 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/notification', [NotificationSubscriptionController::class, 'update'])->name('notification.update');
 });
 
-//About Us:
-Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+//Pages:
+Route::get('/about-us', [PageController::class, 'aboutUs'])->name('about-us');
+Route::get('/terms-of-service', [PageController::class, 'termsOfService'])->name('terms-of-service');
+Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');
+
+//boardgame sessions:
+Route::get('/game-session/{uuid}', [GameSessionController::class, 'show'])->name('show.game-session');
 
 //Magic link with auto login
 Route::get('/magic-login', MagicLoginController::class)->name('magic-login');

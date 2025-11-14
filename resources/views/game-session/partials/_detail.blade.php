@@ -112,63 +112,78 @@
             </div>
         </div>
 
-
         <!-- User Interaction -->
-        <div class="pt-6">
-            @if($registrationStatus)
-                <p class="mb-2">You are currently marked as <strong><span class="px-2 py-1 rounded-full text-xs font-medium
-                            {{ $registrationStatus->value === \App\Enums\RegistrationStatus::Confirmed->value
-                                ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200'
-                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100' }}">
-                            {{ $registrationStatus->label() }}
-                        </span></strong>.</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that?</p>
-            @endif
+        <div class="pt-6 center-items">
+            @if(auth()->check())
 
-            <form action="{{ route('game-session.handle', $gameSession->uuid) }}" method="POST" class="space-y-3">
-                @csrf
-
-                @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
-                    <button type="submit" name="action" value="confirm"
-                            class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
-                                       shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
-                                       dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
-                        🎯 Count me in — reserve my seat!
-                    </button>
+                @if($registrationStatus)
+                    <p class="mb-2">You are currently marked as <strong><span class="px-2 py-1 rounded-full text-xs font-medium
+                                {{ $registrationStatus->value === \App\Enums\RegistrationStatus::Confirmed->value
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200'
+                                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100' }}">
+                                {{ $registrationStatus->label() }}
+                            </span></strong>.</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that?</p>
                 @endif
 
-                @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Interested->value)
-                    @php
-                        $hoursUntilTwoDaysBeforeEvent = (int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false)
-                    @endphp
+                <form action="{{ route('game-session.handle', $gameSession->uuid) }}" method="POST" class="space-y-3">
+                    @csrf
 
-                    @if($hoursUntilTwoDaysBeforeEvent > 2)
-                        <button type="submit" name="action" value="2day"
-                                class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
-                                   hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
-                                   dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
-                            ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still deciding.
+                    @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
+                        <button type="submit" name="action" value="confirm"
+                                class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
+                                           shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
+                                           dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
+                            🎯 Count me in — reserve my seat!
                         </button>
                     @endif
 
-                @endif
+                    @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Interested->value)
+                        @php
+                            $hoursUntilTwoDaysBeforeEvent = (int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false)
+                        @endphp
 
-                @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Declined->value)
-                    <button type="submit" name="action" value="decline"
-                            class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-700
-                                     hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300
-                                     dark:border-gray-700 dark:bg-gray-800/30 dark:text-gray-300 dark:hover:bg-gray-800/50">
-                        🚫 I can’t make it
-                    </button>
-                @endif
-            </form>
+                        @if($hoursUntilTwoDaysBeforeEvent > 2)
+                            <button type="submit" name="action" value="2day"
+                                    class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
+                                       hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
+                                       dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
+                                ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still
+                                deciding.
+                            </button>
+                        @endif
 
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 italic leading-relaxed">
-                By interacting with this game session (for example by showing interest or confirming attendance),
-                you agree to receive related updates and notifications about the event and its status
-                from now until the session has concluded. These may include reminders, schedule adjustments,
-                and important announcements necessary for participation and coordination.
-            </p>
+                    @endif
+
+                    @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Declined->value)
+                        <button type="submit" name="action" value="decline"
+                                class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-700
+                                         hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300
+                                         dark:border-gray-700 dark:bg-gray-800/30 dark:text-gray-300 dark:hover:bg-gray-800/50">
+                            🚫 I can’t make it
+                        </button>
+                    @endif
+                </form>
+
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 italic leading-relaxed">
+                    By interacting with this game session (for example by showing interest or confirming attendance),
+                    you agree to receive related updates and notifications about the event and its status
+                    from now until the session has concluded. These may include reminders, schedule adjustments,
+                    and important announcements necessary for participation and coordination.
+                </p>
+
+            @else
+                @php
+                    // Save intended URL if user sees this section
+                    session()->put('url.intended', route('show.game-session', $gameSession->uuid));
+                @endphp
+                <a href="{{route('login')}}" type="submit" name="action" value="confirm"
+                   class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
+                                           shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
+                                           dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
+                    Login to interact
+                </a>
+            @endif
         </div>
     </div>
 </div>
