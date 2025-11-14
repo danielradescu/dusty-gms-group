@@ -27,16 +27,21 @@
             <section class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 leading-relaxed">
                 <h3 class="text-2xl font-semibold mb-3">💡 The Purpose Behind This App</h3>
                 <p class="text-gray-700 dark:text-gray-300">
-                    This app helps local board-gaming enthusiasts connect and organize weekly sessions more easily and efficiently.
-                    Whether you’re looking to join an open table, show interest in an upcoming event, or simply find new people
+                    This app helps local board-gaming enthusiasts connect and organize weekly sessions more easily and
+                    efficiently.
+                    Whether you’re looking to join an open table, show interest in an upcoming event, or simply find new
+                    people
                     who share your passion, we’ve got you covered.
                 </p>
 
                 <ul class="list-disc pl-5 mt-4 space-y-2 text-gray-700 dark:text-gray-300">
                     <li>✅ <strong>Join a gaming session</strong> that fits your schedule and group size.</li>
-                    <li>👀 <strong>Show interest</strong> for an upcoming session and get notified when it’s confirmed.</li>
+                    <li>👀 <strong>Show interest</strong> for an upcoming session and get notified when it’s confirmed.
+                    </li>
                     <li>📅 <strong>Request a session</strong> when no events are planned for the weekend —
-                        help organizers understand when players are available. <strong>Organizers</strong> can plan smarter by seeing when players are most likely to join.</li>
+                        help organizers understand when players are available. <strong>Organizers</strong> can plan
+                        smarter by seeing when players are most likely to join.
+                    </li>
                 </ul>
 
                 <p class="mt-4 text-gray-700 dark:text-gray-300">
@@ -55,7 +60,8 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         @forelse($featuredMembers as $member)
-                            <div class="p-5 bg-gray-50 dark:bg-gray-900/40 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition">
+                            <div
+                                class="p-5 bg-gray-50 dark:bg-gray-900/40 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition">
                                 <div class="flex items-center gap-3 mb-3">
                                     <img src="{{ asset($member->user->getPhotoURL()) }}"
                                          alt="{{ $member->user->name }}"
@@ -88,7 +94,8 @@
                     </div>
 
                     <p class="mt-6 text-sm text-gray-500 dark:text-gray-400 italic text-center">
-                        Want to be featured here? Stay active, join sessions, and help grow the community — your story might be next!
+                        Want to be featured here? Stay active, join sessions, and help grow the community — your story
+                        might be next!
                     </p>
                 </section>
             @endif

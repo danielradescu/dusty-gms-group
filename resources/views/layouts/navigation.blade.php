@@ -25,9 +25,6 @@
                             </x-nav-link>
                         @endif
                     @endif
-                    <x-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')">
-                        {{ __('About Us') }}
-                    </x-nav-link>
                 </div>
             </div>
 
@@ -93,9 +90,6 @@
                         {{ __('Create Board Game Session') }}
                     </x-responsive-nav-link>
                 @endif
-                <x-responsive-nav-link :href="route('about-us')" :active="request()->routeIs('about-us')">
-                    {{ __('About Us') }}
-                </x-responsive-nav-link>
             @endif
 
         </div>
