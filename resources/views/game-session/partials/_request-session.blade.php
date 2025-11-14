@@ -44,17 +44,10 @@
                 🎯 You have no sessions requested yet — ready to roll? Pick your ideal play day!
             @endif
         </div>
-
-        <div class="mt-3">
-            <button @click="open = !open"
-                    class="float-right px-3 py-1 text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-500">
-                <span x-text="open ? 'Close' : '{{$gameSessionRequests->count() ? 'Update requests' : 'Request a session'}}'"></span>
-            </button>
-        </div>
     </div>
     @include('partials._errors')
     <!-- Form -->
-    <div x-show="open" x-transition
+    <div
          class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-5">
         <form action="{{ route('game-session-request.store') }}" method="POST" class="space-y-4">
             @csrf
