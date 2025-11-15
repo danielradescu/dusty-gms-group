@@ -19,15 +19,13 @@ class DatabaseSeeder extends Seeder
     {
         $env = app()->environment();
 
-        Role::findOrCreate(EnumRole::ADMIN->value);
-        Role::findOrCreate(EnumRole::ORGANIZER->value);
-        Role::findOrCreate(EnumRole::PARTICIPANT->value);
-
-        Permission::findOrCreate('create event');
+        $this->call([
+            SeedRoles::class,
+        ]);
 
         if ($env == 'local') {
             User::factory()->count(100)->create();
-            GameSession::factory()->count(100)->create();
+//            GameSession::factory()->count(100)->create();
             FeaturedMember::factory()->count(5)->create();
         }
 
