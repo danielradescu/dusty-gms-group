@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->longText('info')->nullable();
             $table->unsignedInteger('level')->default(1);
+            $table->unsignedInteger('xp')->default(0);
             $table->boolean('is_blocked')->default(0);
             $table->boolean('notifications_disabled')->default(false);
             $table->rememberToken();
