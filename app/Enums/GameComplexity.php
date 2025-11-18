@@ -25,4 +25,13 @@ enum GameComplexity: int
             self::Competitive => 'For experienced players. Familiarity with rules is expected.',
         };
     }
+
+    public function getNumber(): string
+    {
+        return match ($this) {
+            self::Casual => 1,
+            self::Flexible => 3,
+            self::Competitive => 5,
+        };
+    }
 }

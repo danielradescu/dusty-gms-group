@@ -46,26 +46,26 @@
         <div class="mt-4">
             <p class="text-sm text-gray-500 dark:text-gray-400 font-semibold uppercase mb-1">Complexity</p>
             <div class="flex items-center gap-1">
-                @php
-                    $full = floor($gameSession->complexity);
-                    $half = ($gameSession->complexity - $full) >= 0.5;
-                @endphp
-                @for ($i = 0; $i < $full; $i++)
-                    <span class="text-purple-400 text-lg">🧠</span>
-                @endfor
-                @if ($half)
-                    <span class="text-purple-300 text-lg opacity-70">🧠</span>
-                @endif
-                <span class="ml-2 text-sm text-gray-400">
-                        {{ number_format($gameSession->complexity, 2) }}
-                    </span>
+                <div>
+                    @for ($i = 0; $i < $gameSession->complexity->getNumber(); $i++)
+                        <span class="text-purple-400 text-lg">🧠</span>
+                    @endfor
+                </div>
+
+                <p><strong>{{$gameSession->complexity->label()}}</strong> - {{$gameSession->complexity->description()}}</p>
             </div>
         </div>
 
 
         @php
             $confirmedRegistrations = $registrations->where('status', \App\Enums\RegistrationStatus::Confirmed->value);
-            $interestedRegistrations = $registrations->where('status', \App\Enums\RegistrationStatus::Interested->value);
+            $interestedStatuses = [
+                \App\Enums\RegistrationStatus::RemindMe2Days,
+                \App\Enums\RegistrationStatus::OpenPosition,
+            ];
+
+            $interestedRegistrations = $registrations->whereIn('status', $interestedStatuses);
+
             $declinedCount = $registrations->where('status', \App\Enums\RegistrationStatus::Declined->value)->count();
         @endphp
         <div class="mt-6 bg-gray-800/60 rounded-lg p-4 border border-gray-700">
@@ -128,32 +128,43 @@
 
                 <form action="{{ route('game-session.handle', $gameSession->uuid) }}" method="POST" class="space-y-3">
                     @csrf
-
-                    @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
-                        <button type="submit" name="action" value="confirm"
-                                class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
-                                           shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
-                                           dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
-                            🎯 Count me in — reserve my seat!
-                        </button>
-                    @endif
-
-                    @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Interested->value)
-                        @php
-                            $hoursUntilTwoDaysBeforeEvent = (int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false)
-                        @endphp
-
-                        @if($hoursUntilTwoDaysBeforeEvent > 2)
-                            <button type="submit" name="action" value="2day"
-                                    class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
-                                       hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
-                                       dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
-                                ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still
-                                deciding.
+                    @if ($gameSession->hasOpenPositions())
+                        @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
+                            <button type="submit" name="action" value="confirm"
+                                    class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
+                                               shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
+                                               dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
+                                🎯 Count me in — reserve my seat!
                             </button>
                         @endif
 
+                        @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::RemindMe2Days->value)
+                            @php
+                                $hoursUntilTwoDaysBeforeEvent = (int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false)
+                            @endphp
+
+                            @if($hoursUntilTwoDaysBeforeEvent > 2)
+                                <button type="submit" name="action" value="2day"
+                                        class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
+                                           hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
+                                           dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
+                                    ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still deciding.
+                                </button>
+                            @endif
+
+                        @endif
+                    @else
+                        @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::OpenPosition->value)
+                            <button type="submit" name="action" value="openPosition"
+                                    class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
+                                               hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
+                                               dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
+                                ⏰ Let me know as soon as a position is opened
+                            </button>
+                        @endif
                     @endif
+
+
 
                     @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Declined->value)
                         <button type="submit" name="action" value="decline"

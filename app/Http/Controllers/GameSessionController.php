@@ -123,11 +123,15 @@ class GameSessionController extends Controller
                 $registrationStatus = RegistrationStatus::Confirmed;
                 $notificationStatus = NotificationType::Confirmed;
                 break;
+            case 'openPosition':
+                $registrationStatus = RegistrationStatus::OpenPosition;
+                $notificationStatus = NotificationType::OpenPosition;
+                break;
             case '2day':
                 if ((int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false) < 1) {
                     break;
                 }
-                $registrationStatus = RegistrationStatus::Interested;
+                $registrationStatus = RegistrationStatus::RemindMe2Days;
                 $notificationStatus = NotificationType::ConfirmationReminder2Days;
                 break;
             case 'decline':
