@@ -4,15 +4,17 @@ namespace App\Enums;
 
 enum RegistrationStatus: int
 {
-    case Interested = 0;
+    case RemindMe2Days = 0;
     case Confirmed = 1;
     case Declined = 2;
+    case OpenPosition = 3;
 
 
     public function label(): string
     {
         return match($this) {
-            self::Interested => 'Interested',
+            self::RemindMe2Days => 'Interested, remind me 2 days prior the session start.',
+            self::OpenPosition => 'Interested, let me know when a new position is opened.',
             self::Confirmed => 'Confirmed',
             self::Declined => 'Declined',
         };
