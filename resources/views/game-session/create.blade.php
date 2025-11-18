@@ -4,7 +4,7 @@
             🎲 {{ __('Create New Game Session') }}
         </h2>
     </x-slot>
-{{--@include('partials._errors')--}}
+    {{--@include('partials._errors')--}}
     <div class="py-10">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -14,41 +14,43 @@
 
                         <!-- Name -->
                         <div>
-                            <x-input-label for="name" value="Session Name" />
+                            <x-input-label for="name" value="Session Name"/>
                             <x-text-input id="name" name="name" type="text"
                                           class="mt-1 block w-full"
-                                          :value="old('name')" required autofocus />
-                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                                          :value="old('name')" required autofocus/>
+                            <x-input-error :messages="$errors->get('name')" class="mt-2"/>
                         </div>
 
                         <!-- Description -->
                         <div>
-                            <x-input-label for="description" value="Description" />
+                            <x-input-label for="description" value="Description"/>
                             <textarea id="description" name="description" rows="4"
                                       class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700
                                            bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100
                                            focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('description') }}</textarea>
-                            <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('description')" class="mt-2"/>
                         </div>
 
                         <!-- Location -->
                         <div>
-                            <x-input-label for="location" value="Location" />
+                            <x-input-label for="location" value="Location"/>
                             <x-text-input id="location" name="location" type="text"
                                           class="mt-1 block w-full"
-                                          :value="old('location')" required />
-                            <x-input-error :messages="$errors->get('location')" class="mt-2" />
+                                          :value="old('location')" required/>
+                            <x-input-error :messages="$errors->get('location')" class="mt-2"/>
                         </div>
 
                         <!-- Interest Overview -->
-                        <div class="mb-6 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <div
+                            class="mb-6 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase mb-3">
                                 🧩 Interest Overview (This Week)
                             </h3>
 
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 @foreach($interestStats as $slot)
-                                    <div class="flex items-center justify-between bg-white dark:bg-gray-900/40 rounded-md px-3 py-2 shadow-sm">
+                                    <div
+                                        class="flex items-center justify-between bg-white dark:bg-gray-900/40 rounded-md px-3 py-2 shadow-sm">
                                         <div class="text-sm text-gray-700 dark:text-gray-300">
                                             <span class="font-medium">{{ $slot['label'] }}</span>
                                             <br>
@@ -137,23 +139,29 @@
                         </div>
 
                         <!-- Organizer (admins only) -->
-                        @if(auth()->user()->isAdmin())
+                        @if(auth()->user()->hasAdminPermission())
                             <div>
-                                <x-input-label for="organized_by" value="Organizer" />
+                                <x-input-label for="organized_by" value="Organizer"/>
                                 <select id="organized_by" name="organized_by"
                                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700
                                                dark:bg-gray-800 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                        <option value="">-You-</option>
-                                        @foreach($organizers as $organizer)
-                                            <option value="{{ $organizer->id }}"
-                                                {{ old('organized_by') == $organizer->id ? 'selected' : '' }}>
-                                                <img src="{{ asset($organizer->getPhotoURL()) }}"
-                                                     class="inline-block w-6 h-6 rounded-full ring-2 ring-gray-900"
-                                                     alt="Meeple"> {{ $organizer->name }}
-                                            </option>
-                                        @endforeach
+                                    <option value="">-You-</option>
+                                    @foreach($organizers as $organizer)
+                                        <option value="{{ $organizer->id }}"
+                                                @php
+                                                    if (old('organized_by')) {
+                                                        echo old('organized_by') == $organizer->id ? 'selected' : '';
+                                                    } else {
+                                                        echo auth()->user()->id == $organizer->id ? 'selected' : '';
+                                                    }
+                                                @endphp
+                                            >
+                                            {{ $organizer->name }} - {{$organizer->role->label()}}
+
+                                        </option>
+                                    @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('organized_by')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('organized_by')" class="mt-2"/>
                             </div>
                         @endif
 

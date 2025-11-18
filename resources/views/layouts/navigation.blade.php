@@ -19,7 +19,7 @@
                         <x-nav-link :href="route('notification.edit')" :active="request()->routeIs('notification.edit')">
                             {{ __('Notifications') }}
                         </x-nav-link>
-                        @if(Auth::user()->isOrganizer())
+                        @if(Auth::user()->hasOrganizerPermission())
                             <x-nav-link :href="route('game-sessions.create')" :active="request()->routeIs('game-sessions.create')">
                                 {{ __('Create Board Game Session') }}
                             </x-nav-link>

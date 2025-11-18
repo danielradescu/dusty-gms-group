@@ -20,6 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('role:Admin')->group(function () {
+    Route::get('/admin/dashboard', fn () => view('admin.dashboard'));
+});
+
 Route::middleware('auth', 'verified')->group(function () {
     //dashboard:
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

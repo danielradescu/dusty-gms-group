@@ -52,4 +52,14 @@ class GameSession extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function registration(): HasMany
+    {
+        return $this->hasMany(Registration::class);
+    }
+
+    public function hasOpenPositions()
+    {
+        return is_null($this->max_players) || ($this->max_players > $this->registration()->count());
+    }
+
 }

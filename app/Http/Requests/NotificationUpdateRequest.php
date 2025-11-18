@@ -45,7 +45,7 @@ class NotificationUpdateRequest extends FormRequest
 
                     // Admin-only subscriptions
                     if (in_array($value, array_map(fn($t) => $t->value, \App\Enums\NotificationSubscriptionType::adminOptions()))) {
-                        if (! $user->isAdmin()) {
+                        if (! $user->hasAdminPermission()) {
                             $fail('One of the selected subscriptions is invalid.');
                         }
                     }

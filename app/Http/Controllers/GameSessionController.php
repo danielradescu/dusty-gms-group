@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GameComplexity;
 use App\Enums\NotificationType;
 use App\Enums\RegistrationStatus;
 use App\Enums\Role;
@@ -22,7 +23,7 @@ class GameSessionController extends Controller
 {
     public function create()
     {
-        if (! auth()->user()->isOrganizer()) {
+        if (! auth()->user()->hasOrganizerPermission()) {
             abort(403);
         }
         // Get this week’s defined slot times (Friday/Saturday/Sunday)
@@ -42,8 +43,9 @@ class GameSessionController extends Controller
 
 
         $toReturn = [
-            'organizers' => auth()->user()->isAdmin() ? User::role([Role::ORGANIZER->value])->get() : [],
+            'organizers' => auth()->user()->hasAdminPermission() ? User::all() : [],
             'interestStats' => $interestStats,
+            'complexities' => GameComplexity::cases(),
         ];
 
         return view('game-session.create', $toReturn);

@@ -48,6 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => Role::class,
         ];
     }
 
@@ -67,16 +68,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function gameSessionRequests(): HasMany
     {
         return $this->hasMany(GameSessionRequest::class);
-    }
-
-    public function isOrganizer(): bool
-    {
-        return true;
-    }
-
-    public function isAdmin(): bool
-    {
-        return true;
     }
 
     public function notificationSubscription(): HasMany
