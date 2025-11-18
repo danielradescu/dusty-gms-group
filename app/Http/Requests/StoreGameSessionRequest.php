@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\GameComplexity;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreGameSessionRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StoreGameSessionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->isOrganizer();
+        return auth()->user()->hasOrganizerPermission();
     }
 
     /**
@@ -67,8 +69,8 @@ class StoreGameSessionRequest extends FormRequest
 
             'complexity' => [
                 'nullable',
-                'numeric',
-                'between:0,5',
+                'integer',
+                Rule::in(array_column(GameComplexity::cases(), 'value')),
             ],
 
             'delay_until' => [
@@ -82,7 +84,7 @@ class StoreGameSessionRequest extends FormRequest
                 'exists:users,id',
                 function ($attribute, $value, $fail) {
                     if (! empty($value)) {
-                        if (! auth()->user()->isAdmin()) {
+                        if (! auth()->user()->hasAdminPermission()) {
                             $fail('You are not authorized to assign an organizer.');
                         }
                     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GameComplexity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Enums\GameSessionType;
@@ -34,10 +35,11 @@ class GameSession extends Model
     ];
 
     protected $casts = [
-        'complexity' => 'decimal:2',
+        'complexity' => GameComplexity::class,
         'type' => GameSessionType::class,
         'start_at' => 'datetime',
         'delay_until' => 'datetime',
+
     ];
 
     public function organizer(): BelongsTo

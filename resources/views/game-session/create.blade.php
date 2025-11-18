@@ -86,43 +86,47 @@
                             class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700
                                 dark:bg-gray-800 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             required
-                            onfocus="this.showPicker && this.showPicker()"  {{-- ✅ triggers calendar open if supported --}}
+                            onfocus="this.showPicker && this.showPicker()" {{-- ✅ triggers calendar open if supported --}}
                         >
-                        <x-input-error :messages="$errors->get('start_at')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('start_at')" class="mt-2"/>
                         <!-- Player Counts -->
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <x-input-label for="min_players" value="Minimum Players" />
+                                <x-input-label for="min_players" value="Minimum Players"/>
                                 <x-text-input id="min_players" name="min_players" type="number" min="1"
                                               class="mt-1 block w-full"
-                                              :value="old('min_players', 3)" required />
-                                <x-input-error :messages="$errors->get('min_players')" class="mt-2" />
+                                              :value="old('min_players', 3)" required/>
+                                <x-input-error :messages="$errors->get('min_players')" class="mt-2"/>
                             </div>
 
                             <div>
-                                <x-input-label for="max_players" value="Maximum Players" />
+                                <x-input-label for="max_players" value="Maximum Players"/>
                                 <x-text-input id="max_players" name="max_players" type="number" min="1"
                                               class="mt-1 block w-full"
-                                              :value="old('max_players', 10)" required />
-                                <x-input-error :messages="$errors->get('max_players')" class="mt-2" />
+                                              :value="old('max_players', 10)" required/>
+                                <x-input-error :messages="$errors->get('max_players')" class="mt-2"/>
                             </div>
                         </div>
 
                         <!-- Complexity -->
-                        <div>
-                            <x-input-label for="complexity" value="Average Complexity (0–5)" />
-                            <x-text-input id="complexity" name="complexity" type="number" step="0.1" min="0" max="5"
-                                          class="mt-1 block w-full"
-                                          :value="old('complexity')" />
-                            <x-input-error :messages="$errors->get('complexity')" class="mt-2" />
-                        </div>
+                        <select id="complexity" name="complexity"
+                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700
+                                    dark:bg-gray-800 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            @foreach($complexities as $complexity)
+                                <option value="{{ $complexity->value }}"
+                                    {{ old('complexity') == $complexity->value ? 'selected' : '' }}>
+                                    {{ $complexity->label() }} — {{ $complexity->description() }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('complexity')" class="mt-2"/>
 
                         <!-- Delay option -->
                         <div class="mt-6">
                             <label class="flex items-start gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-700
                                       hover:bg-gray-50 dark:hover:bg-gray-800/50 transition cursor-pointer">
-                                                    <input type="checkbox" name="delay_publication" value="1"
-                                                           class="mt-1 h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded
+                                <input type="checkbox" name="delay_publication" value="1"
+                                       class="mt-1 h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded
                                           dark:border-gray-600 dark:focus:ring-indigo-400 dark:focus:ring-offset-gray-900">
                                 <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                                     <strong>Delay making the session public for 6 hours</strong><br>

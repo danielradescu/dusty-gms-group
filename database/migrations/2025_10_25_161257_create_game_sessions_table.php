@@ -20,7 +20,7 @@ return new class extends Migration
             $table->dateTime('start_at')->nullable();
             $table->smallInteger('min_players')->default(3);
             $table->smallInteger('max_players')->default(10);
-            $table->decimal('complexity', 3, 2)->nullable();
+            $table->tinyInteger('complexity')->nullable();
             $table->tinyInteger('type')->unsigned()->default(1);
             $table->dateTime('delay_until')->nullable();
             // Foreign key column
