@@ -3,18 +3,25 @@
 namespace App\Models;
 
 
+use App\Enums\Role;
+use App\Models\Scopes\VerifiedAndUnblocked;
+use App\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles, Notifiable;
+    use HasFactory, Notifiable, Notifiable, HasRoles;
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new VerifiedAndUnblocked());
+    }
 
     /**
      * The attributes that are mass assignable.
