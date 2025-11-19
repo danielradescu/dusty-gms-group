@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Comment;
+use App\Models\GameSession;
 use App\Models\Notification;
 use App\Enums\NotificationType;
 use App\Enums\NotificationStatus;
@@ -12,7 +14,7 @@ class UserNotificationService
     /**
      * Generate a stable SHA256 hash for a notification.
      */
-    private function makeHash(int $userId, int $type, array $parts = []): string
+    private function makeHash(int $userId, string $type, array $parts = []): string
     {
         ksort($parts);
 
@@ -32,7 +34,7 @@ class UserNotificationService
         array $hashParts
     ): Notification {
 
-        $hash = $this->makeHash($userId, $type->value, $hashParts);
+        $hash = $this->makeHash($userId, $type->name, $hashParts);
 
         $notification = Notification::where('hash', $hash)->first();
 
@@ -70,7 +72,7 @@ class UserNotificationService
             type: NotificationType::SESSION_CREATED,
             data: ['session_id' => $sessionId],
             sendAt: now()->addMinutes(5),
-            hashParts: [$sessionId, NotificationType::SESSION_CREATED->value]
+            hashParts: [$sessionId, NotificationType::SESSION_CREATED->name]
         );
     }
 
@@ -82,7 +84,7 @@ class UserNotificationService
             type: NotificationType::SESSION_CONFIRMED,
             data: ['session_id' => $sessionId],
             sendAt: now()->addMinutes(10),
-            hashParts: [$sessionId, NotificationType::SESSION_CONFIRMED->value]
+            hashParts: [$sessionId, NotificationType::SESSION_CONFIRMED->name]
         );
     }
 
@@ -94,7 +96,7 @@ class UserNotificationService
             type: NotificationType::SESSION_CANCELED,
             data: ['session_id' => $sessionId],
             sendAt: now()->addMinutes(10),
-            hashParts: [$sessionId, NotificationType::SESSION_CANCELED->value]
+            hashParts: [$sessionId, NotificationType::SESSION_CANCELED->name]
         );
     }
 
@@ -106,7 +108,7 @@ class UserNotificationService
             type: NotificationType::SESSION_UPDATED,
             data: ['session_id' => $sessionId],
             sendAt: now()->addMinutes(10),
-            hashParts: [$sessionId, NotificationType::SESSION_UPDATED->value]
+            hashParts: [$sessionId, NotificationType::SESSION_UPDATED->name]
         );
     }
 
@@ -128,7 +130,7 @@ class UserNotificationService
                 'hours_before' => $hoursBefore,
             ],
             sendAt: $sendAt,
-            hashParts: [$sessionId, NotificationType::SESSION_REMINDER->value, $hoursBefore]
+            hashParts: [$sessionId, NotificationType::SESSION_REMINDER->name, $hoursBefore]
         );
     }
 
@@ -140,7 +142,7 @@ class UserNotificationService
             type: NotificationType::SESSION_AUTO_JOINED,
             data: ['target_date' => $targetDate],
             sendAt: now()->addHour(),
-            hashParts: [$targetDate, NotificationType::SESSION_AUTO_JOINED->value]
+            hashParts: [$targetDate, NotificationType::SESSION_AUTO_JOINED->name]
         );
     }
 
@@ -152,7 +154,7 @@ class UserNotificationService
             type: NotificationType::OPEN_SLOT_AVAILABLE,
             data: ['session_id' => $sessionId],
             sendAt: now()->addHours($hours),
-            hashParts: [$sessionId, NotificationType::OPEN_SLOT_AVAILABLE->value]
+            hashParts: [$sessionId, NotificationType::OPEN_SLOT_AVAILABLE->name]
         );
     }
 
@@ -164,7 +166,29 @@ class UserNotificationService
             type: NotificationType::ORGANIZER_PROMPT_CREATE,
             data: ['target_date' => $targetDate],
             sendAt: now()->addHour(),
-            hashParts: [$targetDate, NotificationType::ORGANIZER_PROMPT_CREATE->value]
+            hashParts: [$targetDate, NotificationType::ORGANIZER_PROMPT_CREATE->name]
+        );
+    }
+
+    /** When a new comment was added send notification to the organizer */
+    public function gameSessionOrganizerNewCommentAdded(int $sessionId, int $commentId): ?Notification
+    {
+        $session = GameSession::findOrFail($sessionId);
+        $comment = Comment::with('user')->findOrFail($commentId);
+
+        // Organizer of the session
+        $organizer = $session->organizer;
+
+        if ((! $organizer) || ($organizer->id === $comment->user->id)) {
+            return null;
+        }
+
+        return $this->schedule(
+            userId: $organizer->id,
+            type: NotificationType::NEW_COMMENT,
+            data: ['session_id' => $sessionId, 'comment_id' => $commentId],
+            sendAt: now()->addMinutes(2), // short delay, adjust as needed
+            hashParts: [$sessionId, NotificationType::NEW_COMMENT->name, $comment->user->id, now()->format('Y-m-d-H')] //only once in an hour
         );
     }
 }

@@ -7,10 +7,11 @@ enum NotificationSubscriptionType: int
     // 👥 Participants only
     case NEW_GAME_SESSION = 1;
 
-    // 🧩 Participants + Organizers
+    // 🧩 Organizers
     case GAME_SESSION_REQUESTS = 10;
+    case NEW_COMMENT_ON_MY_SESSION = 11;
 
-    // 🛡️ Participants + Organizers + Admins
+    // 🛡️ Admins
 
     public function label(): string
     {
@@ -18,6 +19,8 @@ enum NotificationSubscriptionType: int
             self::NEW_GAME_SESSION => 'Always notify me about new game sessions',
 
             self::GAME_SESSION_REQUESTS => 'Let me know when a specific day reaches the interest threshold (usually 2 requests), so I can evaluate and organize a session.',
+
+            self::NEW_COMMENT_ON_MY_SESSION => 'Notify me when someone comments on a game session I organize.',
 
         };
     }
@@ -39,6 +42,7 @@ enum NotificationSubscriptionType: int
     {
         return [
             self::GAME_SESSION_REQUESTS,
+            self::NEW_COMMENT_ON_MY_SESSION,
         ];
     }
 
