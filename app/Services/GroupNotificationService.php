@@ -24,31 +24,38 @@ class GroupNotificationService
      * - subscribed to "new game session created"
      * - OR requested to be notified when a session is created for this date
      */
-    public function gameSessionCreated(int $sessionId): void
+    public function gameSessionCreated(int $sessionId): \Illuminate\Support\Collection
     {
         $session = GameSession::findOrFail($sessionId);
+        $date = $session->start_at->toDateString();
 
-        //fetch users subscribed to "SESSION_CREATED"
-        $usersSubscribed = NotificationSubscription::with('user')
-            ->where('type', NotificationSubscriptionType::NEW_GAME_SESSION)
-            ->get()
-            ->pluck('user');   // ← extract users
+        // 1) Users subscribed to NEW_GAME_SESSION (excluding auto-joiners for this date)
+        $usersSubscribed = User::query()
+            ->whereHas('notificationSubscription', function ($q) {
+                $q->where('type', NotificationSubscriptionType::NEW_GAME_SESSION);
+            })
+            ->whereDoesntHave('gameSessionRequests', function ($q) use ($date) {
+                $q->where('auto_join', true)
+                    ->whereDate('preferred_time', $date);
+            })
+            ->get();
 
 
-        // fetch users who requested a session on this specific date
-        $usersRequestedDay = GameSessionRequest::with('user')
-            ->whereDate('preferred_time', $session->start_at->toDateString())
-            ->get()
-            ->pluck('user');   // ← extract users
+        // 2) Users who requested a session for this date (but are NOT auto-joiners)
+        $usersRequestedDay = User::query()
+            ->whereHas('gameSessionRequests', function ($q) use ($date) {
+                $q->where('auto_join', false)
+                    ->whereDate('preferred_time', $date);
+            })
+            ->get();
 
-        //merge the users for uniqueness
+        // 3) Merge, dedupe, sort
         $users = $usersSubscribed
             ->merge($usersRequestedDay)
             ->unique('id')
-            ->sortByDesc('level')   // 👈 sort by user level descending
-            ->values();             // optional: reindex from 0
-
-        $users = $users->reject(fn(User $u) => $u->id === $session->organized_by);
+            ->reject(fn (User $u) => $u->id === $session->organized_by)
+            ->sortByDesc('level')
+            ->values();
 
         /** @var User $user */
         foreach ($users as $user) {
@@ -57,6 +64,8 @@ class GroupNotificationService
                 sessionId: $session->id
             );
         }
+
+        return $users;
     }
 
     //──────────────────────────────────────────────

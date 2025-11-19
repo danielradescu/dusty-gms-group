@@ -116,11 +116,11 @@ class UserNotificationService
     public function gameSessionReminder(
         int $userId,
         int $sessionId,
-        Carbon $sessionDate,
+        Carbon $sessionDatetime,
         int $hoursBefore = 48
     ): Notification {
 
-        $sendAt = $sessionDate->copy()->subHours($hoursBefore);
+        $sendAt = $sessionDatetime->copy()->subHours($hoursBefore);
 
         return $this->schedule(
             userId: $userId,
@@ -154,7 +154,7 @@ class UserNotificationService
             type: NotificationType::OPEN_SLOT_AVAILABLE,
             data: ['session_id' => $sessionId],
             sendAt: now()->addHours($hours),
-            hashParts: [$sessionId, NotificationType::OPEN_SLOT_AVAILABLE->name]
+            hashParts: [$sessionId, NotificationType::OPEN_SLOT_AVAILABLE->name, now()->format('Y-m-d')] //only once per day
         );
     }
 

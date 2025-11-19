@@ -12,6 +12,9 @@ use App\Models\Notification;
 use App\Models\Registration;
 use App\Models\User;
 use App\Services\GameSessionSlotService;
+use App\Services\GroupNotificationService;
+use App\Services\UserNotificationService;
+use App\Services\XP;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -52,8 +55,9 @@ class GameSessionController extends Controller
     public function store(StoreGameSessionRequest $request)
     {
         $validated = $request->validated();
+        $organizer = $validated['organized_by'] ? User::whereId($validated['organized_by'])->firstOrFail() : auth();
 
-        $session = GameSession::create([
+        $gameSession = GameSession::create([
             'uuid' => \Str::uuid()->toString(),
             'name' => $validated['name'],
             'description' => $validated['description'],
@@ -62,15 +66,40 @@ class GameSessionController extends Controller
             'min_players' => $validated['min_players'],
             'max_players' => $validated['max_players'],
             'complexity' => $validated['complexity'],
-            'organized_by' => $validated['organized_by'] ?? auth()->id(),
+            'organized_by' => $organizer->id,
             'type' => \App\Enums\GameSessionType::RECRUITING_PARTICIPANTS->value,
             'delay_until' => $request->has('delay_publication')
                 ? now()->addHours(6)
                 : null,
         ]);
 
+        if ($gameSession) {
+            $notifiedUsers = app(GroupNotificationService::class)->gameSessionCreated($gameSession->id);
+            XP::grant($organizer, 'organizer_create_session');
+
+            //handle auto-joiners
+            $autoJoinDayRequests = GameSessionRequest::with('user')
+                ->whereDate('preferred_time', $gameSession->start_at->toDateString())
+                ->where('auto_join', true)
+                ->get();
+
+            foreach ($autoJoinDayRequests as $gameRequest) {
+                Registration::create([
+                    'user_id' => $gameRequest->user->id,
+                    'game_session_id' => $gameSession->id,
+                    'status' => RegistrationStatus::Confirmed,
+                ]);
+                $gameRequest->auto_join = false; //disable autojoin if another session was created that day, but still receive notifications about other sessions
+                $gameRequest->save();
+                app(UserNotificationService::class)->gameSessionDayMatchedAndAutoJoined($gameRequest->user->id, $gameSession->start_at->toDateString());
+                XP::grantOncePerDay($gameRequest->user, 'interacted_with_game_session');
+            }
+        }
+
         // Redirect to the confirmation/preview route
-        return redirect()->route('game-session.created', $session->uuid);
+        return redirect()->route('game-session.created', $gameSession->uuid)
+            ->with('autoJoinCount', $autoJoinDayRequests->count())
+            ->with('notifyCount', $notifiedUsers->count());
     }
 
     public function created(string $uuid)
@@ -79,8 +108,8 @@ class GameSessionController extends Controller
 
         $toReturn = [
             'gameSession' => $session,
-            'autoJoinCount' => rand(2, 5),
-            'notifyCount' => rand(2, 10),
+            'autoJoinCount' => session('autoJoinCount'),
+            'notifyCount' => session('notifyCount'),
         ];
 
         return view('game-session.create-report', $toReturn);
@@ -97,6 +126,10 @@ class GameSessionController extends Controller
             ->with('user')
             ->get();
 
+        if (auth()->check()) {
+            XP::grantOncePerDay(auth()->user(), 'organizer_create_session');
+        }
+
         return view('game-session.detail', [
             'gameSession' => GameSession::where('uuid', $uuid)->firstOrFail(),
             'registrationStatus' => $myRegistration ? $myRegistration->status : null,
@@ -107,10 +140,14 @@ class GameSessionController extends Controller
 
     public function handle(Request $request, $uuid)
     {
-        $gameSession = GameSession::where('uuid', $uuid)->firstOrFail();
+        $gameSession = GameSession::with('registration')->where('uuid', $uuid)->firstOrFail();
+        $initialConfirmedRegistrations = $confirmedRegistrations = $gameSession->registration()
+            ->where('status', RegistrationStatus::Confirmed->value)
+            ->count();
+        $user = auth()->user();
 
 
-        Registration::where('user_id', Auth::user()->id)
+        Registration::where('user_id', $user->id)
             ->where('game_session_id', $gameSession->id)
             ->delete();
 
@@ -118,19 +155,23 @@ class GameSessionController extends Controller
         $notificationStatus = null;
         switch ($request->get('action')) {
             case 'confirm':
-                $registrationStatus = RegistrationStatus::Confirmed;
-                $notificationStatus = NotificationType::Confirmed;
-                break;
+                //validate if there are still positions opened
+                if ($initialConfirmedRegistrations < $gameSession->max_players) {
+                    $registrationStatus = RegistrationStatus::Confirmed;
+                    break;
+                } //otherwise don't break go to openPosition case
             case 'openPosition':
                 $registrationStatus = RegistrationStatus::OpenPosition;
-                $notificationStatus = NotificationType::OpenPosition;
                 break;
             case '2day':
-                if ((int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false) < 1) {
+                //if there are less than two days + 1h, user can't register for a reminder
+                if ((int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false) > 1) {
+                    //maybe he had the browser opened for too long
+                    $notificationStatus = NotificationType::SESSION_REMINDER;
                     break;
                 }
+                //will let user register as interested in the gaming session
                 $registrationStatus = RegistrationStatus::RemindMe2Days;
-                $notificationStatus = NotificationType::ConfirmationReminder2Days;
                 break;
             case 'decline':
                 $registrationStatus = RegistrationStatus::Declined;
@@ -140,15 +181,27 @@ class GameSessionController extends Controller
         }
 
         $registration = Registration::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => $user->id,
             'game_session_id' => $gameSession->id,
             'status' => $registrationStatus,
         ]);
+
+        $finalConfirmedRegistrations = $gameSession->registration()
+            ->where('status', RegistrationStatus::Confirmed->value)
+            ->count();
+
+        if ($initialConfirmedRegistrations > $finalConfirmedRegistrations ) {
+            if ($gameSession->max_players == $initialConfirmedRegistrations) {
+                //we had a full game and someone left, notify the interested people
+                app(GroupNotificationService::class)->gameSessionOpenSlotAvailable($gameSession->id);
+            }
+        } else {
+            //only if the user didn't just left the session, should get xp if he declined before joining
+            XP::grantOncePerDay(auth()->user(), 'interacted_with_game_session');
+        }
+
         if ($notificationStatus) {
-            Notification::create([
-                'registration_id' => $registration->id,
-                'type' => $notificationStatus->value,
-            ]);
+            app(UserNotificationService::class)->gameSessionReminder($user->id, $gameSession->id, $gameSession->start_at);
         }
 
         return Redirect::route('show.game-session', $uuid);

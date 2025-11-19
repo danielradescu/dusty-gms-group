@@ -48,6 +48,6 @@ class NotificationSubscriptionController extends Controller
 
 
 
-        return redirect()->route('notification.edit');
+        return redirect()->route('notification.edit')->with('status', true);
     }
 }

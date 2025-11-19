@@ -98,6 +98,15 @@
                                                dark:focus:ring-indigo-800 shadow-sm">
                             💾 Save Preferences
                         </button>
+                        @if (session('status'))
+                            <span
+                                x-data="{ show: true }"
+                                x-show="show"
+                                x-transition
+                                x-init="setTimeout(() => show = false, 2000)"
+                                class="text-sm text-gray-600 dark:text-gray-400"
+                            >{{ __('Saved.') }}</span>
+                        @endif
                     </div>
                 </form>
             </div>
