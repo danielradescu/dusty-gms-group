@@ -2,38 +2,31 @@
 
 namespace App\Models;
 
-use App\Enums\NotificationType;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\NotificationType;
+use App\Enums\NotificationStatus;
 
 class Notification extends Model
 {
-    protected $fillable = ['registration_id', 'type', 'sent', 'custom_message'];
-
-    protected $casts = [
-        'type' => NotificationType::class,
-        'sent' => 'boolean',
+    protected $fillable = [
+        'user_id',
+        'data',
+        'type',
+        'status',
+        'send_at',
+        'attempts',
+        'hash',
     ];
 
-    public function registration(): BelongsTo
-    {
-        return $this->belongsTo(Registration::class);
-    }
+    protected $casts = [
+        'data' => 'array',
+        'send_at' => 'datetime',
+        'type' => NotificationType::class,
+        'status' => NotificationStatus::class,
+    ];
 
     public function user()
     {
-        return $this->registration?->user();
-    }
-
-    public function gameSession()
-    {
-        return $this->registration?->gameSession();
-    }
-
-    public function message(): string
-    {
-        return $this->custom_message
-            ?? $this->type->defaultMessage()
-            ?? 'Notification';
+        return $this->belongsTo(User::class);
     }
 }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('photo')->nullable();
             $table->longText('info')->nullable();
-            $table->tinyInteger('role')->default(3); // 3 = Participant
+            $table->unsignedTinyInteger('role')->default(3); // 3 = Participant
             $table->unsignedInteger('level')->default(1);
             $table->unsignedInteger('xp')->default(0);
             $table->boolean('is_blocked')->default(0);

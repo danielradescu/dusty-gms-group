@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->tinyInteger('type')->unsigned();
+            $table->unsignedTinyInteger('type')->unsigned();
             $table->timestamps();
         });
     }

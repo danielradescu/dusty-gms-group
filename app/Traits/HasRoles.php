@@ -60,4 +60,12 @@ trait HasRoles
     {
         $query->whereIn('role', array_map(fn ($role) => $role->value, $roles));
     }
+
+    public function scopeOrganizers($query)
+    {
+        return $query->whereIn('role', [
+            Role::Admin->value,
+            Role::Organizer->value,
+        ]);
+    }
 }

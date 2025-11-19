@@ -23,7 +23,7 @@ enum RegistrationStatus: int
     public function color(): string
     {
         return match($this) {
-            self::Interested => 'text-blue-500',
+            self::RemindMe2Days, self::OpenPosition => 'text-blue-500',
             self::Confirmed => 'text-green-500',
             self::Declined => 'text-red-500',
         };

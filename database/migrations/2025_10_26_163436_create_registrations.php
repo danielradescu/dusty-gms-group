@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('game_session_id')->constrained()->onDelete('cascade');
 
             // Enum stored as tiny integer
-            $table->tinyInteger('status')->unsigned()->default(0);
+            $table->unsignedTinyInteger('status')->unsigned()->default(0);
 
             // Prevent duplicate registration per user-session pair
             $table->unique(['user_id', 'game_session_id']);

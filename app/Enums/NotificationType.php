@@ -4,26 +4,12 @@ namespace App\Enums;
 
 enum NotificationType: int
 {
-    case Confirmed = 0;
-    case ConfirmationReminder2Days = 1;
-    case SessionUpdated = 2;
-    case SessionCancelled = 3;
-    case OrganizerConfirmedSession = 4;
-    case OrganizerChanged = 5;
-    case Reminder1Day = 6;
-    case OpenPosition = 7;
-
-    public function label(): string
-    {
-        return match($this) {
-            self::Confirmed => 'Registration confirmed',
-            self::ConfirmationReminder2Days => '2-day confirmation reminder',
-            self::SessionUpdated => 'Game session updated',
-            self::SessionCancelled => 'Game session cancelled',
-            self::OrganizerConfirmedSession => 'Game session will be held',
-            self::OrganizerChanged => 'Organizer changed',
-            self::Reminder1Day => '1-day reminder',
-            self::OpenPosition => 'Let me know as soon as a position is opened',
-        };
-    }
+    case SESSION_CREATED = 1;
+    case SESSION_CONFIRMED = 2;
+    case SESSION_CANCELED = 3;
+    case SESSION_UPDATED = 4;
+    case SESSION_REMINDER = 5;      // 2 days before, or N hours before
+    case SESSION_AUTO_JOINED = 6;  // user asked to auto-join if a session was created in a specific day
+    case OPEN_SLOT_AVAILABLE = 7;   // user wants to join if a slot opens
+    case ORGANIZER_PROMPT_CREATE = 8; // “at least two requested a session on same day”
 }

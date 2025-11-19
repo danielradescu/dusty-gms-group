@@ -14,24 +14,31 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
 
-            // Link directly to registration
-            $table->foreignId('registration_id')
-                ->constrained()
-                ->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
 
-            // Type of notification
-            $table->tinyInteger('type')->unsigned();
+            // JSON payload: may contain session_id, target_date, extra metadata
+            $table->json('data')->nullable();
 
-            // Whether the notification was sent
-            $table->boolean('sent')->default(false);
+            // tinyint enum (we’ll build PHP enums next)
+            $table->unsignedTinyInteger('type');   // NotificationType enum
+            $table->unsignedTinyInteger('status'); // NotificationStatus enum
 
-            // Optional custom message (for updated sessions)
-            $table->longText('custom_message')->nullable();
+            // When the notification should be processed
+            $table->dateTime('send_at')->index();
 
-            // Prevent duplicate notifications of the same type for one registration
-            $table->unique(['registration_id', 'type']);
+            // Track retries
+            $table->unsignedTinyInteger('attempts')->default(0);
+
+            // Hash for uniqueness (per user/type/session/date)
+            $table->string('hash', 64)->unique();
 
             $table->timestamps();
+
+            // optional but recommended
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+
+            // composite index for worker efficiency
+            $table->index(['status', 'send_at']);
         });
     }
 
