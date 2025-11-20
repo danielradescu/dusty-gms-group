@@ -40,7 +40,7 @@
                                 id="sessionLink"
                                 type="text"
                                 readonly
-                                value="{{ route('show.game-session', $gameSession->uuid ?? 'example-uuid') }}"
+                                value="{{ route('game-session.interaction.show', $gameSession->uuid ?? 'missing-uuid') }}"
                                 class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700
                                        bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-sm"
                             >

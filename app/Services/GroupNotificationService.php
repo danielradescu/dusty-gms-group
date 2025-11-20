@@ -24,7 +24,7 @@ class GroupNotificationService
      * - subscribed to "new game session created"
      * - OR requested to be notified when a session is created for this date
      */
-    public function gameSessionCreated(int $sessionId): \Illuminate\Support\Collection
+    public function gameSessionCreated(int $sessionId, ?int $delayHours): \Illuminate\Support\Collection
     {
         $session = GameSession::findOrFail($sessionId);
         $date = $session->start_at->toDateString();
@@ -57,15 +57,19 @@ class GroupNotificationService
             ->sortByDesc('level')
             ->values();
 
+        $notifications = collect();
+
         /** @var User $user */
         foreach ($users as $user) {
-            $this->userNotifications->gameSessionCreated(
+            $notification = $this->userNotifications->gameSessionCreated(
                 userId: $user->id,
-                sessionId: $session->id
+                sessionId: $session->id,
+                delayHours: $delayHours
             );
+            $notifications->push($notification);
         }
 
-        return $users;
+        return $notifications;
     }
 
     //──────────────────────────────────────────────

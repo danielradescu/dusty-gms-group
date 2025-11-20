@@ -23,16 +23,5 @@ class XPGranted
         public int $xp,
         public string $reason
     ) {}
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
-    public function broadcastOn(): array
-    {
-        return [
-            new PrivateChannel('xp-channel'),
-        ];
-    }
+    
 }

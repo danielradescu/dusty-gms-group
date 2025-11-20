@@ -126,7 +126,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that?</p>
                 @endif
 
-                <form action="{{ route('game-session.handle', $gameSession->uuid) }}" method="POST" class="space-y-3">
+                <form action="{{ route('game-session.interaction.store', $gameSession->uuid) }}" method="POST" class="space-y-3">
                     @csrf
                     @if ($gameSession->hasOpenPositions())
                         @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
@@ -186,7 +186,7 @@
             @else
                 @php
                     // Save intended URL if user sees this section
-                    session()->put('url.intended', route('show.game-session', $gameSession->uuid));
+                    session()->put('url.intended', route('game-session.interaction.show', $gameSession->uuid));
                 @endphp
                 <a href="{{route('login')}}" type="submit" name="action" value="confirm"
                    class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600

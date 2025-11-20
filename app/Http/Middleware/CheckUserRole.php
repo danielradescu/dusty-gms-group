@@ -11,14 +11,20 @@ class CheckUserRole
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Usage: ->middleware('onlyRole:Admin')
      */
-    public function handle($request, Closure $next, string $role)
+    public function handle(Request $request, Closure $next, string $role): Response
     {
-        $required = \App\Enums\Role::from($role);
+        $user = auth()->user();
 
-        if (auth()->user()?->role !== $required) {
-            abort(403);
+        if (! $user) {
+            abort(Response::HTTP_FORBIDDEN, 'Unauthorized');
+        }
+
+        $required = Role::from($role);
+
+        if ($user->role !== $required) {
+            abort(Response::HTTP_FORBIDDEN, 'Access denied: Insufficient role.');
         }
 
         return $next($request);

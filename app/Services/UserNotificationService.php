@@ -65,13 +65,21 @@ class UserNotificationService
     //──────────────────────────────────────────────
 
     /** A new session was created. Notify subscribed users. */
-    public function gameSessionCreated(int $userId, int $sessionId): Notification
+    public function gameSessionCreated(int $userId, int $sessionId, ?int $delayHours = null): Notification
     {
+        $sendAt = now();
+
+        if ($delayHours !== null && $delayHours > 0) {
+            $sendAt = $sendAt->addHours($delayHours);
+        } else {
+            $sendAt = $sendAt->addMinutes(5);
+        }
+
         return $this->schedule(
             userId: $userId,
             type: NotificationType::SESSION_CREATED,
             data: ['session_id' => $sessionId],
-            sendAt: now()->addMinutes(5),
+            sendAt: $sendAt,
             hashParts: [$sessionId, NotificationType::SESSION_CREATED->name]
         );
     }

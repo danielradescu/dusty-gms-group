@@ -1,13 +1,16 @@
 <?php
 
-use App\Http\Controllers\GameSessionController;
-use App\Http\Controllers\NotificationSubscriptionController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\GameSessionRequestController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PageController;
+use App\Http\Controllers\GameSession\CreatedSessionReportController;
+use App\Http\Controllers\GameSession\CreateSessionController;
+use App\Http\Controllers\GameSession\InteractionController;
+use App\Http\Controllers\GameSession\ManagementController;
+use App\Http\Controllers\GameSessionRequestController;
 use App\Http\Controllers\MagicLoginController;
+use App\Http\Controllers\NotificationSubscriptionController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,10 +32,10 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //boardgame sessions:
-    Route::get('/create-game-session', [GameSessionController::class, 'create'])->name('game-sessions.create');
-    Route::post('/create-game-session', [GameSessionController::class, 'store'])->name('game-sessions.store');
-    Route::get('/game-sessions/{uuid}/created', [GameSessionController::class, 'created'])->name('game-session.created');
-    Route::post('/game-session/{uuid}', [GameSessionController::class, 'handle'])->name('game-session.handle');
+    Route::get('/create-game-session', [CreateSessionController::class, 'create'])->name('game-sessions.create');
+    Route::post('/create-game-session', [CreateSessionController::class, 'store'])->name('game-sessions.store');
+    Route::get('/game-sessions/{uuid}/created', [CreateSessionController::class, 'show'])->name('game-session.create.show');
+    Route::post('/game-session/{uuid}', [InteractionController::class, 'store'])->name('game-session.interaction.store');
 
     //comments:
     Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
@@ -51,7 +54,7 @@ Route::get('/terms-of-service', [PageController::class, 'termsOfService'])->name
 Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');
 
 //boardgame sessions:
-Route::get('/game-session/{uuid}', [GameSessionController::class, 'show'])->name('show.game-session');
+Route::get('/game-session/{uuid}', [InteractionController::class, 'show'])->name('game-session.interaction.show');
 
 //Magic link with auto login
 Route::get('/magic-login', MagicLoginController::class)->name('magic-login');

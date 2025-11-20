@@ -31,7 +31,7 @@
                     <div>👥 {{ $session->min_players }}–{{ $session->max_players }} players</div>
                 </div>
 
-                <a href="{{ route('show.game-session', $session->uuid) }}"
+                <a href="{{ route('game-session.interaction.show', $session->uuid) }}"
                    class="mt-6 w-full text-center px-4 py-2 rounded-md bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition">
                     View Details
                 </a>
