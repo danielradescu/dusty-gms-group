@@ -11,6 +11,7 @@ use App\Services\GroupNotificationService;
 use App\Services\UserNotificationService;
 use App\Services\XP;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class InteractionController
 {
@@ -40,10 +41,17 @@ class InteractionController
     public function store(Request $request, $uuid)
     {
         $gameSession = GameSession::with('registration')->where('uuid', $uuid)->firstOrFail();
+        $user = auth()->user();
+
+        if ($gameSession->organized_by == $user->id) {
+            //the organizer cannot leave the session, he should designate another organizer via management section
+            abort(Response::HTTP_FORBIDDEN, 'The organizer cannot leave the session! Try assigning a new organizer first');
+        }
+
         $initialConfirmedRegistrations = $confirmedRegistrations = $gameSession->registration()
             ->where('status', RegistrationStatus::Confirmed->value)
             ->count();
-        $user = auth()->user();
+
 
 
         Registration::where('user_id', $user->id)
@@ -76,7 +84,7 @@ class InteractionController
                 $registrationStatus = RegistrationStatus::Declined;
                 break;
             default:
-                abort(404);
+                abort(Response::HTTP_FORBIDDEN, 'Unidentified action!');
         }
 
         $registration = Registration::create([

@@ -1,0 +1,48 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            🎲 {{ $gameSession->name }}
+        </h2>
+        <p class="text-sm text-gray-800 dark:text-gray-400">{{ $gameSession->description }}</p>
+    </x-slot>
+
+    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="mt-8 space-y-6">
+            @include('game-session.partials.manage._core_info',[$gameSession, $confirmedRegistrations])
+            @include('game-session.partials.manage._status',[$gameSession, $confirmedRegistrations])
+            @include('game-session.partials.manage._organizer',[$gameSession, $confirmedRegistrations])
+            @include('game-session.partials._comments', [$comments, $gameSession])
+        </div>
+    </div>
+
+</x-app-layout>
+
+<!-- Small inline JS to toggle buttons -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.change-section').forEach(section => {
+            const checkbox = section.querySelector('.change-confirm');
+            const buttonWrapper = section.querySelector('.save-button');
+
+            checkbox.addEventListener('change', () => {
+                buttonWrapper.classList.toggle('hidden', !checkbox.checked);
+            });
+        });
+    });
+</script>
+
+<!-- Small inline JS to toggle reason field -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const statusSelect = document.getElementById('status');
+        const reasonBox = document.getElementById('cancel-reason-container');
+
+        statusSelect.addEventListener('change', () => {
+            if (statusSelect.value === 'canceled_by_organizer') {
+                reasonBox.classList.remove('hidden');
+            } else {
+                reasonBox.classList.add('hidden');
+            }
+        });
+    });
+</script>

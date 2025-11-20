@@ -27,7 +27,7 @@ class CreateSessionController extends Controller
     public function __construct()
     {
         // Only allow admins and organizers
-        $this->middleware(['auth', 'hasPermission:' . Role::Organizer]);
+        $this->middleware(['auth', 'hasPermission:' . Role::Organizer->name]);
     }
 
     public function show(string $uuid)
@@ -143,8 +143,8 @@ class CreateSessionController extends Controller
                     ]
                 );
 
-                if ($gameRequest = GameSessionRequest::where('user_id', $userToJoin->id)->where('game_session_id', $gameSession->id)->first()) {
-                    $gameRequest->auto_join = false; //disable autojoin if another session was created that day, but still receive notifications about other sessions
+                if ($gameRequest = GameSessionRequest::where('user_id', $userToJoin->id)->whereDate('preferred_time', $gameSession->start_at->toDateString())->first()) {
+                    $gameRequest->auto_join = false; //disable auto-join if session was created that day, but still receive notifications about other sessions
                     $gameRequest->save();
                 }
                 app(UserNotificationService::class)->gameSessionDayMatchedAndAutoJoined($userToJoin->id, $gameSession->start_at->toDateString());

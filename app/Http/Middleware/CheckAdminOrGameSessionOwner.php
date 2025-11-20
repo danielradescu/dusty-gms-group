@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Role;
 use App\Models\GameSession;
 use Closure;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class CheckAdminOrGameSessionOwner
         // Otherwise check if user owns the session
         $uuid = $request->route('uuid');
         if (! $uuid) {
-            abort(Response::HTTP_BAD_REQUEST, 'Missing UUID parameter.');
+            abort(Response::HTTP_NOT_FOUND, 'Missing UUID parameter.');
         }
 
         $session = GameSession::where('uuid', $uuid)->first();

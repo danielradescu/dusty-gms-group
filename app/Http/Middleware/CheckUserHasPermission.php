@@ -32,7 +32,7 @@ class CheckUserHasPermission
         };
 
         if (! $hasPermission) {
-            abort(403, 'You do not have sufficient permissions to perform this action.');
+            abort(Response::HTTP_FORBIDDEN, 'You do not have sufficient permissions to perform this action.');
         }
 
         return $next($request);

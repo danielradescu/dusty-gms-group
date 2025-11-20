@@ -30,6 +30,10 @@
                     </div>
                 </header>
             @endisset
+            @if(auth()->check())
+                <x-participant-confirmed-session-notice />
+                <x-organizer-sessions-notice />
+            @endif
             <!-- Page Content -->
             <main>
                 {{ $slot }}
