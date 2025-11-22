@@ -1,4 +1,4 @@
-<div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+<div class="{{ request()->routeIs('dashboard') ? 'max-w-7xl' : 'max-w-5xl' }} mx-auto sm:px-6 lg:px-8">
     @if($confirmedSessions->isNotEmpty())
         <div
             class="bg-emerald-100 border-l-4 border-emerald-500 text-emerald-900 dark:bg-emerald-900/40 dark:border-emerald-500 dark:text-emerald-100 p-4 mt-1 rounded-md shadow-sm">

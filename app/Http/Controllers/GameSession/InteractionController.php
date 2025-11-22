@@ -40,15 +40,20 @@ class InteractionController
 
     public function store(Request $request, $uuid)
     {
-        $gameSession = GameSession::with('registration')->where('uuid', $uuid)->firstOrFail();
+        $gameSession = GameSession::with('registrations')->where('uuid', $uuid)->firstOrFail();
         $user = auth()->user();
+
+        if (! $gameSession->isEditable()) {
+            //the organizer cannot leave the session, he should designate another organizer via management section
+            abort(Response::HTTP_FORBIDDEN, 'You cannot interact with this session!');
+        }
 
         if ($gameSession->organized_by == $user->id) {
             //the organizer cannot leave the session, he should designate another organizer via management section
             abort(Response::HTTP_FORBIDDEN, 'The organizer cannot leave the session! Try assigning a new organizer first');
         }
 
-        $initialConfirmedRegistrations = $confirmedRegistrations = $gameSession->registration()
+        $initialConfirmedRegistrations = $confirmedRegistrations = $gameSession->registrations()
             ->where('status', RegistrationStatus::Confirmed->value)
             ->count();
 
@@ -101,7 +106,7 @@ class InteractionController
                 ->update(['auto_join' => false]);
         }
 
-        $finalConfirmedRegistrations = $gameSession->registration()
+        $finalConfirmedRegistrations = $gameSession->registrations()
             ->where('status', RegistrationStatus::Confirmed->value)
             ->count();
 

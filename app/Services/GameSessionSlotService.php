@@ -15,9 +15,9 @@ class GameSessionSlotService
     public static function getSlotDefinitions(): array
     {
         return [
-            ['label' => 'Friday · 18:00',   'dayOffset' => 4, 'hour' => 18, 'minute' => 0],
-            ['label' => 'Saturday · 15:00', 'dayOffset' => 5, 'hour' => 15, 'minute' => 0],
-            ['label' => 'Sunday · 13:00',   'dayOffset' => 6, 'hour' => 13, 'minute' => 0],
+            ['label' => 'Friday ~ 18:00',   'dayOffset' => 4, 'hour' => 18, 'minute' => 0],
+            ['label' => 'Saturday ~ 15:00', 'dayOffset' => 5, 'hour' => 15, 'minute' => 0],
+            ['label' => 'Sunday ~ 13:00',   'dayOffset' => 6, 'hour' => 13, 'minute' => 0],
         ];
     }
 

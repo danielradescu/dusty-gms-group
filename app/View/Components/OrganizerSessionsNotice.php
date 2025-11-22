@@ -2,7 +2,7 @@
 
 namespace App\View\Components;
 
-use App\Enums\GameSessionType;
+use App\Enums\GameSessionStatus;
 use Closure;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
@@ -24,8 +24,8 @@ class OrganizerSessionsNotice extends Component
             $this->pendingSessions = GameSession::query()
                 ->where('organized_by', $user->id)
                 ->where('start_at', '>', now())
-                ->whereIn('type', [
-                    GameSessionType::RECRUITING_PARTICIPANTS
+                ->whereIn('status', [
+                    GameSessionStatus::RECRUITING_PARTICIPANTS
                 ])
                 ->orderBy('start_at')
                 ->get();
@@ -33,7 +33,7 @@ class OrganizerSessionsNotice extends Component
             $this->finishedSessions = GameSession::query()
                 ->where('organized_by', $user->id)
                 ->where('start_at', '<', now())
-                ->whereIn('type', [ GameSessionType::CONFIRMED_BY_ORGANIZER ])
+                ->whereIn('status', [ GameSessionStatus::CONFIRMED_BY_ORGANIZER ])
                 ->orderBy('start_at') ->get();
         }
     }

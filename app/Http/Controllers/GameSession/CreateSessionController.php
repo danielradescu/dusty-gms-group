@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\GameSession;
 
 use App\Enums\GameComplexity;
-use App\Enums\GameSessionType;
+use App\Enums\GameSessionStatus;
 use App\Enums\RegistrationStatus;
 use App\Enums\Role;
+use App\Http\Requests\CreateGameSessionRequest;
 use Carbon\Carbon;
 use Illuminate\Routing\Controller;
-use App\Http\Requests\StoreGameSessionRequest;
 use App\Models\GameSession;
 use App\Models\GameSessionRequest;
 use App\Models\Registration;
@@ -71,7 +71,7 @@ class CreateSessionController extends Controller
         return view('game-session.create', $toReturn);
     }
 
-    public function store(StoreGameSessionRequest $request)
+    public function store(CreateGameSessionRequest $request)
     {
         $validated = $request->validated();
         $organizer = !empty($validated['organized_by']) ? User::findOrFail($validated['organized_by']) : auth()->user();
@@ -92,7 +92,7 @@ class CreateSessionController extends Controller
                 'max_players' => $validated['max_players'],
                 'complexity' => $validated['complexity'],
                 'organized_by' => $organizer->id,
-                'type' => GameSessionType::RECRUITING_PARTICIPANTS->value,
+                'status' => GameSessionStatus::RECRUITING_PARTICIPANTS->value,
                 'delay_until' => $delayUntil,
             ]);
 
@@ -103,7 +103,7 @@ class CreateSessionController extends Controller
 
             $notifications = app(GroupNotificationService::class)->gameSessionCreated($gameSession->id, $delayUntil ? $hoursDelay : null);
             XP::grant($organizer, 'organizer_create_session');
-
+            app(UserNotificationService::class)->organizerOfASession($gameSession->organized_by, $gameSession->id);
 
             // 1️⃣ Get all auto-joining users for the session date (excluding organizer)
             $usersToAutoJoin = GameSessionRequest::with('user')
@@ -129,7 +129,10 @@ class CreateSessionController extends Controller
 
                 //the auto-joiner will not auto-join but will be later notified
                 if ($delayUntil) {
-                    $notifications->push(app(UserNotificationService::class)->gameSessionCreated($userToJoin->id, $gameSession->id, $hoursDelay));
+                    //skip the notification for organizer
+                    if ($userToJoin->id != $organizer->id) {
+                        $notifications->push(app(UserNotificationService::class)->gameSessionCreated($userToJoin->id, $gameSession->id, $hoursDelay));
+                    }
                     continue;
                 }
 
@@ -147,8 +150,12 @@ class CreateSessionController extends Controller
                     $gameRequest->auto_join = false; //disable auto-join if session was created that day, but still receive notifications about other sessions
                     $gameRequest->save();
                 }
-                app(UserNotificationService::class)->gameSessionDayMatchedAndAutoJoined($userToJoin->id, $gameSession->start_at->toDateString());
-                XP::grantOncePerDay($userToJoin, 'interacted_with_game_session');
+
+                //don't notify the organizer about auto-join or give XP, it's already assumed
+                if ($userToJoin->id != $organizer->id) {
+                    app(UserNotificationService::class)->gameSessionDayMatchedAndAutoJoined($userToJoin->id, $gameSession->start_at->toDateString());
+                    XP::grantOncePerDay($userToJoin, 'interacted_with_game_session');
+                }
                 $confirmedRegistrations++;
             }
 

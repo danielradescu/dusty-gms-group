@@ -2,7 +2,7 @@
 
 namespace App\View\Components;
 
-use App\Enums\GameSessionType;
+use App\Enums\GameSessionStatus;
 use App\Enums\RegistrationStatus;
 use App\Models\GameSession;
 use Closure;
@@ -24,15 +24,14 @@ class ParticipantConfirmedSessionNotice extends Component
         }
 
         // Get sessions where user is a confirmed participant,
-        // NOT the organizer, and the session is still upcoming
+        // and the session is still upcoming
         $this->confirmedSessions = GameSession::query()
-            ->where('organized_by', '!=', $user->id) // exclude organizer-owned sessions
-            ->whereHas('registration', function ($query) use ($user) {
+            ->whereHas('registrations', function ($query) use ($user) {
                 $query->where('user_id', $user->id)
                     ->where('status', RegistrationStatus::Confirmed->value);
             })
             ->where('start_at', '>', now()) // upcoming only
-            ->where('type', GameSessionType::CONFIRMED_BY_ORGANIZER) // confirmed sessions
+            ->where('status', GameSessionStatus::CONFIRMED_BY_ORGANIZER) // confirmed sessions
             ->orderBy('start_at')
             ->get();
     }

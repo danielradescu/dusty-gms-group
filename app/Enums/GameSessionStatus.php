@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum GameSessionType: int
+enum GameSessionStatus: int
 {
     case RECRUITING_PARTICIPANTS = 1;
     case CONFIRMED_BY_ORGANIZER = 2;

@@ -30,4 +30,14 @@ class CreateCommentRequest extends FormRequest
             'body' => ['required', 'string', 'min:2', 'max:1000'],
         ];
     }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        $response = redirect()
+            ->to(url()->previous() . '#post-comment')
+            ->withErrors($validator)
+            ->withInput();
+
+        throw new \Illuminate\Validation\ValidationException($validator, $response);
+    }
 }

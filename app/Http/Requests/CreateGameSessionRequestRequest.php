@@ -6,7 +6,7 @@ use App\Services\GameSessionSlotService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class GameSessionRequestRequest extends FormRequest
+class CreateGameSessionRequestRequest extends FormRequest
 {
     public function authorize(): bool
     {

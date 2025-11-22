@@ -4,9 +4,10 @@
             🎲 {{ __('Create New Game Session') }}
         </h2>
     </x-slot>
-    {{--@include('partials._errors')--}}
 
-    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+<div class="py-12 pb-0">
+    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 mt-1">
+{{--        @include('partials._errors')--}}
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900 dark:text-gray-100">
                 <form action="{{ route('game-sessions.store') }}" method="POST" class="space-y-6">
@@ -88,6 +89,7 @@
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700
                                 dark:bg-gray-800 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         required
+                        value="{{old('start_at')}}"
                         onfocus="this.showPicker && this.showPicker()" {{-- ✅ triggers calendar open if supported --}}
                     >
                     <x-input-error :messages="$errors->get('start_at')" class="mt-2"/>
@@ -175,4 +177,5 @@
             </div>
         </div>
     </div>
+</div>
 </x-app-layout>

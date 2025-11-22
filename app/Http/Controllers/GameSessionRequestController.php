@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Role;
-use App\Http\Requests\GameSessionRequestRequest;
+use App\Http\Requests\CreateGameSessionRequestRequest;
 use App\Models\GameSessionRequest;
 use App\Services\GameSessionSlotService;
 use App\Services\GroupNotificationService;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class GameSessionRequestController extends Controller
 {
-    public function store(GameSessionRequestRequest $request)
+    public function store(CreateGameSessionRequestRequest $request)
     {
         $gameSessionRequests = $request->get('requests');
         $toCreate = [];
@@ -68,6 +68,6 @@ class GameSessionRequestController extends Controller
 
         });
 
-        return redirect()->back();
+        return redirect()->back()->withFragment('week-session-request');
     }
 }

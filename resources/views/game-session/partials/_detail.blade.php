@@ -1,4 +1,4 @@
-<div class="mt-5 bg-white dark:bg-gray-800 overflow-hidden shadow rounded-xl">
+<div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-xl">
     <!-- Card body -->
     <div class="p-6 text-gray-900 dark:text-gray-100 space-y-4">
 
@@ -13,10 +13,10 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400 font-semibold uppercase">Status</p>
                 <p>
                     <span class="px-2 py-1 rounded-full text-xs font-medium
-                        {{ $gameSession->type === \App\Enums\GameSessionType::CONFIRMED_BY_ORGANIZER
+                        {{ $gameSession->status === \App\Enums\GameSessionStatus::CONFIRMED_BY_ORGANIZER
                             ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200'
                             : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100' }}">
-                        {{ $gameSession->type->label() }}
+                        {{ $gameSession->status->label() }}
                     </span>
                 </p>
             </div>
@@ -52,7 +52,8 @@
                     @endfor
                 </div>
 
-                <p><strong>{{$gameSession->complexity->label()}}</strong> - {{$gameSession->complexity->description()}}</p>
+                <p><strong>{{$gameSession->complexity->label()}}</strong> - {{$gameSession->complexity->description()}}
+                </p>
             </div>
         </div>
 
@@ -115,86 +116,92 @@
         <!-- User Interaction -->
         <div class="pt-6 center-items">
             @if(auth()->check())
-
-                @if($registrationStatus)
-                    <p class="mb-2">You are currently marked as <strong><span class="px-2 py-1 rounded-full text-xs font-medium
-                                {{ $registrationStatus->value === \App\Enums\RegistrationStatus::Confirmed->value
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200'
-                                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100' }}">
-                                {{ $registrationStatus->label() }}
-                            </span></strong>.</p>
-                    @if ($gameSession->organized_by != auth()->user()->id)
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that?</p>
-                    @else
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that? As an organizer you need to assign another user as organizer before leaving this game session.</p>
+                @if ($gameSession->isEditable())
+                    @if($registrationStatus)
+                        <p class="mb-2">You are currently marked as <strong><span class="px-2 py-1 rounded-full text-xs font-medium
+                                    {{ $registrationStatus->value === \App\Enums\RegistrationStatus::Confirmed->value
+                                        ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200'
+                                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100' }}">
+                                    {{ $registrationStatus->label() }}
+                                </span></strong>.</p>
+                        @if ($gameSession->organized_by != auth()->user()->id)
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that?</p>
+                        @else
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that? As an
+                                organizer you need to assign another user as organizer before leaving this game session.</p>
+                        @endif
                     @endif
-                @endif
-                @if ($gameSession->organized_by != auth()->user()->id)
-                    <form action="{{ route('game-session.interaction.store', $gameSession->uuid) }}" method="POST" class="space-y-3">
-                        @csrf
-                        @if ($gameSession->hasOpenPositions())
-                            @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
-                                <button type="submit" name="action" value="confirm"
-                                        class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
-                                                   shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
-                                                   dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
-                                    🎯 Count me in — reserve my seat!
-                                </button>
-                            @endif
-
-                            @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::RemindMe2Days->value)
-                                @php
-                                    $hoursUntilTwoDaysBeforeEvent = (int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false)
-                                @endphp
-
-                                @if($hoursUntilTwoDaysBeforeEvent > 2)
-                                    <button type="submit" name="action" value="2day"
-                                            class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
-                                               hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
-                                               dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
-                                        ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still deciding.
+                    @if ($gameSession->organized_by != auth()->user()->id)
+                        <form action="{{ route('game-session.interaction.store', $gameSession->uuid) }}" method="POST"
+                              class="space-y-3">
+                            @csrf
+                            @if ($gameSession->hasOpenPositions())
+                                @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
+                                    <button type="submit" name="action" value="confirm"
+                                            class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
+                                                       shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
+                                                       dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
+                                        🎯 Count me in — reserve my seat!
                                     </button>
                                 @endif
 
-                            @endif
-                        @else
-                            @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::OpenPosition->value)
-                                <button type="submit" name="action" value="openPosition"
-                                        class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
+                                @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::RemindMe2Days->value)
+                                    @php
+                                        $hoursUntilTwoDaysBeforeEvent = (int)now()->diffInHours($gameSession->start_at->copy()->subDays(2), false)
+                                    @endphp
+
+                                    @if($hoursUntilTwoDaysBeforeEvent > 2)
+                                        <button type="submit" name="action" value="2day"
+                                                class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
                                                    hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
                                                    dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
-                                    ⏰ Let me know as soon as a position is opened
+                                            ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still
+                                            deciding.
+                                        </button>
+                                    @endif
+                                @endif
+                            @else
+                                @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::OpenPosition->value)
+                                    <button type="submit" name="action" value="openPosition"
+                                            class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
+                                                       hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
+                                                       dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
+                                        ⏰ Let me know as soon as a position is opened
+                                    </button>
+                                @endif
+                            @endif
+
+
+
+                            @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Declined->value)
+                                <button type="submit" name="action" value="decline"
+                                        class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-700
+                                                 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300
+                                                 dark:border-gray-700 dark:bg-gray-800/30 dark:text-gray-300 dark:hover:bg-gray-800/50">
+                                    🚫 I can’t make it
                                 </button>
                             @endif
-                        @endif
-
-
-
-                        @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Declined->value)
-                            <button type="submit" name="action" value="decline"
-                                    class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-700
-                                             hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300
-                                             dark:border-gray-700 dark:bg-gray-800/30 dark:text-gray-300 dark:hover:bg-gray-800/50">
-                                🚫 I can’t make it
-                            </button>
-                        @endif
-                    </form>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 italic leading-relaxed">
-                        By interacting with this game session (for example by showing interest or confirming attendance),
-                        you agree to receive related updates and notifications about the event and its status
-                        from now until the session has concluded. These may include reminders, schedule adjustments,
-                        and important announcements necessary for participation and coordination.
-                    </p>
-                @else
+                        </form>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 italic leading-relaxed">
+                            By interacting with this game session (for example by showing interest or confirming
+                            attendance),
+                            you agree to receive related updates and notifications about the event and its status
+                            from now until the session has concluded. These may include reminders, schedule adjustments,
+                            and important announcements necessary for participation and coordination.
+                        </p>
+                    @else
                         <a href="{{ route('game-session.manage.edit', $gameSession->uuid) }}"
                            class="block w-full text-center px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
-          shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
-          dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800 transition">
+                                  shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
+                                  dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800 transition">
                             ⚙️ Manage session
                         </a>
+                    @endif
+                @else
+                    <p class="text-xs text-gray-500 dark:text-gray-400 italic leading-relaxed">
+                        Organizer note: {{$gameSession->note}}
+                    </p>
                 @endif
-
-
             @else
                 @php
                     // Save intended URL if user sees this section

@@ -19,7 +19,7 @@ class NotificationSubscriptionController extends Controller
             ->toArray();
         $toReturn["user"] = auth()->user();
 
-        return view('notification.edit')->with($toReturn);
+        return view('notification-subscriptions.edit')->with($toReturn);
     }
 
     public function update(NotificationUpdateRequest $request)
@@ -31,7 +31,7 @@ class NotificationSubscriptionController extends Controller
         if ($request->has('no_notifications') && $request->get('no_notifications')) {
             $user->notifications_disabled = true;
             $user->save();
-            return redirect()->route('notification.edit');
+            return redirect()->route('notification-subscription.edit');
         } else {
             $user->notifications_disabled = false;
             $user->save();
@@ -48,6 +48,6 @@ class NotificationSubscriptionController extends Controller
 
 
 
-        return redirect()->route('notification.edit')->with('status', true);
+        return redirect()->route('notification-subscription.edit')->with('status', true);
     }
 }

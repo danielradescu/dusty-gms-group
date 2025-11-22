@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\GameSessionType;
+use App\Enums\GameSessionStatus;
 use App\Enums\Role;
 use App\Models\GameSession;
 use App\Models\User;
@@ -30,7 +30,7 @@ class GameSessionFactory extends Factory
             'min_players' => $this->faker->numberBetween(2, 4),
             'max_players' => $this->faker->numberBetween(4, 12),
             'complexity' => $this->faker->randomFloat(2, 0, 5),
-            'type' => collect(GameSessionType::cases())->random(),
+            'type' => collect(GameSessionStatus::cases())->random(),
             'start_at' => $randomDate,
             'organized_by' => User::role([Role::ORGANIZER->value, Role::ADMIN->value])->inRandomOrder()->first()->id,
             'location' => $this->faker->company(),
@@ -45,7 +45,7 @@ class GameSessionFactory extends Factory
     {
         return $this->afterCreating(function (GameSession $gameSession) {
             // Assign random note in certain cases
-            if (in_array($gameSession->type, [GameSessionType::FAILED, GameSessionType::SUCCEEDED, GameSessionType::CANCELLED])) {
+            if (in_array($gameSession->status, [GameSessionStatus::FAILED, GameSessionStatus::SUCCEEDED, GameSessionStatus::CANCELLED])) {
                 $gameSession->note = $this->faker->text();
                 $gameSession->save();
             }

@@ -1,4 +1,4 @@
-<div x-data="{ open:false }" class="py-10">
+<div id="week-session-request" class="py-10">
     <!-- Header / status row shown above -->
     <div class="mb-3">
         <div>
@@ -47,8 +47,7 @@
     </div>
     @include('partials._errors')
     <!-- Form -->
-    <div
-         class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-5">
+
         <form action="{{ route('game-session-request.store') }}" method="POST" class="space-y-4">
             @csrf
             <p class="text-sm text-gray-600 dark:text-gray-300">
@@ -87,8 +86,8 @@
                                     {{ $disabled ? 'disabled' : '' }}
                                 {{$slot['value'] == "auto" ? 'checked' : ''}}>
                                 <span class="text-sm text-gray-700 dark:text-gray-300">
-                                    <b>Auto-join</b> if a session is created for this slot.
-                                    You’ll also receive an email notification.
+                                    <b>Auto-join and notify</b> the first game session that is created for this day.
+                                    You’ll also receive a notifications about the other game session created in this day.
                                 </span>
                             </label>
 
@@ -101,7 +100,7 @@
                                     {{ $disabled ? 'disabled' : '' }}
                                     {{$slot['value'] == "notify" ? 'checked' : ''}}>
                                 <span class="text-sm text-gray-700 dark:text-gray-300">
-                                    <b>Only notify me</b> when a session is created for this slot.
+                                    <b>Notify me</b> every time a session is created this day.
                                 </span>
                             </label>
 
@@ -137,5 +136,5 @@
                 </button>
             </div>
         </form>
-    </div>
+
 </div>

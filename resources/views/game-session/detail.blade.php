@@ -26,10 +26,11 @@
             <meta name="twitter:image" content="{{ asset('images/complexity/' . $gameSession->complexity->label() . '.png') }}">
         @endif
     </x-slot>
-
-    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-        @include('game-session.partials._detail', [$gameSession, $registrations, $registrationStatus])
-        @include('game-session.partials._comments', [$comments, $gameSession])
+    <div class="py-12 pb-0">
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+            @include('game-session.partials._detail', [$gameSession, $registrations, $registrationStatus])
+            @include('game-session.partials._comments', [$comments, $gameSession])
+        </div>
     </div>
 
 </x-app-layout>

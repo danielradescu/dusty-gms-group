@@ -37,7 +37,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/game-session/{uuid}/created', [CreateSessionController::class, 'show'])->name('game-session.create.show');
     Route::post('/game-session/{uuid}', [InteractionController::class, 'store'])->name('game-session.interaction.store');
     Route::get('/game-session/{uuid}/manage', [ManagementController::class, 'edit'])->name('game-session.manage.edit');
-    Route::patch('/game-session/{uuid}', [ManagementController::class, 'update'])->name('game-session.manage.update.details');
+    Route::patch('/game-session/{uuid}/core-info', [ManagementController::class, 'updateCoreInfo'])->name('game-session.manage.update.core-info');
+    Route::patch('/game-session/{uuid}/status', [ManagementController::class, 'updateStatus'])->name('game-session.manage.update.status');
+    Route::patch('/game-session/{uuid}/organizer', [ManagementController::class, 'updateOrganizer'])->name('game-session.manage.update.organizer');
 
     //comments:
     Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');

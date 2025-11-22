@@ -13,4 +13,6 @@ enum NotificationType: int
     case OPEN_SLOT_AVAILABLE = 7;   // user wants to join if a slot opens
     case ORGANIZER_PROMPT_CREATE = 8; // “at least two requested a session on same day”
     case NEW_COMMENT = 9;  // a comment was added to a session
+    case ORGANIZER_OF_A_SESSION = 10; //you are now the organizer of a session, here are the steps to fallow 1,2,3...
+    // this notification for when you organize or other promote you to organizer of a session (admin when create a session || organizer or admin when they manage session)
 }

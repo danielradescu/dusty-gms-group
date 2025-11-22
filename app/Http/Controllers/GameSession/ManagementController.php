@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\GameSession;
 
 use App\Enums\GameComplexity;
+use App\Enums\GameSessionStatus;
 use App\Enums\NotificationType;
 use App\Enums\RegistrationStatus;
 
-use App\Http\Requests\StoreGameSessionRequest;
+use App\Http\Requests\GameSession\UpdateCoreInfoRequest;
+use App\Http\Requests\GameSession\UpdateOrganizerRequest;
+use App\Http\Requests\GameSession\UpdateStatusRequest;
+use App\Http\Requests\CreateGameSessionRequestRequest;
 use App\Models\GameSession;
 use App\Models\GameSessionRequest;
 use App\Models\Registration;
@@ -30,20 +34,78 @@ class ManagementController extends Controller
 
     public function edit($uuid)
     {
-        $gameSession = GameSession::with('comments', 'comments.user', 'registration')->where('uuid', $uuid)->firstOrFail();
+        $gameSession = GameSession::with('comments.user', 'registrations.user')->where('uuid', $uuid)->firstOrFail();
+
+        // Deny if not found or status is not RECRUITING_PARTICIPANTS or CONFIRMED_BY_ORGANIZER
+        if (! $gameSession->isEditable()) {
+            abort(403, 'At this point in time the session is not editable.');
+        }
 
         $toReturn = [
             'gameSession' => $gameSession,
             'comments' => $gameSession->comments()->orderBy('created_at', 'desc')->get(),
-            'confirmedRegistrations' => $gameSession->registration()->where('status', RegistrationStatus::Confirmed->value)->get(),
+            'confirmedRegistrations' => $gameSession->registrations()->where('status', RegistrationStatus::Confirmed->value)->get(),
         ];
 
         return view('game-session.edit', $toReturn);
     }
 
-    public function update(Request $request, $uuid)
+    public function updateCoreInfo(UpdateCoreInfoRequest $request, $uuid)
+    {
+        //can't update core data if session was confirmed
+        $gameSession = GameSession::where('uuid', $uuid)->where('status', GameSessionStatus::RECRUITING_PARTICIPANTS)->firstOrFail();
+
+        // only the fields defined in your FormRequest rules
+        $data = $request->validated();
+
+        // Handle time update safely
+        if (isset($data['start_at_time'])) {
+            $gameSession->start_at = $gameSession->start_at->copy()->setTimeFromTimeString($data['start_at_time']);
+            unset($data['start_at_time']);
+        }
+
+        $gameSession->update($data);
+
+        return redirect()->back()->with('coreInfoSaved', true)->withFragment('session-detail-management');
+    }
+
+    public function updateStatus(UpdateStatusRequest $request, $uuid)
     {
         $gameSession = GameSession::where('uuid', $uuid)->firstOrFail();
-        dd($gameSession);
+
+        // only the fields defined in your FormRequest rules
+        $data = $request->validated();
+
+        // Compare new vs current status
+        $statusChanged = array_key_exists('status', $data) && $data['status'] !== $gameSession->status;
+
+        if ($statusChanged) {
+            $gameSession->status = $data['status'];
+            $gameSession->note = $data['cancel_reason'];
+            $gameSession->save();
+            // ✅ Only notify if status actually changed
+            app(GroupNotificationService::class)->gameSessionConfirmed($gameSession->id);
+        }
+        if ($gameSession->status === GameSessionStatus::CANCELLED) {
+            return redirect()->route('game-session.interaction.show', $gameSession->uuid);
+        }
+
+        return redirect()->back()->with('statusSaved', true)->withFragment('status-session-management');
+
+    }
+
+    public function updateOrganizer(UpdateOrganizerRequest $request, $uuid)
+    {
+        $gameSession = GameSession::with('registrations')->where('uuid', $uuid)->firstOrFail();
+
+        // only the fields defined in your FormRequest rules
+        $data = $request->validated();
+
+        $gameSession->organized_by = $data['new_organizer_id'];
+        $gameSession->save();
+
+        app(UserNotificationService::class)->organizerOfASession($gameSession->organized_by, $gameSession->id);
+
+        return redirect()->route('game-session.interaction.show', $gameSession->uuid);
     }
 }

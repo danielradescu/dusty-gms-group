@@ -1,7 +1,7 @@
 <!-- 🧩 Session Details Management -->
-<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+<div id="session-detail-management" class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
     <div class="p-6 text-gray-900 dark:text-gray-100">
-        <form action="{{ route('game-session.manage.update.details', $gameSession->uuid) }}" method="POST"
+        <form action="{{ route('game-session.manage.update.core-info', $gameSession->uuid) }}" method="POST"
               class="space-y-6">
             @csrf
             @method('PATCH')
@@ -123,13 +123,14 @@
                 <!-- Checkbox -->
                 <label class="flex items-start gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-700
                                 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition cursor-pointer">
-                    <input type="checkbox" class="change-confirm mt-1 h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded
+                    <input type="checkbox" name="confirm_core_info" value="1" class="change-confirm mt-1 h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded
                                     dark:border-gray-600 dark:focus:ring-indigo-400 dark:focus:ring-offset-gray-900">
                     <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                             <strong>Yes, I want to make changes!</strong><br>
                             Selecting this will reveal the save button and allow you to update session details.
                         </span>
                 </label>
+                <x-input-error :messages="$errors->get('confirm_core_info')" class="mt-2" />
 
                 <!-- Submit Button (hidden until checkbox checked) -->
                 <div class="save-button hidden mt-4">
@@ -137,6 +138,15 @@
                         💾 Save Session Details
                     </x-primary-button>
                 </div>
+                @if (session('coreInfoSaved'))
+                    <span
+                        x-data="{ show: true }"
+                        x-show="show"
+                        x-transition
+                        x-init="setTimeout(() => show = false, 5000)"
+                        class="text-sm text-gray-600 dark:text-gray-400"
+                    >{{ __('Saved.') }}</span>
+                @endif
             </div>
         </form>
     </div>

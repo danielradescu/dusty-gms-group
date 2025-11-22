@@ -1,4 +1,4 @@
-<div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+<div class="{{ request()->routeIs('dashboard') ? 'max-w-7xl' : 'max-w-5xl' }} mx-auto sm:px-6 lg:px-8">
     @if($pendingSessions->isNotEmpty())
         <div
             class="bg-amber-100 border-l-4 border-amber-500 text-amber-900 dark:bg-amber-900/40 dark:border-amber-500 dark:text-amber-100 p-4 mt-1 rounded-md shadow-sm">

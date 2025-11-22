@@ -8,7 +8,9 @@
 
     <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
         <div class="mt-8 space-y-6">
-            @include('game-session.partials.manage._core_info',[$gameSession, $confirmedRegistrations])
+            @if ($gameSession->status === \App\Enums\GameSessionStatus::RECRUITING_PARTICIPANTS)
+                @include('game-session.partials.manage._core_info',[$gameSession, $confirmedRegistrations])
+            @endif
             @include('game-session.partials.manage._status',[$gameSession, $confirmedRegistrations])
             @include('game-session.partials.manage._organizer',[$gameSession, $confirmedRegistrations])
             @include('game-session.partials._comments', [$comments, $gameSession])
@@ -36,13 +38,19 @@
     document.addEventListener('DOMContentLoaded', () => {
         const statusSelect = document.getElementById('status');
         const reasonBox = document.getElementById('cancel-reason-container');
+        const cancelValue = "{{ \App\Enums\GameSessionStatus::CANCELLED->value }}";
 
-        statusSelect.addEventListener('change', () => {
-            if (statusSelect.value === 'canceled_by_organizer') {
+        const toggleReasonBox = () => {
+            if (statusSelect.value === cancelValue) {
                 reasonBox.classList.remove('hidden');
             } else {
                 reasonBox.classList.add('hidden');
             }
-        });
+        };
+
+        statusSelect.addEventListener('change', toggleReasonBox);
+
+        // ✅ Trigger on initial load (handles validation error case)
+        toggleReasonBox();
     });
 </script>

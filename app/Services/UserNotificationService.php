@@ -199,4 +199,16 @@ class UserNotificationService
             hashParts: [$sessionId, NotificationType::NEW_COMMENT->name, $comment->user->id, now()->format('Y-m-d-H')] //only once in an hour
         );
     }
+
+    /** When a new session created or when organizer changed, the organizer will receive a notification with the steps to fallow*/
+    public function organizerOfASession(int $userId, int $sessionId): Notification
+    {
+        return $this->schedule(
+            userId: $userId,
+            type: NotificationType::ORGANIZER_OF_A_SESSION,
+            data: ['session_id' => $sessionId],
+            sendAt: now()->addMinute(),
+            hashParts: [$sessionId, NotificationType::ORGANIZER_PROMPT_CREATE->name, now()->format('Y-m-d')] //if any changes in the organizer, only once a day
+        );
+    }
 }
