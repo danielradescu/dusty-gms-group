@@ -12,12 +12,7 @@
             <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 font-semibold uppercase">Status</p>
                 <p>
-                    <span class="px-2 py-1 rounded-full text-xs font-medium
-                        {{ $gameSession->status === \App\Enums\GameSessionStatus::CONFIRMED_BY_ORGANIZER
-                            ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200'
-                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100' }}">
-                        {{ $gameSession->status->label() }}
-                    </span>
+                    <x-session-status-badge :status="$gameSession->status" />
                 </p>
             </div>
 
@@ -118,12 +113,7 @@
             @if(auth()->check())
                 @if ($gameSession->isEditable())
                     @if($registrationStatus)
-                        <p class="mb-2">You are currently marked as <strong><span class="px-2 py-1 rounded-full text-xs font-medium
-                                    {{ $registrationStatus->value === \App\Enums\RegistrationStatus::Confirmed->value
-                                        ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200'
-                                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100' }}">
-                                    {{ $registrationStatus->label() }}
-                                </span></strong>.</p>
+                        <p class="mb-2">You are currently marked as <x-registration-status-badge :status="$registrationStatus" /></p>
                         @if ($gameSession->organized_by != auth()->user()->id)
                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that?</p>
                         @else
