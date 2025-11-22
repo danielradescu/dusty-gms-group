@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GameSession\CreatedSessionReportController;
 use App\Http\Controllers\GameSession\CreateSessionController;
 use App\Http\Controllers\GameSession\InteractionController;
 use App\Http\Controllers\GameSession\ManagementController;
 use App\Http\Controllers\GameSessionRequestController;
+use App\Http\Controllers\InAppNotificationController;
 use App\Http\Controllers\MagicLoginController;
 use App\Http\Controllers\NotificationSubscriptionController;
 use App\Http\Controllers\PageController;
@@ -48,8 +48,11 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/game-session-request', [GameSessionRequestController::class, 'store'])->name('game-session-request.store');
 
     //notification subscriptions
-    Route::get('/notification', [NotificationSubscriptionController::class, 'edit'])->name('notification.edit');
-    Route::post('/notification', [NotificationSubscriptionController::class, 'update'])->name('notification.update');
+    Route::get('/notification', [NotificationSubscriptionController::class, 'edit'])->name('notification-subscription.edit');
+    Route::post('/notification', [NotificationSubscriptionController::class, 'update'])->name('notification-subscription.update');
+
+    //notifications:
+    Route::get('/notifications', [InAppNotificationController::class, 'index'])->name('in-app-notifications.index');
 });
 
 //Pages:
