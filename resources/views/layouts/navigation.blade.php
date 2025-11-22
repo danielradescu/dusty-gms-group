@@ -23,7 +23,13 @@
                         @if(Auth::user()->hasOrganizerPermission())
                             <x-nav-link :href="route('game-sessions.create')"
                                         :active="request()->routeIs('game-sessions.create')">
-                                {{ __('Create Board Game Session') }}
+                                {{ __('Create Session') }}
+                            </x-nav-link>
+                        @endif
+                        @if(Auth::user()->hasAdminPermission())
+                            <x-nav-link :href="route('admin.users.index')"
+                                        :active="request()->routeIs('admin.users.index')">
+                                {{ __('Users') }}
                             </x-nav-link>
                         @endif
                     @endif
@@ -129,7 +135,13 @@
                 @if(Auth::user()->hasOrganizerPermission())
                     <x-responsive-nav-link :href="route('game-sessions.create')"
                                            :active="request()->routeIs('game-sessions.create')">
-                        {{ __('Create Board Game Session') }}
+                        {{ __('Create Session') }}
+                    </x-responsive-nav-link>
+                @endif
+                @if(Auth::user()->hasAdminPermission())
+                    <x-responsive-nav-link :href="route('admin.users.index')"
+                                           :active="request()->routeIs('admin.users.index')">
+                        {{ __('Users') }}
                     </x-responsive-nav-link>
                 @endif
             @endif

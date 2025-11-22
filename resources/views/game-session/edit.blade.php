@@ -10,6 +10,8 @@
         <div class="mt-8 space-y-6">
             @if ($gameSession->status === \App\Enums\GameSessionStatus::RECRUITING_PARTICIPANTS)
                 @include('game-session.partials.manage._core_info',[$gameSession, $confirmedRegistrations])
+            @else
+                @include('game-session.partials.manage._participants',[$gameSession, $confirmedRegistrations])
             @endif
             @include('game-session.partials.manage._status',[$gameSession, $confirmedRegistrations])
             @include('game-session.partials.manage._organizer',[$gameSession, $confirmedRegistrations])

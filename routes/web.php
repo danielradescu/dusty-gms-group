@@ -11,6 +11,7 @@ use App\Http\Controllers\MagicLoginController;
 use App\Http\Controllers\NotificationSubscriptionController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -53,6 +54,13 @@ Route::middleware('auth', 'verified')->group(function () {
 
     //notifications:
     Route::get('/notifications', [InAppNotificationController::class, 'index'])->name('in-app-notifications.index');
+
+    //admin user management
+    Route::prefix('admin')->group(function () {
+        Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/{user}/edit', [UserManagementController::class, 'edit'])->name('admin.user.edit');
+        Route::patch('/users/{user}', [UserManagementController::class, 'update'])->name('admin.user.update');
+    });
 });
 
 //Pages:
