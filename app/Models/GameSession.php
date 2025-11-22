@@ -67,4 +67,10 @@ class GameSession extends Model
             && in_array($this->status, [GameSessionStatus::RECRUITING_PARTICIPANTS, GameSessionStatus::CONFIRMED_BY_ORGANIZER]);
     }
 
+    public function myRegistration()
+    {
+        return $this->hasOne(\App\Models\Registration::class)
+            ->where('user_id', auth()->id());
+    }
+
 }

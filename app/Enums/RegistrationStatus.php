@@ -13,19 +13,10 @@ enum RegistrationStatus: int
     public function label(): string
     {
         return match($this) {
-            self::RemindMe2Days => 'Interested, remind me 2 days prior the session start.',
-            self::OpenPosition => 'Interested, let me know when a new position is opened.',
-            self::Confirmed => 'Confirmed',
-            self::Declined => 'Declined',
-        };
-    }
-
-    public function color(): string
-    {
-        return match($this) {
-            self::RemindMe2Days, self::OpenPosition => 'text-blue-500',
-            self::Confirmed => 'text-green-500',
-            self::Declined => 'text-red-500',
+            self::RemindMe2Days => 'Interested — notify me 2 days before the session.',
+            self::OpenPosition  => 'Interested — notify me when a seat becomes available.',
+            self::Confirmed     => 'Confirmed — I’m attending this session.',
+            self::Declined      => 'Declined — I won’t be joining this session.',
         };
     }
 }

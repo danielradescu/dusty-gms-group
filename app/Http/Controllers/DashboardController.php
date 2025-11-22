@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $toReturn['gameSessions'] = GameSession::whereBetween('start_at', [
             Carbon::now(),
             Carbon::now()->endOfWeek(),
-        ])->with('organizer')->orderBy('start_at', 'asc')->get();
+        ])->with('organizer', 'registrations', 'myRegistration')->orderBy('start_at', 'asc')->get();
 
         $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests;
         $toReturn['slots'] = GameSessionSlotService::getCurrentWeekSlots($toReturn['gameSessionRequests']);
