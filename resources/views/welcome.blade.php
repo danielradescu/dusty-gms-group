@@ -15,6 +15,25 @@
 
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
 
+<section class="w-full bg-amber-200 dark:bg-amber-700 py-6 shadow-inner border-y border-amber-400 dark:border-amber-600">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+
+            <span class="text-3xl">🚧</span>
+
+            <p class="text-lg font-semibold text-amber-900 dark:text-amber-100">
+                This platform is currently a <strong>work in progress</strong>.
+            </p>
+
+        </div>
+
+        <p class="mt-3 text-sm text-amber-800 dark:text-amber-200">
+            Features, visuals, and content are still being refined.
+            Thank you for your patience and feedback while we build the best experience for our community.
+        </p>
+    </div>
+</section>
+
 <!-- =============================== -->
 <!-- SECTION A — HERO -->
 <!-- =============================== -->
