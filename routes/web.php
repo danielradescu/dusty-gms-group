@@ -15,7 +15,7 @@ use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('dashboard');
+    return view('welcome');
 });
 
 Route::middleware('auth')->group(function () {

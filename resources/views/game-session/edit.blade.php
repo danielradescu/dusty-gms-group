@@ -3,16 +3,15 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             🎲 {{ $gameSession->name }}
         </h2>
-        <p class="text-sm text-gray-800 dark:text-gray-400">{{ $gameSession->description }}</p>
+        <p class="text-sm text-gray-800 dark:text-gray-400">{!! \App\Helpers\TextHelper::linkify($gameSession->description ?? 'To be decided') !!}</p>
     </x-slot>
 
     <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
         <div class="mt-8 space-y-6">
             @if ($gameSession->status === \App\Enums\GameSessionStatus::RECRUITING_PARTICIPANTS)
                 @include('game-session.partials.manage._core_info',[$gameSession, $confirmedRegistrations])
-            @else
-                @include('game-session.partials.manage._participants',[$gameSession, $confirmedRegistrations])
             @endif
+            @include('game-session.partials.manage._participants',[$gameSession, $confirmedRegistrations])
             @include('game-session.partials.manage._status',[$gameSession, $confirmedRegistrations])
             @include('game-session.partials.manage._organizer',[$gameSession, $confirmedRegistrations])
             @include('game-session.partials._comments', [$comments, $gameSession])

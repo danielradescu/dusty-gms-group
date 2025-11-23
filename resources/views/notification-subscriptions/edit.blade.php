@@ -26,7 +26,7 @@
                                         dark:border-gray-600 dark:focus:ring-red-400 dark:focus:ring-offset-gray-900">
                                 <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                                     <strong>Never send me any notifications</strong><br>
-                                    I understand that I’ll no longer receive <em>any</em> emails or messages — even if I’m registered
+                                    I understand that I’ll no longer receive <em>any</em> emails — even if I’m registered
                                     for a session or have pending reminders. I’ll check the app regularly for updates.
                                 </span>
                             </label>
@@ -35,7 +35,7 @@
                                 <div class="mt-3 p-4 rounded-lg border border-red-300 dark:border-red-700
                                             bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-sm">
                                     ⚠️ You’ve chosen to <strong>disable all notifications</strong>.<br>
-                                    You won’t receive any future messages — even if other settings or events would normally notify you.
+                                    You won’t receive any future emails — even if other settings or events would normally notify you.
                                 </div>
                             @endif
                         </section>

@@ -52,7 +52,7 @@ class UpdateOrganizerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'new_organizer_id.required' => 'Please a new organizer first.',
+            'new_organizer_id.required' => 'You must choose the new organizer first.',
         ];
     }
 

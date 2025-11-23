@@ -9,7 +9,14 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 space-y-6">
-
+                    <div class="mb-4">
+                        <a href="{{ route('admin.users.index') }}"
+                           class="inline-flex items-center px-4 py-2 rounded-md bg-gray-200 text-gray-700
+              hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600
+              focus:outline-none focus:ring-2 focus:ring-gray-400 transition text-sm font-medium">
+                            ← Back to Users
+                        </a>
+                    </div>
                     @if(session('success'))
                         <div class="bg-green-100 dark:bg-green-800/40 text-green-700 dark:text-green-200 px-4 py-3 rounded-md">
                             ✅ {{ session('success') }}
@@ -81,15 +88,19 @@
                             <x-input-error :messages="$errors->get('role')" class="mt-2"/>
                         </div>
 
-                        <!-- Toggles -->
-                        <div class="flex items-center gap-6">
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="is_blocked" value="1"
-                                       {{ old('is_blocked', $user->is_blocked) ? 'checked' : '' }}
-                                       class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                <span>Blocked</span>
-                            </label>
-                        </div>
+                        @if (! $user->isAdmin())
+                            <!-- Toggles -->
+                            <div class="flex items-center gap-6">
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" name="is_blocked" value="1"
+                                           {{ old('is_blocked', $user->is_blocked) ? 'checked' : '' }}
+                                           class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                    <span>Blocked</span>
+                                </label>
+                            </div>
+                            <x-input-error :messages="$errors->get('is_blocked')" class="mt-2"/>
+                        @endif
+
 
                         <!-- Actions -->
                         <div class="pt-6 flex items-center justify-between">

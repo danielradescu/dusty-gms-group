@@ -26,12 +26,12 @@
                         ⏰ <span>{{ $session->start_at->format('H:i') }}</span>
                     </p>
                     <p class="flex items-center gap-2">
-                        📍 <span>{{ $session->location ?? 'To be decided' }}</span>
+                        📍 <span>{!! \App\Helpers\TextHelper::linkify($session->location ?? 'To be decided') !!}</span>
                     </p>
                     @if($session->myRegistration)
                         <span class="text-xs text-gray-500 italic">{{$session->myRegistration->status->label()}}</span>
                     @else
-                        <span class="text-xs text-gray-500 italic">No response yet</span>
+                        <span class="text-xs text-gray-500 italic">You haven’t responded to this session yet.</span>
                     @endif
                 </div>
 

@@ -22,7 +22,7 @@
                                     </p>
                                     <p class="text-xs text-gray-600 dark:text-gray-400">
                                         {{ $session->start_at->format('l, M d, H:i') }} @if($session->location)
-                                            • {{ $session->location }}
+                                            • {!! \App\Helpers\TextHelper::linkify($session->location ?? 'To be decided') !!}
                                         @endif
                                     </p>
                                 </div>
@@ -64,7 +64,7 @@
                                     <p class="text-xs text-gray-600 dark:text-gray-400">
                                         {{ $session->start_at->format('l, M d, H:i') }}
                                         @if($session->location)
-                                            • {{ $session->location }}
+                                            • {!! \App\Helpers\TextHelper::linkify($session->location ?? 'To be decided') !!}
                                         @endif
                                     </p>
                                 </div>

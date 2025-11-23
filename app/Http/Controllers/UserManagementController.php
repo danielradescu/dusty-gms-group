@@ -43,7 +43,12 @@ class UserManagementController extends Controller
             'phone_number' => ['nullable', 'string', 'max:50'],
             'info' => ['nullable', 'string', 'max:5000'],
             'role' => ['required', 'integer', 'in:1,2,3'],
-            'is_blocked' => ['boolean'],
+            'is_blocked' => ['boolean', function ($attribute, $value, $fail) use ($user){
+                // Prevent blocking admins
+                if ($user->role === \App\Enums\Role::Admin) {
+                    $fail('Administrator accounts cannot be blocked.');
+                }
+            },],
         ]);
 
         if (!empty($data['password'])) {

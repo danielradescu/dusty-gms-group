@@ -3,13 +3,13 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             🎲 {{ $gameSession->name }}
         </h2>
-        <p class="text-sm text-gray-800 dark:text-gray-400">{{ $gameSession->description }}</p>
+        <p class="text-sm text-gray-800 dark:text-gray-400">{!! \App\Helpers\TextHelper::linkify($gameSession->description ?? 'No description provided.') !!}</p>
     </x-slot>
     <x-slot name="meta">
         @if(isset($gameSession))
             <meta property="og:title" content="{{ $gameSession->name }} – Board Game Session">
             <meta property="og:description"
-                  content="Join us for a board-gaming session on {{ $gameSession->start_at->format('l, M d, Y') }} at {{ $gameSession->location ?? 'TBD' }}. Players: {{ $gameSession->min_players }}–{{ $gameSession->max_players }}.">
+                  content="Join us for a board-gaming session on {{ $gameSession->start_at->format('l, M d, Y') }} at {!! \App\Helpers\TextHelper::linkify($gameSession->location ?? 'To be decided') !!} 'TBD' }}. Players: {{ $gameSession->min_players }}–{{ $gameSession->max_players }}.">
             <meta property="og:type" content="website">
             <meta property="og:url" content="{{ request()->url() }}">
 
