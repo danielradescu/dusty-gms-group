@@ -105,4 +105,9 @@ class User extends Authenticatable implements MustVerifyEmail
         // Otherwise, return their email address as usual
         return $this->email;
     }
+
+    public function invites(): HasMany
+    {
+        return $this->hasMany(CommunityJoinRequest::class, 'initiated_by', 'id');
+    }
 }

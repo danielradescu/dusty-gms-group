@@ -34,9 +34,9 @@
         <!-- Contact Email -->
         <p class="text-xs text-gray-500 dark:text-gray-400">
             Contact us:
-            <a href="mailto:iasi.boardgames@gmail.com"
+            <a href="mailto:{{env('APP_CONTACT_EMAIL')}}"
                class="text-indigo-600 dark:text-indigo-400 hover:underline">
-                iasi.boardgames@gmail.com
+                {{env('APP_CONTACT_EMAIL')}}
             </a>
         </p>
 

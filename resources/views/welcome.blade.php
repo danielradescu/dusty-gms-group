@@ -69,8 +69,9 @@
         <h2 class="text-2xl font-semibold mb-4">Join our Community</h2>
 
         <p class="text-gray-600 dark:text-gray-300 mb-8">
-            Already part of the group? Log in using your magic link.
-            New here? Request an invitation — we’d be happy to meet you!
+            Already part of the group? Or new here?
+            <br/>
+            Request an invitation — we’d be happy to meet you!
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -79,7 +80,7 @@
                 Log In
             </a>
 
-            <a href="/request-invite"
+            <a href="{{route('public-join-create')}}"
                class="px-6 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600
                           text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600
                           font-medium rounded-md shadow">
@@ -157,8 +158,7 @@
             <div>
                 <h3 class="text-xl font-semibold mb-3">1. Invitation from an Existing Member</h3>
                 <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    If you already know someone in the community, they can invite you directly.
-                    Members who attended at least one session (Level 2+) can send invitations.
+                    If you know someone here, they can invite you — members who have already played with us can invite others.
                 </p>
             </div>
 
@@ -169,7 +169,7 @@
                     New to the group? Leave your contact details and we’ll get in touch for a short, friendly chat — by message or phone — to introduce ourselves.
                 </p>
 
-                <a href="/request-invite"
+                <a href="{{route('public-join-create')}}"
                    class="inline-block px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow font-medium">
                     Request an Invitation
                 </a>
@@ -182,25 +182,52 @@
 
 
 <!-- =============================== -->
-<!-- SECTION G — CLOSING MOTTO -->
+<!-- SECTION G — CLOSING + FOOTER -->
 <!-- =============================== -->
-<section class="w-full py-20 bg-white dark:bg-gray-900 text-center">
-    <div class="max-w-3xl mx-auto px-6">
+<section class="w-full py-20 bg-white dark:bg-gray-900 text-center border-t border-gray-200 dark:border-gray-700">
+    <div class="max-w-4xl mx-auto px-6">
 
+        <!-- Motto -->
         <h2 class="text-2xl sm:text-3xl font-semibold mb-6">
             “We play games to disconnect from screens and reconnect with people.”
         </h2>
 
-        <p class="text-gray-600 dark:text-gray-400 mt-6 text-sm">
-            © 2025 Iași Board Gaming Community — Built by the community, for the community.
+        <!-- Footer Links -->
+        <div class="flex flex-wrap items-center justify-center gap-6 mt-10 mb-6 text-sm">
+            <a href="/about-us"
+               class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline">
+                About Us
+            </a>
+
+            <a href="/privacy-policy"
+               class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline">
+                Privacy Policy
+            </a>
+
+            <a href="/terms-of-service"
+               class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline">
+                Terms of Service
+            </a>
+        </div>
+
+        <!-- Contact -->
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+            Contact us:
+            <a href="mailto:{{ env('APP_CONTACT_EMAIL') }}"
+               class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                {{ env('APP_CONTACT_EMAIL') }}
+            </a>
         </p>
 
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Contact: <a href="mailto:iasi.boardgames@gmail.com"
-                        class="text-indigo-600 dark:text-indigo-400 hover:underline">iasi.boardgames@gmail.com</a>
+        <!-- Copyright -->
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            © {{ date('Y') }} Iași Board Gaming Community. All rights reserved.
         </p>
+
     </div>
 </section>
+
+
 
 </body>
 </html>

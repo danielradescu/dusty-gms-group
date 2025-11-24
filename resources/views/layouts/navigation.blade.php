@@ -20,10 +20,18 @@
                                     :active="request()->routeIs('notification-subscription.edit')">
                             {{ __('Notification settings') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('member-invite-create')"
+                                    :active="request()->routeIs('member-invite-create')">
+                            {{ __('Invitations') }}
+                        </x-nav-link>
                         @if(Auth::user()->hasOrganizerPermission())
                             <x-nav-link :href="route('game-sessions.create')"
                                         :active="request()->routeIs('game-sessions.create')">
                                 {{ __('Create Session') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('management-join-request-index')"
+                                        :active="request()->routeIs('management-join-request-index')">
+                                {{ __('Join requests') }}
                             </x-nav-link>
                         @endif
                         @if(Auth::user()->hasAdminPermission())
@@ -132,10 +140,18 @@
                                        :active="request()->routeIs('notification-subscription.edit')">
                     {{ __('Notification settings') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('member-invite-create')"
+                                       :active="request()->routeIs('member-invite-create')">
+                    {{ __('Invitations') }}
+                </x-responsive-nav-link>
                 @if(Auth::user()->hasOrganizerPermission())
                     <x-responsive-nav-link :href="route('game-sessions.create')"
                                            :active="request()->routeIs('game-sessions.create')">
                         {{ __('Create Session') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('management-join-request-index')"
+                                           :active="request()->routeIs('management-join-request-index')">
+                        {{ __('Join requests') }}
                     </x-responsive-nav-link>
                 @endif
                 @if(Auth::user()->hasAdminPermission())
