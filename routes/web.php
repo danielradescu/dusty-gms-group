@@ -31,7 +31,7 @@ Route::middleware('role:Admin')->group(function () {
     Route::get('/admin/dashboard', fn () => view('admin.dashboard'));
 });
 
-Route::middleware('auth', 'verified')->group(function () {
+Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
     //dashboard:
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -60,6 +60,12 @@ Route::middleware('auth', 'verified')->group(function () {
 
     //admin user management
     Route::prefix('admin')->group(function () {
+
+        // custom binding for admin routes (bypass global scopes)
+        Route::bind('user', function ($value) {
+            return \App\Models\User::withoutGlobalScopes()->findOrFail($value);
+        });
+
         Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
         Route::get('/users/{user}/edit', [UserManagementController::class, 'edit'])->name('admin.user.edit');
         Route::patch('/users/{user}', [UserManagementController::class, 'update'])->name('admin.user.update');

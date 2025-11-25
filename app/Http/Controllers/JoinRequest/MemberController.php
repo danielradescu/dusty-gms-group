@@ -4,7 +4,7 @@ namespace App\Http\Controllers\JoinRequest;
 
 use App\Enums\JoinRequestStatus;
 use App\Http\Requests\MemberJoinRequest;
-use App\Models\CommunityJoinRequest;
+use App\Models\JoinRequest;
 
 class MemberController extends \Illuminate\Routing\Controller
 {
@@ -19,7 +19,7 @@ class MemberController extends \Illuminate\Routing\Controller
 
     public function create()
     {
-        $invites = CommunityJoinRequest::where('initiated_by', auth()->user()->id)
+        $invites = JoinRequest::where('initiated_by', auth()->user()->id)
             ->orderByDesc('created_at')
             ->paginate(10);
 
@@ -32,12 +32,12 @@ class MemberController extends \Illuminate\Routing\Controller
         $validated = $request->validated();
 
         // Check if there’s already a public join request (not initiated by a member)
-        $communityJoinRequest = CommunityJoinRequest::whereNull('initiated_by')
+        $communityJoinRequest = JoinRequest::whereNull('initiated_by')
             ->where('email', $validated['email'])
             ->first();
 
         if (! $communityJoinRequest) {
-            $communityJoinRequest = CommunityJoinRequest::create(array_merge($validated, [
+            $communityJoinRequest = JoinRequest::create(array_merge($validated, [
                 'status' => JoinRequestStatus::PENDING->value,
                 'initiated_by' => $user->id,
             ]));
@@ -49,13 +49,11 @@ class MemberController extends \Illuminate\Routing\Controller
             $communityJoinRequest->initiated_by = $user->id;
             $communityJoinRequest->reviewed_by = $user->id;
             $communityJoinRequest->reviewed_at = now();
-            $communityJoinRequest->message = $communityJoinRequest->message . ' --> System: Member invited by #' . $user->id . ' ' . $user->name . ' to join the group.';
+            $communityJoinRequest->note = $communityJoinRequest->note . ' --> System: Member invited by #' . $user->id . ' ' . $user->name . ' to join the group.';
             $communityJoinRequest->status = JoinRequestStatus::APPROVED;
             $communityJoinRequest->save();
 
             //TODO send invitation to register
-        } else {
-            //
         }
 
 

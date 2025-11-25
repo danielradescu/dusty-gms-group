@@ -29,9 +29,10 @@ class UpdateJoinRequestRequest extends FormRequest
         return [
             'status' => [
                 'required',
-                'string',
+                'integer',
                 'in:' . $validStatuses,
             ],
+            'note' => ['required', 'string', 'min:5', 'max:2000'],
         ];
     }
 
@@ -40,6 +41,8 @@ class UpdateJoinRequestRequest extends FormRequest
         return [
             'status.required' => 'A status selection is required.',
             'status.in' => 'Invalid status selected. Approved requests cannot be changed.',
+            'note.required' => 'Please provide a note describing your contact with the applicant.',
         ];
     }
 }
+

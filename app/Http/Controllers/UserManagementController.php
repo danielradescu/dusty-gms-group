@@ -21,7 +21,7 @@ class UserManagementController extends Controller
 
     public function index()
     {
-        $users = User::orderBy('name')->paginate(10);
+        $users = User::withoutGlobalScopes()->orderBy('name')->paginate(10);
 
         return view('admin.users.index', compact('users'));
     }

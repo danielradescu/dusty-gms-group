@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'onlyRole' => \App\Http\Middleware\CheckUserRole::class,
             'hasPermission' => \App\Http\Middleware\CheckUserHasPermission::class,
             'isAdminOrGameSessionOwner' => \App\Http\Middleware\CheckAdminOrGameSessionOwner::class,
+            'verified.reviewer' => \App\Http\Middleware\EnsureUserIsReviewed::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

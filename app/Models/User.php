@@ -4,7 +4,7 @@ namespace App\Models;
 
 
 use App\Enums\Role;
-use App\Models\Scopes\VerifiedAndUnblocked;
+use App\Models\Scopes\VerifiedUnblockedAndRevieved;
 use App\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected static function booted(): void
     {
-        static::addGlobalScope(new VerifiedAndUnblocked());
+        static::addGlobalScope(new VerifiedUnblockedAndRevieved());
     }
 
     /**
@@ -108,6 +108,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function invites(): HasMany
     {
-        return $this->hasMany(CommunityJoinRequest::class, 'initiated_by', 'id');
+        return $this->hasMany(JoinRequest::class, 'initiated_by', 'id');
+    }
+
+    public function inviter()
+    {
+        return $this->belongsTo(User::class, 'invited_by');
+    }
+
+    public function isReviewed()
+    {
+        return !empty($this->reviewed_by);
     }
 }

@@ -20,7 +20,7 @@ class OrganizerSessionsNotice extends Component
 
         $user = auth()->user();
 
-        if ($user) {
+        if ($user && $user->isReviewed()) {
             $this->pendingSessions = GameSession::query()
                 ->where('organized_by', $user->id)
                 ->where('start_at', '>', now())

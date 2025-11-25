@@ -90,12 +90,38 @@
                                     <select id="status" name="status"
                                             class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500">
                                         @foreach(App\Enums\JoinRequestStatus::cases() as $status)
-                                            <option value="{{ $status->value }}" {{ $joinRequest->status === $status ? 'selected' : '' }}>
-                                                {{ ucfirst($status->value) }}
+                                            <option value="{{ $status->value }}"
+                                                {{ old('status', $joinRequest->status->value) == $status->value ? 'selected' : '' }}>
+                                                {{ ucfirst($status->label()) }}
                                             </option>
                                         @endforeach
                                     </select>
                                     <x-input-error class="mt-2" :messages="$errors->get('status')" />
+                                </div>
+
+                                <div>
+                                    <label for="note" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Organizer Notes
+                                    </label>
+                                    <textarea id="note" name="note" rows="3"
+                                              placeholder="Example: Contacted on Nov 25 via WhatsApp, confirmed they play Eurogames..."
+                                              class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500">{{ old('note', $joinRequest->note) }}</textarea>
+                                    <x-input-error class="mt-2" :messages="$errors->get('note')" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                                        💬 Before approving or rejecting this request, please personally contact the applicant using the
+                                        <strong>phone number</strong> or <strong>other contact method</strong> they provided.
+                                        Confirm their interest and clarify any questions. Only after this conversation,
+                                        update the status below.
+                                    </p>
+
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                                        📝 Use the note field to record any relevant details for other organizers
+                                        (for example, when you contacted the person or what was discussed).
+                                        This note is visible only to organizers and admins.
+                                    </p>
                                 </div>
 
                                 <div class="flex items-center gap-3">

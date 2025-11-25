@@ -4,7 +4,7 @@ namespace App\Http\Controllers\JoinRequest;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PublicJoinRequest;
-use App\Models\CommunityJoinRequest;
+use App\Models\JoinRequest;
 
 class PublicController extends Controller
 {
@@ -17,7 +17,7 @@ class PublicController extends Controller
     {
         $validatedData = $request->validated();
 
-        CommunityJoinRequest::create($validatedData);
+        JoinRequest::create($validatedData);
 
         return redirect()
             ->back()

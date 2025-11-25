@@ -12,7 +12,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    @if (Auth::user())
+                    @if (Auth::user() && Auth::user()->isReviewed())
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
@@ -43,34 +43,34 @@
                     @endif
                 </div>
             </div>
-
-            <!-- Notification Button (Always Visible) -->
-            <div class="flex items-center sm:ms-6">
-                <a href="{{ route('in-app-notifications.index') }}"
-                   class="relative inline-flex items-center justify-center
-                          w-10 h-10 rounded-full
-                          bg-gray-100 dark:bg-gray-700
-                          hover:bg-gray-200 dark:hover:bg-gray-600
-                          transition duration-150 ease-in-out
-                          text-lg">
-                    🔔
-                    @php
-                        $unreadCount = rand(0, 9); // temporary placeholder
-                    @endphp
-                    @if ($unreadCount > 0)
-                        <span class="absolute -top-1 -right-1
-                         flex items-center justify-center
-                         h-5 min-w-[1.25rem]
-                         px-1.5
-                         text-xs font-bold
-                         text-white bg-red-500
-                         rounded-full ring-2 ring-white dark:ring-gray-800">
-                {{ $unreadCount }}
-            </span>
-                    @endif
-                </a>
-            </div>
-
+            @if (Auth::user() && Auth::user()->isReviewed())
+                <!-- Notification Button (Always Visible) -->
+                <div class="flex items-center sm:ms-6">
+                    <a href="{{ route('in-app-notifications.index') }}"
+                       class="relative inline-flex items-center justify-center
+                              w-10 h-10 rounded-full
+                              bg-gray-100 dark:bg-gray-700
+                              hover:bg-gray-200 dark:hover:bg-gray-600
+                              transition duration-150 ease-in-out
+                              text-lg">
+                        🔔
+                        @php
+                            $unreadCount = rand(0, 9); // temporary placeholder
+                        @endphp
+                        @if ($unreadCount > 0)
+                            <span class="absolute -top-1 -right-1
+                             flex items-center justify-center
+                             h-5 min-w-[1.25rem]
+                             px-1.5
+                             text-xs font-bold
+                             text-white bg-red-500
+                             rounded-full ring-2 ring-white dark:ring-gray-800">
+                                    {{ $unreadCount }}
+                                </span>
+                        @endif
+                    </a>
+                </div>
+            @endif
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
 
@@ -132,7 +132,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            @if(Auth::user())
+            @if(Auth::user() && Auth::user()->isReviewed())
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>

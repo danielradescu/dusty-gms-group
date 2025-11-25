@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\JoinRequestStatus;
-use App\Models\CommunityJoinRequest;
+use App\Models\JoinRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MemberJoinRequest extends FormRequest
@@ -25,15 +25,7 @@ class MemberJoinRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', function ($attribute, $value, $fail) {
-                $alreadyInvited = CommunityJoinRequest::where('email', $value)
-                    ->where('status', "!=",  JoinRequestStatus::PENDING->value)
-                    ->first();
-
-                if ($alreadyInvited) {
-                    $fail('We already invited this email address.');
-                }
-            }],
+            'email' => ['required', 'email', 'max:255'],
         ];
     }
 

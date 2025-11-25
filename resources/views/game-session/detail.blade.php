@@ -9,7 +9,7 @@
         @if(isset($gameSession))
             <meta property="og:title" content="{{ $gameSession->name }} – Board Game Session">
             <meta property="og:description"
-                  content="Join us for a board-gaming session on {{ $gameSession->start_at->format('l, M d, Y') }} at {!! \App\Helpers\TextHelper::linkify($gameSession->location ?? 'To be decided') !!} 'TBD' }}. Players: {{ $gameSession->min_players }}–{{ $gameSession->max_players }}.">
+                  content="Join us for a board-gaming session on {{ $gameSession->start_at->format('l, M d, Y') }}. Players: {{ $gameSession->min_players }}–{{ $gameSession->max_players }}.">
             <meta property="og:type" content="website">
             <meta property="og:url" content="{{ request()->url() }}">
 

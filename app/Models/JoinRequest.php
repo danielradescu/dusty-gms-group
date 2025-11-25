@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Str;
 
-class CommunityJoinRequest extends Model
+class JoinRequest extends Model
 {
     use HasFactory;
 
     /**
      * Table associated with the model.
      */
-    protected $table = 'community_join_requests';
+    protected $table = 'join_requests';
 
     /**
      * Mass assignable attributes.

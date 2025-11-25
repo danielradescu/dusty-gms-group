@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 space-y-6">
                     <div class="mb-4">
-                        <a href="{{ route('admin.users.index') }}"
+                        <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('admin.users.index') }}"
                            class="inline-flex items-center px-4 py-2 rounded-md bg-gray-200 text-gray-700
               hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600
               focus:outline-none focus:ring-2 focus:ring-gray-400 transition text-sm font-medium">

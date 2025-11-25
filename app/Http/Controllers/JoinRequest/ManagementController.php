@@ -5,7 +5,7 @@ namespace App\Http\Controllers\JoinRequest;
 use App\Enums\JoinRequestStatus;
 use App\Enums\Role;
 use App\Http\Requests\UpdateJoinRequestRequest;
-use App\Models\CommunityJoinRequest;
+use App\Models\JoinRequest;
 use Illuminate\Routing\Controller;
 
 class ManagementController extends Controller
@@ -19,7 +19,7 @@ class ManagementController extends Controller
 
     public function index()
     {
-        $joinRequests = CommunityJoinRequest::orderByRaw(
+        $joinRequests = JoinRequest::orderByRaw(
             "CASE WHEN status = ? THEN 0 ELSE 1 END", [JoinRequestStatus::PENDING->value]
         )
             ->orderBy('created_at')
@@ -29,12 +29,12 @@ class ManagementController extends Controller
             ->with(['joinRequests' => $joinRequests]);
     }
 
-    public function edit(CommunityJoinRequest $joinRequest)
+    public function edit(JoinRequest $joinRequest)
     {
         return view('join-request.management.edit')->with(['joinRequest' => $joinRequest]);
     }
 
-    public function update(UpdateJoinRequestRequest $request, CommunityJoinRequest $joinRequest)
+    public function update(UpdateJoinRequestRequest $request, JoinRequest $joinRequest)
     {
         $joinRequest->status = $request->get('status');
         $joinRequest->save();

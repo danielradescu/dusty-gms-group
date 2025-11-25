@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\JoinRequestStatus;
-use App\Models\CommunityJoinRequest;
+use App\Models\JoinRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PublicJoinRequest extends FormRequest
@@ -26,7 +26,7 @@ class PublicJoinRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', function ($attribute, $value, $fail) {
-                $existing = CommunityJoinRequest::where('email', $value)
+                $existing = JoinRequest::where('email', $value)
                     ->where('status', JoinRequestStatus::PENDING->value)
                     ->first();
 
