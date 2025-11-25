@@ -13,7 +13,7 @@ class NotificationSubscriptionController extends Controller
         $toReturn = [];
         $toReturn["subscribedTypes"] = auth()
             ->user()
-            ->notificationSubscription
+            ->notificationSubscription()
             ->pluck('type')
             ->map(fn($t) => $t->value)
             ->toArray();

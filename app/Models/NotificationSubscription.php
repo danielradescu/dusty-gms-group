@@ -14,7 +14,7 @@ class NotificationSubscription extends Model
     ];
 
     protected $casts = [
-        'type' => NotificationSubscriptionType::class, // 👈 enum cast
+        'type' => NotificationSubscriptionType::class,
     ];
 
     /**

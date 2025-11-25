@@ -38,7 +38,7 @@ class NotificationUpdateRequest extends FormRequest
 
                     // Organizer-only subscriptions
                     if (in_array($value, array_map(fn($t) => $t->value, \App\Enums\NotificationSubscriptionType::organizerOptions()))) {
-                        if (! $user->isOrganizer()) {
+                        if (! $user->hasOrganizerPermission()) {
                             $fail('One of the selected subscriptions is invalid.');
                         }
                     }

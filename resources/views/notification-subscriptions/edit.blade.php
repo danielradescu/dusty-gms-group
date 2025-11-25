@@ -63,10 +63,8 @@
 
                         </section>
                     </div>
-                    @if (Auth::user()->isOrganizer())
+                    @if (Auth::user()->hasOrganizerPermission())
                         <div class="p-6 text-gray-900 dark:text-gray-100">
-
-
                             <!-- Organizer Notifications -->
                             <section>
                                 <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
