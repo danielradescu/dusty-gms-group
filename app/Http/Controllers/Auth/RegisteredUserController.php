@@ -19,9 +19,18 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('auth.register');
+        $token = $request->query('invitation_token');
+
+        $joinRequest = null;
+        if ($token) {
+            $joinRequest = \App\Models\JoinRequest::where('invitation_token', $token)
+                ->where('status', \App\Enums\JoinRequestStatus::APPROVED)
+                ->first();
+        }
+
+        return view('auth.register', ['joinRequest' => $joinRequest]);
     }
 
     /**
@@ -31,6 +40,15 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $token = $request->input('invitation_token');
+        $joinRequest = null;
+
+        if ($token) {
+            $joinRequest = \App\Models\JoinRequest::where('invitation_token', $token)
+                ->where('status', \App\Enums\JoinRequestStatus::APPROVED)
+                ->first();
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -40,19 +58,52 @@ class RegisteredUserController extends Controller
                 'email',
                 'max:255',
                 'unique:'.User::class,
-                function($attribute, $value, $fail) use ($request) {
+                function($attribute, $value, $fail) use ($request, $joinRequest) {
                     if (! JoinRequest::where('email', $value)->where('status', JoinRequestStatus::APPROVED)->exists()) {
-                        $fail("Your email address is not approved yet. Try submitting a join request, if you didn't already.");
+                        // 1️⃣ If registration has a token → skip email approval check
+                        if ($joinRequest) {
+                            return;
+                        }
+
+                        // 2️⃣ Otherwise, check if this email has an approved join request
+                        $approved = \App\Models\JoinRequest::query()
+                            ->where('email', $value)
+                            ->where('status', \App\Enums\JoinRequestStatus::APPROVED)
+                            ->exists();
+
+                        if (! $approved) {
+                            $fail("Your email address is not yet approved to register. Please submit a join request first.");
+                        }
                     }
                 }],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        if (! $joinRequest) {
+            $joinRequest = \App\Models\JoinRequest::where('email', $request->email)
+                ->where('status', \App\Enums\JoinRequestStatus::APPROVED)
+                ->first();
+        }
+
+        // Double safety check
+        if (! $joinRequest) {
+            abort(403, 'No approved join request found for this registration.');
+        }
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->reviewed_by = $joinRequest->reviewed_by;
+        $user->save();
+
+        // Mark the JoinRequest as registered
+        if ($joinRequest) {
+            $joinRequest->status = \App\Enums\JoinRequestStatus::REGISTERED;
+            $joinRequest->invitation_used_at = now();
+            $joinRequest->invitation_token = null; //invalidate immediately
+            $joinRequest->save();
+        }
 
         event(new Registered($user));
 

@@ -1,7 +1,9 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
-
+        @if($joinRequest)
+            <input type="hidden" name="invitation_token" value="{{$joinRequest->invitation_token}}">
+        @endif
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />

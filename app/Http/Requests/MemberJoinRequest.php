@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\JoinRequestStatus;
-use App\Models\JoinRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MemberJoinRequest extends FormRequest
