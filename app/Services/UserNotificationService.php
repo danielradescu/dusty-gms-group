@@ -200,7 +200,7 @@ class UserNotificationService
         );
     }
 
-    /** When a new session created or when organizer changed, the organizer will receive a notification with the steps to fallow*/
+    /** When a new session created where he organizes or when organizer changed and he is the organizer now, the organizer will receive a notification with the steps to fallow*/
     public function organizerOfASession(int $userId, int $sessionId): Notification
     {
         return $this->schedule(

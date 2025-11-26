@@ -32,28 +32,7 @@
                 <tr>
                     <td style="padding:32px; color:#111827; font-size:15px; line-height:1.6;">
 
-                        {{-- Apply Markdown parsing --}}
-                        @php
-                            $parsed = Illuminate\Mail\Markdown::parse($slot);
-
-                            // Tighten spacing between paragraphs
-                            $parsed = str_replace('<p>', '<p style="margin:0 0 16px;">', $parsed);
-
-                            // Style H1/H2 for consistency
-                            $parsed = str_replace('<h1>', '<h1 style="font-size:22px; font-weight:600; margin:0 0 20px;">', $parsed);
-                            $parsed = str_replace('<h2>', '<h2 style="font-size:18px; font-weight:600; margin:20px 0 12px;">', $parsed);
-
-                            // Space above and below button tables
-                            $parsed = str_replace('<table', '<div style="margin:24px 0;"></div><table', $parsed);
-
-                            // Add space ABOVE buttons
-                            $parsed = str_replace('<table', '<div style="margin-top:28px;"></div><table', $parsed);
-                            
-                            // Add space BELOW buttons
-                            $parsed = str_replace('</table>', '</table><div style="margin-bottom:32px;"></div>', $parsed);
-                        @endphp
-
-                        {!! $parsed !!}
+                        {!! $slot !!}
                     </td>
                 </tr>
 
