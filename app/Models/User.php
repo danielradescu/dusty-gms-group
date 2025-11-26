@@ -5,6 +5,8 @@ namespace App\Models;
 
 use App\Enums\Role;
 use App\Models\Scopes\VerifiedUnblockedAndRevieved;
+use App\Notifications\CustomResetPassword;
+use App\Notifications\CustomVerifyEmail;
 use App\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,6 +23,22 @@ class User extends Authenticatable implements MustVerifyEmail
     protected static function booted(): void
     {
         static::addGlobalScope(new VerifiedUnblockedAndRevieved());
+    }
+
+    /**
+     * Send the email verification notification.
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new CustomVerifyEmail());
+    }
+
+    /**
+     * Send the password reset notification.
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPassword($token));
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\JoinRequest;
 use App\Enums\JoinRequestStatus;
 use App\Enums\Role;
 use App\Http\Requests\UpdateJoinRequestRequest;
+use App\Mail\CommunityJoinApprovedMail;
 use App\Models\JoinRequest;
 use Illuminate\Routing\Controller;
 
@@ -38,6 +39,10 @@ class ManagementController extends Controller
     {
         $joinRequest->status = $request->get('status');
         $joinRequest->save();
+
+        if ($joinRequest->status == JoinRequestStatus::APPROVED) {
+            \Mail::to($joinRequest->email)->send(new CommunityJoinApprovedMail($joinRequest));
+        }
 
         return redirect()->back()->with(['status' => 'Request Status Updated']);
     }

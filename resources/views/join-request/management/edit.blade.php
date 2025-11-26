@@ -89,7 +89,7 @@
                                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
                                     <select id="status" name="status"
                                             class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500">
-                                        @foreach(App\Enums\JoinRequestStatus::cases() as $status)
+                                        @foreach(collect(App\Enums\JoinRequestStatus::cases())->reject(fn($case) => $case === App\Enums\JoinRequestStatus::REGISTERED) as $status)
                                             <option value="{{ $status->value }}"
                                                 {{ old('status', $joinRequest->status->value) == $status->value ? 'selected' : '' }}>
                                                 {{ ucfirst($status->label()) }}
