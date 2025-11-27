@@ -20,10 +20,12 @@
                                     :active="request()->routeIs('notification-subscription.edit')">
                             {{ __('Notification settings') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('member-invite-create')"
-                                    :active="request()->routeIs('member-invite-create')">
-                            {{ __('Invitations') }}
-                        </x-nav-link>
+                        @if (Auth::user()->canInvite())
+                            <x-nav-link :href="route('member-invite-create')"
+                                        :active="request()->routeIs('member-invite-create')">
+                                {{ __('Invitations') }}
+                            </x-nav-link>
+                        @endif
                         @if(Auth::user()->hasOrganizerPermission())
                             <x-nav-link :href="route('game-sessions.create')"
                                         :active="request()->routeIs('game-sessions.create')">
@@ -40,6 +42,10 @@
                                 {{ __('Users') }}
                             </x-nav-link>
                         @endif
+                        <x-nav-link :href="route('contact.create')"
+                                    :active="request()->routeIs('contact.create')">
+                            {{ __('Contact') }}
+                        </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -55,7 +61,13 @@
                               text-lg">
                         🔔
                         @php
-                            $unreadCount = rand(0, 9); // temporary placeholder
+                            $unreadCount = 0;
+                            if (! request()->routeIs('in-app-notifications.index')) {
+                                $user = Auth::user();
+                                $unreadCount = Cache::remember("user_{$user->id}_unread_count", 30, function () use ($user) {
+                                    return $user->inAppNotifications()->whereNull('read_at')->count();
+                                });
+                            }
                         @endphp
                         @if ($unreadCount > 0)
                             <span class="absolute -top-1 -right-1
@@ -140,10 +152,12 @@
                                        :active="request()->routeIs('notification-subscription.edit')">
                     {{ __('Notification settings') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('member-invite-create')"
-                                       :active="request()->routeIs('member-invite-create')">
-                    {{ __('Invitations') }}
-                </x-responsive-nav-link>
+                @if (Auth::user()->canInvite())
+                    <x-responsive-nav-link :href="route('member-invite-create')"
+                                           :active="request()->routeIs('member-invite-create')">
+                        {{ __('Invitations') }}
+                    </x-responsive-nav-link>
+                @endif
                 @if(Auth::user()->hasOrganizerPermission())
                     <x-responsive-nav-link :href="route('game-sessions.create')"
                                            :active="request()->routeIs('game-sessions.create')">
@@ -160,6 +174,10 @@
                         {{ __('Users') }}
                     </x-responsive-nav-link>
                 @endif
+                <x-responsive-nav-link :href="route('contact.create')"
+                                       :active="request()->routeIs('contact.create')">
+                    {{ __('Contact') }}
+                </x-responsive-nav-link>
             @endif
 
         </div>

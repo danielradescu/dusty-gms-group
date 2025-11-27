@@ -108,15 +108,15 @@ class UserNotificationService
         );
     }
 
-    /** Session updated AFTER confirmation */
-    public function gameSessionUpdated(int $userId, int $sessionId): Notification
+    /** Message to participant from organizer */
+    public function gameSessionMessageFromOrganizer(int $userId, int $sessionId, int $commentId): Notification
     {
         return $this->schedule(
             userId: $userId,
-            type: NotificationType::SESSION_UPDATED,
-            data: ['session_id' => $sessionId],
-            sendAt: now()->addMinutes(10),
-            hashParts: [$sessionId, NotificationType::SESSION_UPDATED->name]
+            type: NotificationType::SESSION_ORGANIZER_MESSAGE,
+            data: ['session_id' => $sessionId, 'comment_id' => $commentId],
+            sendAt: now()->addMinute(),
+            hashParts: [$sessionId, NotificationType::SESSION_ORGANIZER_MESSAGE->name, $commentId]
         );
     }
 

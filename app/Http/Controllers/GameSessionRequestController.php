@@ -34,12 +34,12 @@ class GameSessionRequestController extends Controller
             $referenceDay = GameSessionSlotService::getReferenceDay();
 
             // Current week: Monday 00:00:00 → Sunday 23:59:59
-            $start = $referenceDay->copy()->startOfWeek(Carbon::MONDAY);
+//            $start = $referenceDay->copy()->startOfWeek(Carbon::MONDAY);
             $end   = $referenceDay->copy()->endOfWeek(Carbon::SUNDAY)->setTime(23, 59, 59);
 
-            // Delete this user's requests for the current week
+            // Delete this user's requests for the current week and cleanup the past
             $user->gameSessionRequests()
-                ->whereBetween('preferred_time', [$start, $end])
+                ->where('preferred_time', '<', $end)
                 ->delete();
 
             // Create new ones (if any)

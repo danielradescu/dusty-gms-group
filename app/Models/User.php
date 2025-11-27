@@ -138,4 +138,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return !empty($this->reviewed_by);
     }
+
+    public function canInvite()
+    {
+        return $this->hasOrganizerPermission() || $this->created_at > now()->addDay();
+    }
 }

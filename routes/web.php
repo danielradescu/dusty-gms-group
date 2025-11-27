@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GameSession\CreateSessionController;
 use App\Http\Controllers\GameSession\InteractionController;
@@ -79,6 +80,10 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
     Route::get('/join-request', [JoinRequestManagementController::class, 'index'])->name('management-join-request-index');
     Route::get('/join-request/{joinRequest}/edit', [JoinRequestManagementController::class, 'edit'])->name('management-join-request-edit');
     Route::put('/join-request/{joinRequest}/update', [JoinRequestManagementController::class, 'update'])->name('management-join-request-update');
+
+    //contact
+    Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 });
 
 //Pages:

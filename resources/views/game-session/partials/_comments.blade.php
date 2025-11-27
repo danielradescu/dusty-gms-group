@@ -15,7 +15,7 @@
                        placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
             ></textarea>
             @error('body')
-                <p class="text-sm text-red-400 mt-1">{{ $message }}</p>
+            <p class="text-sm text-red-400 mt-1">{{ $message }}</p>
             @enderror
             <input type="hidden" name="game_session_uuid" value="{{$gameSession->uuid}}">
 
@@ -33,17 +33,36 @@
     <!-- Comment List -->
     <div class="space-y-5">
         @forelse($comments as $comment)
-                <!-- Comment 1 -->
-                <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset($comment->user->getPhotoURL()) }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
-                            <span class="font-semibold text-gray-200">{{ $comment->user->name }}</span>
-                        </div>
-                        <span class="text-sm text-gray-500">{{ $comment->created_at->format('l, M j, Y · H:i') }}</span>
+            <div class="{{ $comment->is_announcement
+        ? 'bg-amber-100/10 border-amber-400/30'
+        : 'bg-gray-800 border-gray-700'
+    }} rounded-lg p-4 border">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-3">
+                        <img src="{{ asset($comment->user->getPhotoURL()) }}" alt="Avatar"
+                             class="w-8 h-8 rounded-full object-cover">
+                        <span
+                            class="font-semibold {{ $comment->is_announcement ? 'text-amber-300' : 'text-gray-200' }}">
+                {{ $comment->user->name }}
+            </span>
+
+                        {{-- Optional small badge --}}
+                        @if($comment->is_announcement)
+                            <span
+                                class="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded-full uppercase tracking-wide">
+                    Announcement
+                </span>
+                        @endif
                     </div>
-                    <p class="text-gray-300">{{ $comment->body }}</p>
+
+                    <span class="text-sm text-gray-500">
+            {{ $comment->created_at->format('l, M j, Y · H:i') }}
+        </span>
                 </div>
+
+                <p class="text-gray-300">{{ $comment->body }}</p>
+            </div>
+
         @empty
             @php
                 $messages = [

@@ -28,6 +28,8 @@ class CreateCommentRequest extends FormRequest
 
             // The body of the comment must be between 5 and 1000 characters, no HTML allowed
             'body' => ['required', 'string', 'min:2', 'max:1000'],
+
+            'is_announcement' => ['nullable', 'boolean'],
         ];
     }
 

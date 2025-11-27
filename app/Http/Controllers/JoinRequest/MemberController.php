@@ -4,6 +4,7 @@ namespace App\Http\Controllers\JoinRequest;
 
 use App\Enums\JoinRequestStatus;
 use App\Http\Requests\MemberJoinRequest;
+use App\Mail\CommunityJoinApprovedMail;
 use App\Models\JoinRequest;
 
 class MemberController extends \Illuminate\Routing\Controller
@@ -11,10 +12,15 @@ class MemberController extends \Illuminate\Routing\Controller
 
     public function __construct()
     {
-        // TODO: Restrict this controller to admins, organizers and members who played at least one game
-        // (e.g., use middleware or policy check)
         $this->middleware('auth');
 
+        $this->middleware(function ($request, $next) {
+            if (! auth()->user()->canInvite()) {
+                abort(403, 'You cannot invite other members yet.');
+            }
+
+            return $next($request);
+        });
     }
 
     public function create()
@@ -52,12 +58,11 @@ class MemberController extends \Illuminate\Routing\Controller
             $communityJoinRequest->note = $communityJoinRequest->note . ' --> System: Member invited by #' . $user->id . ' ' . $user->name . ' to join the group.';
             $communityJoinRequest->status = JoinRequestStatus::APPROVED;
             $communityJoinRequest->save();
-
-            //TODO send invitation to register
         }
 
-
-
+        if ($communityJoinRequest->status == JoinRequestStatus::APPROVED) {
+            \Mail::to($communityJoinRequest->email)->send(new CommunityJoinApprovedMail($communityJoinRequest));
+        }
 
         return redirect()->back()->with('success', 'Your invite has been recorded successfully.');
 

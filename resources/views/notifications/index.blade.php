@@ -14,14 +14,14 @@
                         <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex justify-between items-center">
                             <div>
                                 <p class="font-medium text-gray-800 dark:text-gray-200">
-                                    {{ $note['message'] }}
+                                    {{ $note->message }}
                                 </p>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ $note['date']->diffForHumans() }}
+                                    {{ $note->sent_at->diffForHumans() }}
                                 </p>
                             </div>
                             <span class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
-                                {{ str_replace('_', ' ', ucfirst(strtolower($note['type']))) }}
+                                {{ str_replace('_', ' ', ucfirst(strtolower($note->type->name))) }}
                             </span>
                         </div>
                     @empty
@@ -29,7 +29,12 @@
                             You have no notifications yet.
                         </div>
                     @endforelse
-
+                    <!-- Pagination -->
+                    @if ($notifications->hasPages())
+                        <div class="pt-6">
+                            {{ $notifications->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

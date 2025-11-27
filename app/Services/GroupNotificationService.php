@@ -124,8 +124,8 @@ class GroupNotificationService
         }
     }
 
-    /** Game session updated after confirmation */
-    public function gameSessionUpdated(int $sessionId): void
+    /** Message to participants from organizer */
+    public function gameSessionMessageFromOrganizer(int $sessionId, int $commentId): void
     {
         $session = GameSession::findOrFail($sessionId);
 
@@ -138,9 +138,10 @@ class GroupNotificationService
             ->reject(fn(User $u) => $u->id === $session->organized_by);
 
         foreach ($users as $user) {
-            $this->userNotifications->gameSessionUpdated(
+            $this->userNotifications->gameSessionMessageFromOrganizer(
                 userId: $user->id,
-                sessionId: $sessionId
+                sessionId: $sessionId,
+                commentId: $commentId
             );
         }
     }

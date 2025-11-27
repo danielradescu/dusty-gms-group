@@ -19,7 +19,10 @@ class DashboardController extends Controller
             Carbon::now()->endOfWeek(),
         ])->with('organizer', 'registrations', 'myRegistration')->orderBy('start_at', 'asc')->get();
 
-        $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests;
+        $referenceDay = GameSessionSlotService::getReferenceDay();
+        $start = $referenceDay->copy()->startOfWeek(Carbon::MONDAY);
+
+        $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests()->where('preferred_time', '>', $start)->get();
         $toReturn['slots'] = GameSessionSlotService::getCurrentWeekSlots($toReturn['gameSessionRequests']);
 
         return view('dashboard')->with($toReturn);
