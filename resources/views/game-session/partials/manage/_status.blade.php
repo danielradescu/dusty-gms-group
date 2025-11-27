@@ -69,9 +69,34 @@
                 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded
                 dark:border-gray-600 dark:focus:ring-indigo-400 dark:focus:ring-offset-gray-900">
                 <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    <strong>I have enough information to decide whether the session should be confirmed or canceled.</strong><br>
-                    Checking this box will reveal the save button and allow you to update the session status.
+                    <strong>I have enough information to decide the outcome of this session.</strong><br>
+                    Selecting this option will unlock the <em>Save</em> button, allowing you to confirm or cancel the session as needed.
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                        <li>
+                            <span class="text-gray-600 dark:text-gray-400">
+                                <strong>Confirming</strong> the session will notify
+                                <span class="font-semibold text-indigo-600 dark:text-indigo-400">
+                                    {{ $confirmedNotifyCount }}
+                                </span>
+                                other confirmed participant{{ $confirmedNotifyCount !== 1 ? 's' : '' }}.
+                            </span>
+                        </li>
+                        <li>
+                            <span class="text-gray-600 dark:text-gray-400">
+                                <strong>Cancelling</strong> the session will notify
+                                <span class="font-semibold text-indigo-600 dark:text-indigo-400">
+                                    {{ $confirmedNotifyCount }}
+                                </span>
+                                other confirmed and
+                                <span class="font-semibold text-indigo-600 dark:text-indigo-400">
+                                    {{ $interestedNotifyCount }}
+                                </span>
+                                interested participant{{ $interestedNotifyCount !== 1 ? 's' : '' }}.
+                            </span>
+                        </li>
+                    </ul>
                 </span>
+
             </label>
             <x-input-error :messages="$errors->get('confirm_status')" class="mt-2"/>
 

@@ -22,19 +22,12 @@ class CommentController extends Controller
         $comment->save();
 
         XP::grantOncePerDay(auth()->user(), 'comment_session');
+
         if (auth()->user()->id !== $gameSession->organized_by) {
             app(UserNotificationService::class)->gameSessionOrganizerNewCommentAdded(
                 $gameSession->id,
                 $comment->id
             );
-        }
-
-        if ($request->has('is_announcement') && ($gameSession->organized_by == auth()->user()->id)) {
-            //this is a general announcement comment from the organizer for participants
-            $comment->is_announcement = true;
-            $comment->save();
-
-            app(GroupNotificationService::class)->gameSessionMessageFromOrganizer($gameSession->id, $comment->id);
         }
 
         return redirect()->back()->withFragment('post-comment');

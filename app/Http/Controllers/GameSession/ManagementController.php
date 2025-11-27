@@ -45,7 +45,13 @@ class ManagementController extends Controller
             'gameSession' => $gameSession,
             'comments' => $gameSession->comments()->orderBy('created_at', 'desc')->get(),
             'confirmedRegistrations' => $gameSession->registrations()->where('status', RegistrationStatus::Confirmed->value)->get(),
+            'interestedRegistrations' => $gameSession->registrations()->whereIn('status', [RegistrationStatus::RemindMe2Days->value, RegistrationStatus::OpenPosition->value])->get(),
         ];
+
+        $toReturn = array_merge($toReturn, [
+            'confirmedNotifyCount' => ($toReturn['confirmedRegistrations']->count() - 1) > 0 ? $toReturn['confirmedRegistrations']->count() - 1 : 0, //minus organizer
+            'interestedNotifyCount' => $toReturn['interestedRegistrations']->count(),
+        ]);
 
         return view('game-session.edit', $toReturn);
     }

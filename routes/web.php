@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
@@ -48,6 +49,8 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
 
     //comments:
     Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
+    //announcement, same as comment, but special
+    Route::post('/announcement', [AnnouncementController::class, 'store'])->name('announcement.store');
 
     //game session request
     Route::post('/game-session-request', [GameSessionRequestController::class, 'store'])->name('game-session-request.store');

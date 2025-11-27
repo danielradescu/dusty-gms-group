@@ -32,7 +32,7 @@
                 <input type="checkbox" name="confirm" value="1" class="change-confirm mt-1 h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded
                                     dark:border-gray-600 dark:focus:ring-indigo-400 dark:focus:ring-offset-gray-900">
                 <span class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                            <strong>I have already spoken with the person who will take over as organizer, and they agreed to do so.</strong><br>
+                            <strong>I have already spoken with the person who will take over as organizer, and <span class="font-semibold text-indigo-600 dark:text-indigo-400">they agreed</span> to do so.</strong><br>
                             Checking this box will confirm your decision and reveal the button to assign the new organizer.
                         </span>
             </label>
