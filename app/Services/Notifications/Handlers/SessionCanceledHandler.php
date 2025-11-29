@@ -9,10 +9,7 @@ use App\Mail\GameSessionCanceledMail;
 use App\Models\GameSession;
 use App\Models\Notification;
 use App\Models\Registration;
-use App\Services\Notifications\{
-    NotificationContext,
-    InAppTemplateFactory
-};
+use App\Services\Notifications\{NotificationContext, InAppTemplateFactory, Support\RelevanceResult};
 use Illuminate\Support\Facades\Log;
 
 class SessionCanceledHandler extends NotificationHandlerBase
@@ -23,17 +20,22 @@ class SessionCanceledHandler extends NotificationHandlerBase
      * Check if the notification is still relevant.
      * (Session still exists and is canceled)
      */
-    protected function isStillRelevant(Notification $n): bool
+    protected function isStillRelevant(Notification $n): RelevanceResult
     {
         $this->session = GameSession::find($n->data['session_id'] ?? null);
 
         if (! $this->session) {
-            return false;
+            return RelevanceResult::fail('Session not found');
+        }
+
+        // The session must start in the future
+        if ($this->session->start_at->isPast()) {
+            return RelevanceResult::fail('Session already started.');
         }
 
         // Only relevant if session is actually canceled
         if ($this->session->status !== GameSessionStatus::CANCELLED) {
-            return false;
+            return RelevanceResult::fail('Session is not in status cancelled');
         }
 
         // Must still be a registered participant (Confirmed/Open/RemindMe)
@@ -48,10 +50,10 @@ class SessionCanceledHandler extends NotificationHandlerBase
             ->exists();
 
         if (! $userIsParticipant) {
-            return false;
+            return RelevanceResult::fail('User is not a participant to this session (Confirmed/Open/RemindMe)');
         }
 
-        return true;
+        return RelevanceResult::ok();
     }
 
     /**

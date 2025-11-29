@@ -8,35 +8,43 @@ use App\Enums\NotificationSubscriptionType;
 use Illuminate\Support\Facades\Log;
 use App\Models\{Notification, GameSession, NotificationSubscription};
 use App\Mail\GameSessionCreatedMail;
-use App\Services\Notifications\{NotificationContext, InAppTemplateFactory, Policies\SessionCreatedPolicy};
+use App\Services\Notifications\{NotificationContext,
+    InAppTemplateFactory,
+    Policies\SessionCreatedPolicy,
+    Support\RelevanceResult};
 
 class SessionCreatedHandler extends NotificationHandlerBase
 {
     protected ?GameSession $session = null;
 
-    protected function isStillRelevant(Notification $n): bool
+    protected function isStillRelevant(Notification $n): RelevanceResult
     {
         $this->session = GameSession::find($n->data['session_id'] ?? null);
 
-        // 1️⃣ Session must still exist
+        // Session must still exist
         if (! $this->session) {
-            return false;
+            return RelevanceResult::fail('Session not found');
         }
 
-        // 2️⃣ Must be open to participants
+        // The session must start in the future
+        if ($this->session->start_at->isPast()) {
+            return RelevanceResult::fail('Session already started.');
+        }
+
+        // Must be open to participants
         if (! in_array($this->session->status, [
             GameSessionStatus::RECRUITING_PARTICIPANTS,
             GameSessionStatus::CONFIRMED_BY_ORGANIZER,
         ], true)) {
-            return false;
+            return RelevanceResult::fail('Session is not in a status where the users can join.');
         }
 
-        // 3️⃣ Must still have open positions
+        // Must still have open positions
         if (! $this->session->hasOpenPositions()) {
-            return false;
+            return RelevanceResult::fail('Session has no open spots at the moment');
         }
 
-        return true;
+        return RelevanceResult::ok();
     }
 
 

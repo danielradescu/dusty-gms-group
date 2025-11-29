@@ -4,10 +4,7 @@ namespace App\Services\Notifications\Handlers;
 
 use App\Models\Notification;
 use App\Enums\NotificationStatus;
-use App\Services\Notifications\{
-    NotificationContext,
-    NotificationPolicyResolver
-};
+use App\Services\Notifications\{NotificationContext, NotificationPolicyResolver, Support\RelevanceResult};
 use App\Services\Notifications\Channels\ChannelFactory;
 use Illuminate\Support\Facades\Log;
 
@@ -27,9 +24,14 @@ abstract class NotificationHandlerBase
         Log::info("Notification #{$n->id} ({$n->type->name}) processing now.");
 
         // Relevance check only
-        if (! $this->isStillRelevant($n)) {
-            $n->update(['status' => NotificationStatus::CANCELLED]);
-            Log::info("Notification #{$n->id} ({$n->type->name}) cancelled (no longer relevant).");
+        $result = $this->isStillRelevant($n);
+
+        if (! $result->isRelevant) {
+            $n->update([
+                'status'  => NotificationStatus::CANCELLED,
+                'message' => $result->reason,
+            ]);
+            Log::info("Notification #{$n->id} ({$n->type->name}) cancelled: {$result->reason}");
             return false;
         }
 
@@ -49,7 +51,7 @@ abstract class NotificationHandlerBase
     }
 
 
-    abstract protected function isStillRelevant(Notification $n): bool;
+    abstract protected function isStillRelevant(Notification $n): RelevanceResult;
     abstract protected function buildContext(Notification $n): NotificationContext;
     abstract protected function send(Notification $n, NotificationContext $context, array $channels): void;
 }

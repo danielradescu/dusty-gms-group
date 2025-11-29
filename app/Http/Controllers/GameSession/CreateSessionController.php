@@ -153,7 +153,7 @@ class CreateSessionController extends Controller
 
                 //don't notify the organizer about auto-join or give XP, it's already assumed
                 if ($userToJoin->id != $organizer->id) {
-                    app(UserNotificationService::class)->gameSessionDayMatchedAndAutoJoined($userToJoin->id, $gameSession->start_at->toDateString());
+                    app(UserNotificationService::class)->gameSessionDayMatchedAndAutoJoined($userToJoin->id, $gameSession->id, $gameSession->start_at->toDateString());
                     XP::grantOncePerDay($userToJoin, 'interacted_with_game_session');
                 }
                 $confirmedRegistrations++;

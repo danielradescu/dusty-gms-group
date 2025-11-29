@@ -5,6 +5,7 @@ namespace App\Services\Notifications;
 use App\Enums\NotificationType;
 use App\Models\User;
 use App\Services\Notifications\Policies\{NotificationChannelPolicyInterface,
+    SessionAutoJoinedPolicy,
     SessionCanceledPolicy,
     SessionConfirmedPolicy,
     SessionCreatedPolicy,
@@ -19,6 +20,7 @@ class NotificationPolicyResolver
         NotificationType::SESSION_CANCELED->value  => SessionCanceledPolicy::class,
         NotificationType::SESSION_ORGANIZER_MESSAGE->value  => SessionOrganizerMessagePolicy::class,
         NotificationType::SESSION_REMINDER->value  => SessionReminderPolicy::class,
+        NotificationType::SESSION_AUTO_JOINED->value => SessionAutoJoinedPolicy::class,
         // ... other types
     ];
 

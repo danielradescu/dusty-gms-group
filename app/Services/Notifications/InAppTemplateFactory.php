@@ -54,6 +54,17 @@ class InAppTemplateFactory
                 ),
                 'link' => $session ? route('game-session.interaction.show', $session->uuid) : null,
             ],
+            NotificationType::SESSION_AUTO_JOINED => [
+                'title' => '✅ You’ve Been Auto-Joined to a Game Session!',
+                'message' => sprintf(
+                    'A new session "%s" was created for %s, and you’ve been automatically added as confirmed!',
+                    $session->name,
+                    $context['target_date']
+                        ? \Carbon\Carbon::parse($context['target_date'])->format('l, M j')
+                        : $session->start_at?->format('l, M j')
+                ),
+                'link' => $session ? route('game-session.interaction.show', $session->uuid) : null,
+            ],
 
             default => [
                 'title' => 'Notification',

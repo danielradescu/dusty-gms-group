@@ -2,23 +2,19 @@
 
 namespace App\Services\Notifications\Handlers;
 
-use App\Enums\GameSessionStatus;
-use App\Enums\NotificationStatus;
-use App\Enums\RegistrationStatus;
-use App\Mail\GameSessionConfirmedMail;
-use App\Models\GameSession;
-use App\Models\Notification;
-use App\Models\Registration;
+use Carbon\Carbon;
+use App\Enums\{GameSessionStatus, RegistrationStatus};
+use App\Mail\GameSessionAutoJoinedMail;
+use App\Models\{GameSession, Notification, Registration};
 use App\Services\Notifications\{NotificationContext, InAppTemplateFactory, Support\RelevanceResult};
 use Illuminate\Support\Facades\Log;
 
-class SessionConfirmedHandler extends NotificationHandlerBase
+class SessionAutoJoinedHandler extends NotificationHandlerBase
 {
     protected ?GameSession $session = null;
 
     /**
-     * Check if the notification is still relevant.
-     * (Session still exists and is confirmed)
+     * Determine if this notification is still relevant.
      */
     protected function isStillRelevant(Notification $n): RelevanceResult
     {
@@ -33,50 +29,64 @@ class SessionConfirmedHandler extends NotificationHandlerBase
             return RelevanceResult::fail('Session already started.');
         }
 
-        // Only relevant if the session is confirmed
-        if ($this->session->status !== GameSessionStatus::CONFIRMED_BY_ORGANIZER) {
-            return RelevanceResult::fail('Session is not confirmed anymore');
+        // Session must be open for joins status
+        if (! in_array($this->session->status, [
+            GameSessionStatus::RECRUITING_PARTICIPANTS,
+            GameSessionStatus::CONFIRMED_BY_ORGANIZER,
+        ], true)) {
+            return RelevanceResult::fail('Session is not open to join.');
         }
 
-        //relevant if this is a confirmed user to the session
-        if (! Registration::where('user_id', $n->user->id)
+        // Check that user is still confirmed in this session
+        $isConfirmed = Registration::query()
+            ->where('user_id', $n->user->id)
             ->where('game_session_id', $this->session->id)
             ->where('status', RegistrationStatus::Confirmed)
-            ->exists()
-        ) {
-            return RelevanceResult::fail('This user does not have a registration with status confirmed in this session.');
+            ->exists();
+
+        if (! $isConfirmed) {
+            return RelevanceResult::fail("User doesn't have a confirmed registration in the session anymore.");
         }
 
         return RelevanceResult::ok();
     }
 
     /**
-     * Build the context object for templating and email.
+     * Build notification context.
      */
     protected function buildContext(Notification $n): NotificationContext
     {
         return new NotificationContext(
             user: $n->user,
-            session: $this->session ?? GameSession::find($n->data['session_id'])
+            session: $this->session,
+            targetDate: isset($n->data['target_date'])
+                ? Carbon::parse($n->data['target_date'])
+                : null,
+
         );
     }
 
     /**
-     * Send the notification via resolved channels.
+     * Send via appropriate channels.
      */
     protected function send(Notification $n, NotificationContext $ctx, array $channels): void
     {
         $template = (new InAppTemplateFactory())->make($n->type, [
             'session' => $ctx->session,
+            'target_date' => $ctx->target_date ?? null,
         ]);
 
         $this->channels->via($channels)->send($n, [
-            'email'   => new GameSessionConfirmedMail($ctx->user, $ctx->session),
+            'email'   => new GameSessionAutoJoinedMail(
+                $ctx->user,
+                $ctx->session,
+                $ctx->targetDate ?? null
+            ),
             'title'   => $template['title'],
             'message' => $template['message'],
             'link'    => $template['link'],
         ]);
 
-        Log::info("SessionConfirmedHandler sent notification #{$n->id} via: " . implode(', ', $channels));
+        Log::info("SessionAutoJoinedHandler sent notification #{$n->id} via: " . implode(', ', $channels));
     }
 }

@@ -143,12 +143,12 @@ class UserNotificationService
     }
 
     /** Notify user auto-joined if ANY session happens on date X */
-    public function gameSessionDayMatchedAndAutoJoined(int $userId, string $targetDate): Notification
+    public function gameSessionDayMatchedAndAutoJoined(int $userId, int $sessionId, string $targetDate): Notification
     {
         return $this->schedule(
             userId: $userId,
             type: NotificationType::SESSION_AUTO_JOINED,
-            data: ['target_date' => $targetDate],
+            data: ['session_id' => $sessionId, 'target_date' => $targetDate],
             sendAt: now()->addHour(), //to keep this member as confirmed some time in case he later exits
             hashParts: [$targetDate, NotificationType::SESSION_AUTO_JOINED->name]
         );

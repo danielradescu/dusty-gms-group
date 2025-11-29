@@ -16,6 +16,8 @@ class Notification extends Model
         'send_at',
         'attempts',
         'hash',
+        'message',
+        'error',
     ];
 
     protected $casts = [

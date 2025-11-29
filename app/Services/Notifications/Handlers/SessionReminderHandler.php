@@ -5,10 +5,7 @@ namespace App\Services\Notifications\Handlers;
 use App\Enums\{GameSessionStatus, RegistrationStatus, NotificationStatus};
 use App\Mail\GameSessionReminderMail;
 use App\Models\{GameSession, Notification, Registration};
-use App\Services\Notifications\{
-    NotificationContext,
-    InAppTemplateFactory
-};
+use App\Services\Notifications\{NotificationContext, InAppTemplateFactory, Support\RelevanceResult};
 use Illuminate\Support\Facades\Log;
 
 class SessionReminderHandler extends NotificationHandlerBase
@@ -18,12 +15,17 @@ class SessionReminderHandler extends NotificationHandlerBase
     /**
      * Determine if the reminder is still relevant.
      */
-    protected function isStillRelevant(Notification $n): bool
+    protected function isStillRelevant(Notification $n): RelevanceResult
     {
         $this->session = GameSession::find($n->data['session_id'] ?? null);
 
         if (! $this->session) {
-            return false;
+            return RelevanceResult::fail('Session not found');
+        }
+
+        // The session must start in the future
+        if ($this->session->start_at->isPast()) {
+            return RelevanceResult::fail('Session already started.');
         }
 
         // Session must be open for joins status
@@ -31,17 +33,12 @@ class SessionReminderHandler extends NotificationHandlerBase
             GameSessionStatus::RECRUITING_PARTICIPANTS,
             GameSessionStatus::CONFIRMED_BY_ORGANIZER,
         ], true)) {
-            return false;
+            return RelevanceResult::fail('Session is not open to people to join.');
         }
 
         // The session must still have available spots
         if (! $this->session->hasOpenPositions()) {
-            return false;
-        }
-
-        // The session must start in the future
-        if ($this->session->start_at->isPast()) {
-            return false;
+            return RelevanceResult::fail('Session dose not have any open positions.');
         }
 
         // User must still be in RemindMe2Days status for this session

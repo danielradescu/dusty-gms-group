@@ -6,10 +6,7 @@ use App\Enums\GameSessionStatus;
 use App\Enums\NotificationStatus;
 use App\Mail\GameSessionOrganizerUpdateMail;
 use App\Models\{GameSession, Notification, Comment};
-use App\Services\Notifications\{
-    NotificationContext,
-    InAppTemplateFactory
-};
+use App\Services\Notifications\{NotificationContext, InAppTemplateFactory, Support\RelevanceResult};
 use Illuminate\Support\Facades\Log;
 
 class SessionOrganizerMessageHandler extends NotificationHandlerBase
@@ -20,26 +17,35 @@ class SessionOrganizerMessageHandler extends NotificationHandlerBase
     /**
      * Check if the notification is still relevant.
      */
-    protected function isStillRelevant(Notification $n): bool
+    protected function isStillRelevant(Notification $n): RelevanceResult
     {
         $this->session = GameSession::find($n->data['session_id'] ?? null);
         $this->comment = Comment::find($n->data['comment_id'] ?? null);
 
-        if (! $this->session || ! $this->comment) {
-            return false;
+        if (! $this->session) {
+            return RelevanceResult::fail('Session not found');
+        }
+
+        // The session must start in the future
+        if ($this->session->start_at->isPast()) {
+            return RelevanceResult::fail('Session already started.');
+        }
+
+        if (! $this->comment) {
+            return RelevanceResult::fail('Comment announcement not found');
         }
 
         // Only if session exists and was confirmed (cannot edit after confirmed, only send announcements)
         if ($this->session->status !== GameSessionStatus::CONFIRMED_BY_ORGANIZER) {
-            return false;
+            return RelevanceResult::fail('Session not in status confirmed by organizer.');
         }
 
         // Don’t send to the organizer themselves
         if ($this->comment->user_id === $n->user->id) {
-            return false;
+            return RelevanceResult::fail('Skip the owner of the comment.');
         }
 
-        return true;
+        return RelevanceResult::ok();
     }
 
     /**
