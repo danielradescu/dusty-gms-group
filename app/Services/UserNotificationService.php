@@ -91,7 +91,7 @@ class UserNotificationService
             userId: $userId,
             type: NotificationType::SESSION_CONFIRMED,
             data: ['session_id' => $sessionId],
-            sendAt: now()->addMinutes(10),
+            sendAt: now()->addMinutes(10),//time for organizer to change his/her mind
             hashParts: [$sessionId, NotificationType::SESSION_CONFIRMED->name]
         );
     }
@@ -103,7 +103,7 @@ class UserNotificationService
             userId: $userId,
             type: NotificationType::SESSION_CANCELED,
             data: ['session_id' => $sessionId],
-            sendAt: now()->addMinutes(10),
+            sendAt: now()->addMinutes(10),//time for organizer to contact admin to change it back
             hashParts: [$sessionId, NotificationType::SESSION_CANCELED->name]
         );
     }

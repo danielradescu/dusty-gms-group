@@ -85,16 +85,22 @@ class ManagementController extends Controller
         // Compare new vs current status
         $statusChanged = array_key_exists('status', $data) && $data['status'] !== $gameSession->status;
 
+        // ✅ Only notify if status actually changed
         if ($statusChanged) {
             $gameSession->status = $data['status'];
             $gameSession->note = $data['cancel_reason'];
             $gameSession->save();
-            // ✅ Only notify if status actually changed
-            app(GroupNotificationService::class)->gameSessionConfirmed($gameSession->id);
+
+            if ($gameSession->status === GameSessionStatus::CONFIRMED_BY_ORGANIZER) {
+                app(GroupNotificationService::class)->gameSessionConfirmed($gameSession->id);
+            }
+            if ($gameSession->status === GameSessionStatus::CANCELLED) {
+                app(GroupNotificationService::class)->gameSessionCanceled($gameSession->id);
+                // if canceled can't manage anymore, redirect to default session view
+                return redirect()->route('game-session.interaction.show', $gameSession->uuid);
+            }
         }
-        if ($gameSession->status === GameSessionStatus::CANCELLED) {
-            return redirect()->route('game-session.interaction.show', $gameSession->uuid);
-        }
+
 
         return redirect()->back()->with('statusSaved', true)->withFragment('status-session-management');
 

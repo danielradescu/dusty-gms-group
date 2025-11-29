@@ -42,6 +42,7 @@ class RunEveryMinute extends Command
                         Log::error("Notification #{$notification->id} failed: " . $e->getMessage());
                         $notification->update(['status' => NotificationStatus::FAILED]);
                     }
+                    $processedCount++;
                 }
             });
 

@@ -6,7 +6,7 @@ use App\Models\User;
 
 abstract class BaseNotificationPolicy implements NotificationChannelPolicyInterface
 {
-    protected function allowsExternalNotifications(User $user, NotificationSubscriptionType $subscriptionType): bool
+    protected function allowsExternalNotifications(User $user): bool
     {
         return $user->hasVerifiedEmail() &&
             $user->hasExternalNotifications();

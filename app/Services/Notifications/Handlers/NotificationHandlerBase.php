@@ -22,7 +22,7 @@ abstract class NotificationHandlerBase
         $this->policy   = new NotificationPolicyResolver();
     }
 
-    public function process(Notification $n): void
+    public function process(Notification $n): bool
     {
         Log::info("Notification #{$n->id} ({$n->type->name}) processing now.");
 
@@ -30,7 +30,7 @@ abstract class NotificationHandlerBase
         if (! $this->isStillRelevant($n)) {
             $n->update(['status' => NotificationStatus::CANCELLED]);
             Log::info("Notification #{$n->id} ({$n->type->name}) cancelled (no longer relevant).");
-            return;
+            return false;
         }
 
         $context  = $this->buildContext($n);
@@ -44,6 +44,8 @@ abstract class NotificationHandlerBase
 
         $n->update(['status' => NotificationStatus::SENT]);
         Log::info("Notification #{$n->id} ({$n->type->name}) sent via " . implode(', ', $channels));
+
+        return true;
     }
 
 
