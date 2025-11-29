@@ -143,4 +143,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOrganizerPermission() || $this->created_at > now()->addDay();
     }
+
+    public function hasExternalNotifications(): bool
+    {
+        return ! $this->notifications_disabled;
+    }
 }

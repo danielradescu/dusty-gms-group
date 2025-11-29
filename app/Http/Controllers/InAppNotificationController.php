@@ -11,17 +11,25 @@ class InAppNotificationController extends Controller
     {
         $user = Auth::user();
 
-        // Fetch notifications with pagination
-        $notifications = InAppNotification::where('user_id', $user->id)
-            ->orderByDesc('created_at')
-            ->paginate(10);
-
-        // Mark all as read automatically when user opens the page
-        InAppNotification::where('user_id', $user->id)
+        // Fetch all NEW (unread) notifications — always show all
+        $newNotifications = InAppNotification::where('user_id', $user->id)
             ->whereNull('read_at')
-            ->update(['read_at' => now()]);
+            ->orderByDesc('created_at')
+            ->get();
 
-        return view('notifications.index', compact('notifications'));
+        // Fetch old (read) notifications — paginated
+        $oldNotifications = InAppNotification::where('user_id', $user->id)
+            ->whereNotNull('read_at')
+            ->orderByDesc('created_at')
+            ->paginate(10, ['*'], 'old_page'); // use a separate paginator name
+
+        // Mark new ones as read after loading them
+        if ($newNotifications->isNotEmpty()) {
+            InAppNotification::whereIn('id', $newNotifications->pluck('id'))
+                ->update(['read_at' => now()]);
+        }
+
+        return view('notifications.index', compact('newNotifications', 'oldNotifications'));
     }
 
 }

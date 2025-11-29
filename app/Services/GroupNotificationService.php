@@ -2,9 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\NotificationSubscriptionType;
-use App\Models\GameSessionRequest;
-use App\Models\NotificationSubscription;
 use App\Models\Registration;
 use App\Models\User;
 use App\Models\GameSession;
@@ -24,53 +21,38 @@ class GroupNotificationService
      * - subscribed to "new game session created"
      * - OR requested to be notified when a session is created for this date
      */
-    public function gameSessionCreated(int $sessionId, ?int $delayHours): \Illuminate\Support\Collection
+    public function gameSessionCreated(int $sessionId, ?int $delayHours = null): \Illuminate\Support\Collection
     {
-        $session = GameSession::findOrFail($sessionId);
+        $session = GameSession::with('organizer')->findOrFail($sessionId);
         $date = $session->start_at->toDateString();
 
-        // 1) Users subscribed to NEW_GAME_SESSION (excluding auto-joiners for this date)
-        $usersSubscribed = User::query()
-            ->whereHas('notificationSubscription', function ($q) {
-                $q->where('type', NotificationSubscriptionType::NEW_GAME_SESSION);
-            })
+        // 1️⃣ Audience: all users except the organizer and auto-joiners for that date, they get a different notification
+        $users = User::query()
+            ->where('id', '<>', $session->organized_by)
             ->whereDoesntHave('gameSessionRequests', function ($q) use ($date) {
                 $q->where('auto_join', true)
                     ->whereDate('preferred_time', $date);
             })
             ->get();
 
+        // 2️⃣ Sort (optional)
+        $users = $users->sortByDesc('level')->values();
 
-        // 2) Users who requested a session for this date (but are NOT auto-joiners)
-        $usersRequestedDay = User::query()
-            ->whereHas('gameSessionRequests', function ($q) use ($date) {
-                $q->where('auto_join', false)
-                    ->whereDate('preferred_time', $date);
-            })
-            ->get();
-
-        // 3) Merge, dedupe, sort
-        $users = $usersSubscribed
-            ->merge($usersRequestedDay)
-            ->unique('id')
-            ->reject(fn (User $u) => $u->id === $session->organized_by)
-            ->sortByDesc('level')
-            ->values();
-
+        // 3️⃣ Schedule notifications
         $notifications = collect();
-
-        /** @var User $user */
         foreach ($users as $user) {
-            $notification = $this->userNotifications->gameSessionCreated(
-                userId: $user->id,
-                sessionId: $session->id,
-                delayHours: $delayHours
+            $notifications->push(
+                $this->userNotifications->gameSessionCreated(
+                    userId: $user->id,
+                    sessionId: $session->id,
+                    delayHours: $delayHours
+                )
             );
-            $notifications->push($notification);
         }
 
         return $notifications;
     }
+
 
     //──────────────────────────────────────────────
     // 2. Game session state transitions

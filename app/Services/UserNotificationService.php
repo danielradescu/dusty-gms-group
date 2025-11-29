@@ -149,7 +149,7 @@ class UserNotificationService
             userId: $userId,
             type: NotificationType::SESSION_AUTO_JOINED,
             data: ['target_date' => $targetDate],
-            sendAt: now()->addHour(),
+            sendAt: now()->addHour(), //to keep this member as confirmed some time in case he later exits
             hashParts: [$targetDate, NotificationType::SESSION_AUTO_JOINED->name]
         );
     }

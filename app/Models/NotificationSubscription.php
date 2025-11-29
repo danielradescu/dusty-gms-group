@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NotificationSubscription extends Model
 {
+    protected static array $userSubscriptionsCache = [];
+
     protected $fillable = [
         'user_id',
         'type',
@@ -38,8 +40,13 @@ class NotificationSubscription extends Model
      */
     public static function isUserSubscribed(int $userId, NotificationSubscriptionType $type): bool
     {
-        return self::where('user_id', $userId)
-            ->where('type', $type->value)
-            ->exists();
+
+        if (!isset(self::$userSubscriptionsCache[$userId])) {
+            self::$userSubscriptionsCache[$userId] = self::where('user_id', $userId)
+                ->pluck('type')
+                ->all();
+        }
+
+        return in_array($type, self::$userSubscriptionsCache[$userId], true);
     }
 }

@@ -9,4 +9,5 @@ enum NotificationStatus: int
     case CANCELLED = 3;
     case FAILED = 4;
     case RETRY = 5;
+    case PROCESSING = 6;
 }

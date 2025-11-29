@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GameComplexity;
+use App\Enums\RegistrationStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Enums\GameSessionStatus;
@@ -58,7 +59,7 @@ class GameSession extends Model
 
     public function hasOpenPositions()
     {
-        return is_null($this->max_players) || ($this->max_players > $this->registrations()->count());
+        return is_null($this->max_players) || ($this->max_players > $this->registrations()->where('status', RegistrationStatus::Confirmed)->count());
     }
 
     public function isEditable(): bool
