@@ -7,7 +7,8 @@ use App\Models\User;
 use App\Services\Notifications\Policies\{NotificationChannelPolicyInterface,
     SessionCanceledPolicy,
     SessionConfirmedPolicy,
-    SessionCreatedPolicy};
+    SessionCreatedPolicy,
+    SessionOrganizerMessagePolicy};
 
 class NotificationPolicyResolver
 {
@@ -15,6 +16,7 @@ class NotificationPolicyResolver
         NotificationType::SESSION_CREATED->value => SessionCreatedPolicy::class,
         NotificationType::SESSION_CONFIRMED->value => SessionConfirmedPolicy::class,
         NotificationType::SESSION_CANCELED->value  => SessionCanceledPolicy::class,
+        NotificationType::SESSION_ORGANIZER_MESSAGE->value  => SessionOrganizerMessagePolicy::class,
         // ... other types
     ];
 

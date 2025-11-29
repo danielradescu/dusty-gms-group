@@ -56,7 +56,7 @@ class SessionCreatedHandler extends NotificationHandlerBase
             'email'   => new GameSessionCreatedMail($ctx->user, $ctx->session),
             'title'   => $template['title'],
             'message' => $template['message'],
-            'link'    => $ctx->session ? route('game-session.interaction.show', $ctx->session->uuid) : null,
+            'link'    => $template['link'],
         ]);
     }
 }

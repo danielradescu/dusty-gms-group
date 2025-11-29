@@ -4,50 +4,38 @@ namespace App\Services\Notifications\Handlers;
 
 use App\Enums\GameSessionStatus;
 use App\Enums\NotificationStatus;
-use App\Enums\RegistrationStatus;
-use App\Mail\GameSessionCanceledMail;
-use App\Models\GameSession;
-use App\Models\Notification;
-use App\Models\Registration;
+use App\Mail\GameSessionOrganizerUpdateMail;
+use App\Models\{GameSession, Notification, Comment};
 use App\Services\Notifications\{
     NotificationContext,
     InAppTemplateFactory
 };
 use Illuminate\Support\Facades\Log;
 
-class SessionCanceledHandler extends NotificationHandlerBase
+class SessionOrganizerMessageHandler extends NotificationHandlerBase
 {
     protected ?GameSession $session = null;
+    protected ?Comment $comment = null;
 
     /**
      * Check if the notification is still relevant.
-     * (Session still exists and is canceled)
      */
     protected function isStillRelevant(Notification $n): bool
     {
         $this->session = GameSession::find($n->data['session_id'] ?? null);
+        $this->comment = Comment::find($n->data['comment_id'] ?? null);
 
-        if (! $this->session) {
+        if (! $this->session || ! $this->comment) {
             return false;
         }
 
-        // Only relevant if session is actually canceled
-        if ($this->session->status !== GameSessionStatus::CANCELLED) {
+        // Only if session exists and was confirmed (cannot edit after confirmed, only send announcements)
+        if ($this->session->status !== GameSessionStatus::CONFIRMED_BY_ORGANIZER) {
             return false;
         }
 
-        // Must still be a registered participant (Confirmed/Open/RemindMe)
-        $userIsParticipant = Registration::query()
-            ->where('game_session_id', $this->session->id)
-            ->where('user_id', $n->user->id)
-            ->whereIn('status', [
-                RegistrationStatus::Confirmed,
-                RegistrationStatus::OpenPosition,
-                RegistrationStatus::RemindMe2Days,
-            ])
-            ->exists();
-
-        if (! $userIsParticipant) {
+        // Don’t send to the organizer themselves
+        if ($this->comment->user_id === $n->user->id) {
             return false;
         }
 
@@ -55,32 +43,38 @@ class SessionCanceledHandler extends NotificationHandlerBase
     }
 
     /**
-     * Build context.
+     * Build the context.
      */
     protected function buildContext(Notification $n): NotificationContext
     {
         return new NotificationContext(
             user: $n->user,
-            session: $this->session ?? GameSession::find($n->data['session_id'])
+            session: $this->session,
+            comment: $this->comment
         );
     }
 
     /**
-     * Send via resolved CHANNELS.
+     * Send the notification via resolved channels.
      */
     protected function send(Notification $n, NotificationContext $ctx, array $channels): void
     {
         $template = (new InAppTemplateFactory())->make($n->type, [
             'session' => $ctx->session,
+            'comment' => $ctx->comment,
         ]);
 
         $this->channels->via($channels)->send($n, [
-            'email'   => new GameSessionCanceledMail($ctx->user, $ctx->session),
+            'email'   => new GameSessionOrganizerUpdateMail(
+                $ctx->user,
+                $ctx->session,
+                $ctx->comment->body
+            ),
             'title'   => $template['title'],
             'message' => $template['message'],
             'link'    => $template['link'],
         ]);
 
-        Log::info("SessionCanceledHandler sent notification #{$n->id} via: " . implode(', ', $channels));
+        Log::info("SessionOrganizerMessageHandler sent notification #{$n->id} via: " . implode(', ', $channels));
     }
 }

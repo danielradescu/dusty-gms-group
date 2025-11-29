@@ -115,7 +115,7 @@ class UserNotificationService
             userId: $userId,
             type: NotificationType::SESSION_ORGANIZER_MESSAGE,
             data: ['session_id' => $sessionId, 'comment_id' => $commentId],
-            sendAt: now()->addMinute(),
+            sendAt: now(),
             hashParts: [$sessionId, NotificationType::SESSION_ORGANIZER_MESSAGE->name, $commentId]
         );
     }

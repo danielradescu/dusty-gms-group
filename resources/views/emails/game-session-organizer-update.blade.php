@@ -28,7 +28,7 @@
                     You can view the session details and continue the discussion with the community:
                 </p>
 
-                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid)])
+                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid) . '#post-comment'])
                     View Game Session
                 @endcomponent
 
