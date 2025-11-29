@@ -73,6 +73,15 @@ class InAppTemplateFactory
                 ),
                 'link' => $session ? route('game-session.interaction.show', $session->uuid) : null,
             ],
+            NotificationType::ORGANIZER_PROMPT_CREATE => [
+                'title' => '📅 Players Want a Game!',
+                'message' => sprintf(
+                    'At least %d players requested a session on %s. Create one to get them playing!',
+                    $context['interested_count'] ?? 2,
+                    \Carbon\Carbon::parse($context['target_date'])->format('l, M j')
+                ),
+                'link' => route('game-session.create', ['date' => $context['target_date']]),
+            ],
 
 
             default => [

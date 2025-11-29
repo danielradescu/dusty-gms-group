@@ -38,8 +38,8 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //boardgame sessions:
-    Route::get('/create-game-session', [CreateSessionController::class, 'create'])->name('game-sessions.create');
-    Route::post('/create-game-session', [CreateSessionController::class, 'store'])->name('game-sessions.store');
+    Route::get('/create-game-session', [CreateSessionController::class, 'create'])->name('game-session.create');
+    Route::post('/create-game-session', [CreateSessionController::class, 'store'])->name('game-session.store');
     Route::get('/game-session/{uuid}/created', [CreateSessionController::class, 'show'])->name('game-session.create.show');
     Route::post('/game-session/{uuid}', [InteractionController::class, 'store'])->name('game-session.interaction.store');
     Route::get('/game-session/{uuid}/manage', [GameSessionManagementController::class, 'edit'])->name('game-session.manage.edit');

@@ -10,7 +10,7 @@
 {{--        @include('partials._errors')--}}
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900 dark:text-gray-100">
-                <form action="{{ route('game-sessions.store') }}" method="POST" class="space-y-6">
+                <form action="{{ route('game-session.store') }}" method="POST" class="space-y-6">
                     @csrf
 
                     <!-- Name -->

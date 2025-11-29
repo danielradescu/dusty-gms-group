@@ -3,7 +3,8 @@
 namespace App\Services\Notifications;
 
 use App\Enums\NotificationType;
-use App\Services\Notifications\Handlers\{SessionAutoJoinedHandler,
+use App\Services\Notifications\Handlers\{OrganizerPromptCreateHandler,
+    SessionAutoJoinedHandler,
     SessionCanceledHandler,
     SessionConfirmedHandler,
     SessionCreatedHandler,
@@ -23,6 +24,7 @@ class NotificationHandlerFactory
             NotificationType::SESSION_REMINDER          => app(SessionReminderHandler::class),
             NotificationType::SESSION_AUTO_JOINED       => app(SessionAutoJoinedHandler::class),
             NotificationType::OPEN_SLOT_AVAILABLE       => app(SessionOpenSlotAvailableHandler::class),
+            NotificationType::ORGANIZER_PROMPT_CREATE   => app(OrganizerPromptCreateHandler::class),
             default => null,
         };
     }

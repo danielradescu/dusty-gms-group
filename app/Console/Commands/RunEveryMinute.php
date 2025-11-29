@@ -18,40 +18,51 @@ class RunEveryMinute extends Command
 
     public function handle(): int
     {
-        $start = microtime(true);
-        $now = now();
+        $originalLogger = Log::getLogger();
+        Log::swap(Log::channel('notifications'));
+        try {
 
-        $processedCount = 0;
 
-        // Log heartbeat
-        Log::info("[Scheduler] RunEveryMinute executed at {$now}");
+            $start = microtime(true);
+            $now = now();
 
-        Notification::where('send_at', '<=', $now)
-            ->whereIn('status', [NotificationStatus::SCHEDULED, NotificationStatus::RETRY])
-            ->orderBy('send_at')
-            ->chunkById(100, function ($notifications) use (&$processedCount) {
-                foreach ($notifications as $notification) {
-                    try {
-                        $handler = (new NotificationHandlerFactory())->make($notification->type);
-                        if ($handler) {
-                            $handler->process($notification);
-                        } else {
-                            throw new \Exception("Notification #{$notification->id} has no handler to resolve it.");
+            $processedCount = 0;
+
+            // Log heartbeat
+            Log::info("[Scheduler] RunEveryMinute executed at {$now}");
+
+            Notification::where('send_at', '<=', $now)
+                ->whereIn('status', [NotificationStatus::SCHEDULED, NotificationStatus::RETRY])
+                ->orderBy('send_at')
+                ->chunkById(100, function ($notifications) use (&$processedCount) {
+                    foreach ($notifications as $notification) {
+                        try {
+                            $handler = (new NotificationHandlerFactory())->make($notification->type);
+                            if ($handler) {
+                                $handler->process($notification);
+                            } else {
+                                throw new \Exception("Notification #{$notification->id} has no handler to resolve it.");
+                            }
+                        } catch (\Throwable $e) {
+                            Log::error("Notification #{$notification->id} failed: " . $e->getMessage());
+                            $notification->update([
+                                'status' => NotificationStatus::FAILED,
+                                'error' => $e->getMessage(),
+                            ]);
                         }
-                    } catch (\Throwable $e) {
-                        Log::error("Notification #{$notification->id} failed: " . $e->getMessage());
-                        $notification->update([
-                            'status' => NotificationStatus::FAILED,
-                            'error' => $e->getMessage(),
-                        ]);
+                        $processedCount++;
                     }
-                    $processedCount++;
-                }
-            });
+                });
 
-        $duration = round(microtime(true) - $start, 2);
-        Log::info("[Scheduler] Dispatched {$processedCount} notifications in {$duration}s.");
+            $duration = round(microtime(true) - $start, 2);
+            Log::info("[Scheduler] Dispatched {$processedCount} notifications in {$duration}s.");
 
-        return self::SUCCESS;
+            return self::SUCCESS;
+
+
+        } finally {
+            Log::swap($originalLogger); // restore the default logger
+        }
+
     }
 }

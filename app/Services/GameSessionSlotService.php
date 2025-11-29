@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\GameSessionStatus;
 use App\Models\GameSession;
 use App\Models\GameSessionRequest;
 use Carbon\Carbon;
@@ -53,6 +54,7 @@ class GameSessionSlotService
 
         // 🔍 2) Get ALL *game sessions* this week to exclude those dates
         $sessionsThisWeek = GameSession::whereBetween('start_at', [$weekStartDate, $weekEndDate])
+            ->whereIn('status', [GameSessionStatus::CONFIRMED_BY_ORGANIZER, GameSessionStatus::RECRUITING_PARTICIPANTS])
             ->get()
             ->groupBy(fn($s) => $s->start_at->toDateString());
 
@@ -73,7 +75,7 @@ class GameSessionSlotService
                 }
 
                 // Check if still available
-                $isAvailable = $dt->isFuture() && $now->diffInHours($dt, false) > 2;
+                $isAvailable = $dt->isFuture() && $now->diffInHours($dt, false) > 2;//at least two hours until slot begins
                 if (! $isAvailable) {
                     return null;
                 }

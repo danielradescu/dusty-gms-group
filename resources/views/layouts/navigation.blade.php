@@ -27,8 +27,8 @@
                             </x-nav-link>
                         @endif
                         @if(Auth::user()->hasOrganizerPermission())
-                            <x-nav-link :href="route('game-sessions.create')"
-                                        :active="request()->routeIs('game-sessions.create')">
+                            <x-nav-link :href="route('game-session.create')"
+                                        :active="request()->routeIs('game-session.create')">
                                 {{ __('Create Session') }}
                             </x-nav-link>
                             <x-nav-link :href="route('management-join-request-index')"
@@ -159,8 +159,8 @@
                     </x-responsive-nav-link>
                 @endif
                 @if(Auth::user()->hasOrganizerPermission())
-                    <x-responsive-nav-link :href="route('game-sessions.create')"
-                                           :active="request()->routeIs('game-sessions.create')">
+                    <x-responsive-nav-link :href="route('game-session.create')"
+                                           :active="request()->routeIs('game-session.create')">
                         {{ __('Create Session') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('management-join-request-index')"

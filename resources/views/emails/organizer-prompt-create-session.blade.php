@@ -25,7 +25,7 @@
                     </p>
                 </div>
 
-                @component('mail::button', ['url' => route('game-sessions.create')])
+                @component('mail::button', ['url' => route('game-session.create')])
                     Create a Session
                 @endcomponent
 
