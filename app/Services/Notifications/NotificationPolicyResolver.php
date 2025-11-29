@@ -8,7 +8,8 @@ use App\Services\Notifications\Policies\{NotificationChannelPolicyInterface,
     SessionCanceledPolicy,
     SessionConfirmedPolicy,
     SessionCreatedPolicy,
-    SessionOrganizerMessagePolicy};
+    SessionOrganizerMessagePolicy,
+    SessionReminderPolicy};
 
 class NotificationPolicyResolver
 {
@@ -17,6 +18,7 @@ class NotificationPolicyResolver
         NotificationType::SESSION_CONFIRMED->value => SessionConfirmedPolicy::class,
         NotificationType::SESSION_CANCELED->value  => SessionCanceledPolicy::class,
         NotificationType::SESSION_ORGANIZER_MESSAGE->value  => SessionOrganizerMessagePolicy::class,
+        NotificationType::SESSION_REMINDER->value  => SessionReminderPolicy::class,
         // ... other types
     ];
 

@@ -6,7 +6,8 @@ use App\Enums\NotificationType;
 use App\Services\Notifications\Handlers\{SessionCanceledHandler,
     SessionConfirmedHandler,
     SessionCreatedHandler,
-    SessionOrganizerMessageHandler};
+    SessionOrganizerMessageHandler,
+    SessionReminderHandler};
 
 class NotificationHandlerFactory
 {
@@ -17,6 +18,7 @@ class NotificationHandlerFactory
             NotificationType::SESSION_CONFIRMED => app(SessionConfirmedHandler::class),
             NotificationType::SESSION_CANCELED  => app(SessionCanceledHandler::class),
             NotificationType::SESSION_ORGANIZER_MESSAGE => app(SessionOrganizerMessageHandler::class),
+            NotificationType::SESSION_REMINDER          => app(SessionReminderHandler::class),
             default => null,
         };
     }

@@ -44,6 +44,17 @@ class InAppTemplateFactory
                 ),
                 'link' => $session ? route('game-session.interaction.show', $session->uuid) . '#post-comment' : null,
             ],
+            NotificationType::SESSION_REMINDER => [
+                'title' => '⏰ Reminder: Upcoming Game Session',
+                'message' => sprintf(
+                    'Your session "%s" starts on %s at %s. Confirm your spot before it fills up!',
+                    $session->name,
+                    $session->start_at?->format('l, M j'),
+                    $session->start_at?->format('H:i')
+                ),
+                'link' => $session ? route('game-session.interaction.show', $session->uuid) : null,
+            ],
+
             default => [
                 'title' => 'Notification',
                 'message' => 'You have a new update.',
