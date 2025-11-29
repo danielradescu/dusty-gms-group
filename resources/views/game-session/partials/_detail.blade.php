@@ -159,7 +159,14 @@
                                     @endif
                                 @endif
                             @else
-                                @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::OpenPosition->value)
+
+                                @if(empty($registrationStatus)
+                                            || (
+                                                $registrationStatus?->value !== \App\Enums\RegistrationStatus::OpenPosition->value
+                                                && $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value
+                                                )
+
+                                            )
                                     <button type="submit" name="action" value="openPosition"
                                             class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
                                                        hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200

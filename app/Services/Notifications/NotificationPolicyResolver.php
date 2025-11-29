@@ -9,6 +9,7 @@ use App\Services\Notifications\Policies\{NotificationChannelPolicyInterface,
     SessionCanceledPolicy,
     SessionConfirmedPolicy,
     SessionCreatedPolicy,
+    SessionOpenSlotAvailablePolicy,
     SessionOrganizerMessagePolicy,
     SessionReminderPolicy};
 
@@ -21,6 +22,7 @@ class NotificationPolicyResolver
         NotificationType::SESSION_ORGANIZER_MESSAGE->value  => SessionOrganizerMessagePolicy::class,
         NotificationType::SESSION_REMINDER->value  => SessionReminderPolicy::class,
         NotificationType::SESSION_AUTO_JOINED->value => SessionAutoJoinedPolicy::class,
+        NotificationType::OPEN_SLOT_AVAILABLE->value => SessionOpenSlotAvailablePolicy::class,
         // ... other types
     ];
 

@@ -7,6 +7,7 @@ use App\Services\Notifications\Handlers\{SessionAutoJoinedHandler,
     SessionCanceledHandler,
     SessionConfirmedHandler,
     SessionCreatedHandler,
+    SessionOpenSlotAvailableHandler,
     SessionOrganizerMessageHandler,
     SessionReminderHandler};
 
@@ -21,6 +22,7 @@ class NotificationHandlerFactory
             NotificationType::SESSION_ORGANIZER_MESSAGE => app(SessionOrganizerMessageHandler::class),
             NotificationType::SESSION_REMINDER          => app(SessionReminderHandler::class),
             NotificationType::SESSION_AUTO_JOINED       => app(SessionAutoJoinedHandler::class),
+            NotificationType::OPEN_SLOT_AVAILABLE       => app(SessionOpenSlotAvailableHandler::class),
             default => null,
         };
     }

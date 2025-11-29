@@ -151,7 +151,7 @@ class GroupNotificationService
             ->groupBy(fn ($reg) => $reg->status->value);
 
         // fetch users who asked for open slot notifications
-        $openSlotUsers = $registrations[RegistrationStatus::OpenPosition->value] ?? collect()
+        $openSlotUsers = ($registrations[RegistrationStatus::OpenPosition->value] ?? collect())
             ->pluck('user') // convert to User collection
             ->unique('id');
 
@@ -164,7 +164,7 @@ class GroupNotificationService
         }
 
         // Users with reminders → EXCLUDE users already in $usersWatchingSlots
-        $reminderUsers = $registrations[RegistrationStatus::RemindMe2Days->value] ?? collect()
+        $reminderUsers = ($registrations[RegistrationStatus::RemindMe2Days->value] ?? collect())
             ->reject(fn($r) => $openSlotUsers->contains('id', $r->user_id))
             ->pluck('user') // convert to User collection
             ->unique('id');

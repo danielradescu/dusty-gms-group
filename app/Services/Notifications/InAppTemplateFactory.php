@@ -65,6 +65,15 @@ class InAppTemplateFactory
                 ),
                 'link' => $session ? route('game-session.interaction.show', $session->uuid) : null,
             ],
+            NotificationType::OPEN_SLOT_AVAILABLE => [
+                'title' => '🎯 A Spot Just Opened Up!',
+                'message' => sprintf(
+                    'Good news! A spot became available for "%s". Join before it’s taken!',
+                    $session->name
+                ),
+                'link' => $session ? route('game-session.interaction.show', $session->uuid) : null,
+            ],
+
 
             default => [
                 'title' => 'Notification',

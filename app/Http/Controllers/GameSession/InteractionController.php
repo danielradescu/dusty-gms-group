@@ -75,6 +75,10 @@ class InteractionController
                 } //otherwise don't break go to openPosition case
             case 'openPosition':
                 $registrationStatus = RegistrationStatus::OpenPosition;
+                //if by any chance anyone leaves before pressing the button while he/she stares at the session details
+                if ($initialConfirmedRegistrations < $gameSession->max_players) {
+                    $registrationStatus = RegistrationStatus::Confirmed;
+                }
                 break;
             case '2day':
                 //if there are less than two days + 1h, user can't register for a reminder
@@ -92,11 +96,15 @@ class InteractionController
                 abort(Response::HTTP_FORBIDDEN, 'Unidentified action!');
         }
 
-        $registration = Registration::create([
-            'user_id' => $user->id,
-            'game_session_id' => $gameSession->id,
-            'status' => $registrationStatus,
-        ]);
+        $registration = Registration::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'game_session_id' => $gameSession->id,
+            ],
+            [
+                'status' => $registrationStatus,
+            ]
+        );
 
         if ($registration->status === RegistrationStatus::Confirmed) {
             // Disable all auto-joins for that user's sessions on the same day
