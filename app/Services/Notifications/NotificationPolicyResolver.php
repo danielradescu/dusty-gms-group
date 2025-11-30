@@ -5,6 +5,7 @@ namespace App\Services\Notifications;
 use App\Enums\NotificationType;
 use App\Models\User;
 use App\Services\Notifications\Policies\{NotificationChannelPolicyInterface,
+    OrganizerOfASessionPolicy,
     OrganizerPromptCreatePolicy,
     SessionAutoJoinedPolicy,
     SessionCanceledPolicy,
@@ -27,6 +28,7 @@ class NotificationPolicyResolver
         NotificationType::OPEN_SLOT_AVAILABLE->value => SessionOpenSlotAvailablePolicy::class,
         NotificationType::ORGANIZER_PROMPT_CREATE->value => OrganizerPromptCreatePolicy::class,
         NotificationType::NEW_COMMENT->value => SessionOrganizerNewCommentPolicy::class,
+        NotificationType::ORGANIZER_OF_A_SESSION->value => OrganizerOfASessionPolicy::class,
         // ... other types
     ];
 

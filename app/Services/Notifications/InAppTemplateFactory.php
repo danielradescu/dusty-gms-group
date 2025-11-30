@@ -90,6 +90,14 @@ class InAppTemplateFactory
                 ),
                 'link' => route('game-session.interaction.show', $context['session']->uuid) . '#post-comment',
             ],
+            NotificationType::ORGANIZER_OF_A_SESSION => [
+                'title' => '🧭 You’re Now the Organizer!',
+                'message' => sprintf(
+                    'You’re the organizer of "%s". Manage participants, confirm details, and guide the event flow.',
+                    $context['session']->name
+                ),
+                'link' => route('game-session.manage.edit', $context['session']->uuid),
+            ],
 
 
 
