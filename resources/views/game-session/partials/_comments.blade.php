@@ -11,18 +11,23 @@
                 name="body"
                 rows="3"
                 placeholder="Share your thoughts about this session..."
-                class="w-full p-3 rounded-lg border border-gray-700 bg-gray-900 text-gray-200
-                       placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                class="w-full p-3 rounded-lg border resize-none
+                   border-gray-300 bg-white text-gray-800 placeholder-gray-500
+                   focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+                   dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder-gray-500"
             ></textarea>
+
             @error('body')
-            <p class="text-sm text-red-400 mt-1">{{ $message }}</p>
+            <p class="text-sm text-red-500 dark:text-red-400 mt-1">{{ $message }}</p>
             @enderror
-            <input type="hidden" name="game_session_uuid" value="{{$gameSession->uuid}}">
+
+            <input type="hidden" name="game_session_uuid" value="{{ $gameSession->uuid }}">
 
             <div class="mt-2 flex justify-end">
                 <button
                     type="submit"
-                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm
+                       focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 >
                     Post Comment
                 </button>
@@ -33,34 +38,43 @@
     <!-- Comment List -->
     <div class="space-y-5">
         @forelse($comments as $comment)
-            <div class="{{ $comment->is_announcement
-        ? 'bg-amber-100/10 border-amber-400/30'
-        : 'bg-gray-800 border-gray-700'
-    }} rounded-lg p-4 border">
+            <div
+                class="rounded-lg p-4 border
+                   {{ $comment->is_announcement
+                        ? 'bg-amber-50 border-amber-200 dark:bg-amber-100/10 dark:border-amber-400/30'
+                        : 'bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700' }}"
+            >
                 <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-3">
-                        <img src="{{ asset($comment->user->getPhotoURL()) }}" alt="Avatar"
+                        <img src="{{ asset($comment->user->getPhotoURL()) }}"
+                             alt="Avatar"
                              class="w-8 h-8 rounded-full object-cover">
                         <span
-                            class="font-semibold {{ $comment->is_announcement ? 'text-amber-300' : 'text-gray-200' }}">
-                {{ $comment->user->name }}
-            </span>
+                            class="font-semibold
+                               {{ $comment->is_announcement
+                                    ? 'text-amber-800 dark:text-amber-300'
+                                    : 'text-gray-800 dark:text-gray-200' }}">
+                        {{ $comment->user->name }}
+                    </span>
 
-                        {{-- Optional small badge --}}
                         @if($comment->is_announcement)
                             <span
-                                class="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded-full uppercase tracking-wide">
-                    Announcement
-                </span>
+                                class="text-xs px-2 py-0.5 rounded-full uppercase tracking-wide
+                                   bg-amber-200 text-amber-800
+                                   dark:bg-amber-500/20 dark:text-amber-300">
+                            Announcement
+                        </span>
                         @endif
                     </div>
 
-                    <span class="text-sm text-gray-500">
-            {{ $comment->created_at->format('l, M j, Y · H:i') }}
-        </span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ $comment->created_at->format('l, M j, Y · H:i') }}
+                </span>
                 </div>
 
-                <p class="text-gray-300">{{ $comment->body }}</p>
+                <p class="text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                    {{ $comment->body }}
+                </p>
             </div>
 
         @empty
@@ -76,4 +90,5 @@
             </p>
         @endforelse
     </div>
+
 </section>

@@ -20,7 +20,7 @@
             <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 font-semibold uppercase">Status</p>
                 <p>
-                    <x-session-status-badge :status="$gameSession->status" />
+                    <x-session-status-badge :status="$gameSession->status"/>
                 </p>
             </div>
 
@@ -72,61 +72,79 @@
 
             $declinedCount = $registrations->where('status', \App\Enums\RegistrationStatus::Declined->value)->count();
         @endphp
-        <div class="mt-6 bg-gray-800/60 rounded-lg p-4 border border-gray-700">
-            <h3 class="text-sm uppercase tracking-wide text-gray-400 font-semibold mb-3">
+        <div class="mt-6 rounded-lg p-4 border
+            bg-white/80 border-gray-200
+            dark:bg-gray-800/60 dark:border-gray-700">
+
+            <h3 class="text-sm uppercase tracking-wide font-semibold mb-3
+               text-gray-700 dark:text-gray-400">
                 Attendance Status
             </h3>
 
             <!-- Confirmed -->
             <div class="flex justify-between mb-2">
-                <span class="font-medium text-gray-200 flex items-center gap-2">
-                    ✅Confirmed:
+                <span class="font-medium flex items-center gap-2
+                             text-gray-800 dark:text-gray-200">
+                    ✅ Confirmed:
                 </span>
-                <div class="-space-x-2">
-                    @forelse($confirmedRegistrations as $r)
-                        <img src="{{ asset($r->user->getPhotoURL()) }}"
-                             class="inline-block w-6 h-6 rounded-full ring-2 ring-gray-900"
-                             alt="Meeple">
-                    @empty
-                        <span class="text-gray-400 text-sm">– None –</span>
-                    @endforelse
-                </div>
-            </div>
-            <!-- Interested -->
-            <div class="flex justify-between mb-2">
-                <span class="font-medium text-gray-200 flex items-center gap-2">
-                    👀Interested:
+                        <div class="-space-x-2">
+                            @forelse($confirmedRegistrations as $r)
+                                <img src="{{ asset($r->user->getPhotoURL()) }}"
+                                     class="inline-block w-6 h-6 rounded-full ring-2
+                                    ring-white dark:ring-gray-900"
+                                     alt="Meeple">
+                            @empty
+                                <span class="text-gray-500 dark:text-gray-400 text-sm">– None –</span>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <!-- Interested -->
+                    <div class="flex justify-between mb-2">
+                <span class="font-medium flex items-center gap-2
+                             text-gray-800 dark:text-gray-200">
+                    👀 Interested:
                 </span>
-                <div class="-space-x-2">
-                    @forelse($interestedRegistrations as $r)
-                        <img src="{{ asset($r->user->getPhotoURL()) }}"
-                             class="inline-block w-6 h-6 rounded-full ring-2 ring-gray-900"
-                             alt="Meeple">
-                    @empty
-                        <span class="text-gray-400 text-sm">– None –</span>
-                    @endforelse
-                </div>
-            </div>
-            <!-- Declined -->
-            <div class="flex items-center justify-between">
-                <span class="font-medium text-gray-200 flex items-center gap-2">
-                    🚫Declined:
+                        <div class="-space-x-2">
+                            @forelse($interestedRegistrations as $r)
+                                <img src="{{ asset($r->user->getPhotoURL()) }}"
+                                     class="inline-block w-6 h-6 rounded-full ring-2
+                                    ring-white dark:ring-gray-900"
+                                     alt="Meeple">
+                            @empty
+                                <span class="text-gray-500 dark:text-gray-400 text-sm">– None –</span>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <!-- Declined -->
+                    <div class="flex items-center justify-between">
+                <span class="font-medium flex items-center gap-2
+                             text-gray-800 dark:text-gray-200">
+                    🚫 Declined:
                 </span>
-                <span class="text-gray-400 text-sm">x{{ $declinedCount ?? 0 }}</span>
+                        <span class="text-gray-600 dark:text-gray-400 text-sm">
+                    x{{ $declinedCount ?? 0 }}
+                </span>
             </div>
         </div>
+
 
         <!-- User Interaction -->
         <div class="pt-6 center-items">
             @if(auth()->check())
                 @if ($gameSession->isEditable())
                     @if($registrationStatus)
-                        <p class="mb-2">You are currently marked as <x-registration-status-badge :status="$registrationStatus" /></p>
+                        <p class="mb-2">You are currently marked as
+                            <x-registration-status-badge :status="$registrationStatus"/>
+                        </p>
                         @if ($gameSession->organized_by != auth()->user()->id)
                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that?</p>
                         @else
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that? As an
-                                organizer you need to assign another user as organizer before leaving this game session.</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Would you like to change that? As
+                                an
+                                organizer you need to assign another user as organizer before leaving this game
+                                session.</p>
                         @endif
                     @endif
                     @if ($gameSession->organized_by != auth()->user()->id)
@@ -153,7 +171,8 @@
                                                 class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
                                                    hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
                                                    dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
-                                            ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still
+                                            ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) —
+                                            still
                                             deciding.
                                         </button>
                                     @endif
