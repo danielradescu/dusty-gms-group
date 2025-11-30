@@ -10,6 +10,7 @@ use App\Services\Notifications\Handlers\{OrganizerPromptCreateHandler,
     SessionCreatedHandler,
     SessionOpenSlotAvailableHandler,
     SessionOrganizerMessageHandler,
+    SessionOrganizerNewCommentHandler,
     SessionReminderHandler};
 
 class NotificationHandlerFactory
@@ -25,6 +26,7 @@ class NotificationHandlerFactory
             NotificationType::SESSION_AUTO_JOINED       => app(SessionAutoJoinedHandler::class),
             NotificationType::OPEN_SLOT_AVAILABLE       => app(SessionOpenSlotAvailableHandler::class),
             NotificationType::ORGANIZER_PROMPT_CREATE   => app(OrganizerPromptCreateHandler::class),
+            NotificationType::NEW_COMMENT               => app(SessionOrganizerNewCommentHandler::class),
             default => null,
         };
     }

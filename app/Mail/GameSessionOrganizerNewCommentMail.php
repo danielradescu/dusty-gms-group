@@ -8,13 +8,11 @@ class GameSessionOrganizerNewCommentMail extends Mailable
 {
     public $organizer;
     public $session;
-    public $comment;
 
-    public function __construct($organizer, $session, $comment)
+    public function __construct($organizer, $session)
     {
         $this->organizer = $organizer;
         $this->session = $session;
-        $this->comment = $comment;
     }
 
     public function build()

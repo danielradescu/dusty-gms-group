@@ -14,12 +14,12 @@ class CommentController extends Controller
     public function store(CreateCommentRequest $request)
     {
         $gameSession = GameSession::where('uuid', $request->get('game_session_uuid'))->firstOrFail();
-        $comment = new Comment();
 
-        $comment->body = $request->get('body');
-        $comment->game_session_id = $gameSession->id;
-        $comment->user_id = auth()->user()->id;
-        $comment->save();
+        $comment = Comment::updateOrCreate([
+            'body' => $request->get('body'),
+            'game_session_id' => $gameSession->id,
+            'user_id' => auth()->user()->id,
+        ]);
 
         XP::grantOncePerDay(auth()->user(), 'comment_session');
 

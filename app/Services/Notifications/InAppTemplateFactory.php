@@ -82,6 +82,15 @@ class InAppTemplateFactory
                 ),
                 'link' => route('game-session.create', ['date' => $context['target_date']]),
             ],
+            NotificationType::NEW_COMMENT => [
+                'title' => '💬 New Comment on Your Game Session',
+                'message' => sprintf(
+                    'A participant commented on "%s". Check the discussion before the event!',
+                    $context['session']->name
+                ),
+                'link' => route('game-session.interaction.show', $context['session']->uuid) . '#post-comment',
+            ],
+
 
 
             default => [

@@ -9,8 +9,23 @@
                 <p style="margin:0 0 16px 0;">Hey <strong>{{ $organizer->name }}</strong>,</p>
 
                 <p style="margin:0 0 24px 0;">
-                    A new comment was just added to your board game session:
+                    Someone just added a new comment in the game session you’re organizing —
+                    <strong>{{ $session->name }}</strong>.
                 </p>
+
+                <p style="margin:0 0 24px 0;">
+                    Your participants are starting to engage and may have questions, suggestions, or updates.
+                    A quick reply from you helps keep everyone informed and shows that the session is active and well-organized.
+                </p>
+
+                {{-- If the session is happening today --}}
+                @if($session->start_at && $session->start_at->isToday())
+                    <p style="margin:0 0 24px 0; color:#dc2626; font-weight:500;">
+                        🚨 <strong>Today is the day!</strong><br>
+                        This is the most important moment to stay connected — make sure everyone knows the final details like the meeting point or any last-minute changes.
+                        Your communication today helps ensure the session runs smoothly and participants show up prepared.
+                    </p>
+                @endif
 
                 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f9fafb; border-radius:8px; padding:16px 20px; margin-bottom:24px;">
                     <tr><td>🎲 <strong>Game:</strong> {{ $session->name }}</td></tr>
@@ -19,27 +34,14 @@
                     <tr><td>📍 <strong>Location:</strong> {{ $session->location ?? 'Not specified' }}</td></tr>
                 </table>
 
-                <div style="background:#eef2ff; border-left:4px solid #4f46e5; padding:12px 16px; border-radius:6px; margin-bottom:24px;">
-                    <p style="margin:0; color:#1e3a8a;">
-                        <strong>{{ $comment->user->name }}</strong>
-                        <span style="font-weight:400; color:#6b7280;">
-                        · {{ $comment->created_at->format('l, M j, Y · H:i') }}
-                    </span>
-                    </p>
-                    <p style="margin:8px 0 0 0; color:#111827;">“{{ $comment->body }}”</p>
-                </div>
-
-                <p style="margin-top:20px;">
-                    You can reply directly on the session page to keep the discussion going:
+                <p style="margin:28px 0 16px 0;">
+                    💡 <em>Active communication keeps your session healthy and builds trust among players.</em><br>
+                    A small follow-up message or clarification can go a long way.
                 </p>
 
                 @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid) . '#post-comment'])
                     View Comment & Reply
                 @endcomponent
-
-                <p style="margin-top:28px;">
-                    Keeping the conversation active helps everyone stay informed and excited!
-                </p>
 
                 <p style="margin-top:20px;">
                     🎲 Thanks for keeping the community engaged.<br>

@@ -22,7 +22,6 @@ class Notification extends Model
 
     protected $casts = [
         'data' => 'array',
-        'send_at' => 'datetime',
         'type' => NotificationType::class,
         'status' => NotificationStatus::class,
     ];

@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Enums\RegistrationStatus;
 use App\Models\Comment;
 use App\Models\GameSession;
 use App\Models\Notification;
 use App\Enums\NotificationType;
 use App\Enums\NotificationStatus;
+use App\Models\Registration;
 use Carbon\Carbon;
 
 class UserNotificationService
@@ -42,7 +44,7 @@ class UserNotificationService
 
             if ($notification->status === NotificationStatus::SCHEDULED) {
                 $notification->data = $data;
-                $notification->send_at = $sendAt;
+                $notification->send_at = $sendAt->format('Y-m-d H:i:s');
                 $notification->save();
             }
 
@@ -178,6 +180,7 @@ class UserNotificationService
         );
     }
 
+
     /** When a new comment was added send notification to the organizer */
     public function gameSessionOrganizerNewCommentAdded(int $sessionId, int $commentId): ?Notification
     {
@@ -187,16 +190,49 @@ class UserNotificationService
         // Organizer of the session
         $organizer = $session->organizer;
 
+        //don't alert if the comment was made by the organizer himself
         if ((! $organizer) || ($organizer->id === $comment->user->id)) {
             return null;
+        }
+
+        //don't alert if the comment was made a user that is not a confirmed participant
+        if (! Registration::where('game_session_id', $sessionId)->where('user_id', $comment->user->id)->where('status', RegistrationStatus::Confirmed)->exists()) {
+            return null;
+        }
+
+        // Use a single frozen reference point
+        $now = now()->copy()->seconds(0)->microseconds(0);
+
+        //usually commenting a session, will alert the organizer once per 4h
+
+        $interval = 4; // 4-hour blocks
+        $currentHour = $now->hour;
+
+        // Find the *next* multiple of 4 hours
+        $nextSlotHour = ceil(($currentHour + 1) / $interval) * $interval;
+
+
+        $sendAt = $now->copy()->startOfDay()->addHours($nextSlotHour);
+
+        // if it wrapped to 24h → move to next day at 00:00
+        if ($nextSlotHour >= 24) {
+            $sendAt = $now->copy()->addDay()->startOfDay();
+        }
+
+        $hashPart = $sendAt->format('Y-m-d-H');
+
+        //but if we are in the day of the event, we need the fastest response time:
+        if (now()->isSameDay($session->start_at)) {
+            $sendAt = $now->copy()->addMinute(); // keep seconds clean
+            $hashPart = $sendAt->format('Y-m-d-H-i');
         }
 
         return $this->schedule(
             userId: $organizer->id,
             type: NotificationType::NEW_COMMENT,
             data: ['session_id' => $sessionId, 'comment_id' => $commentId],
-            sendAt: now()->addMinutes(2), // short delay, adjust as needed
-            hashParts: [$sessionId, NotificationType::NEW_COMMENT->name, $comment->user->id, now()->format('Y-m-d-H')] //only once in an hour
+            sendAt: $sendAt, // variable send at
+            hashParts: [$sessionId, NotificationType::NEW_COMMENT->name, $hashPart]
         );
     }
 

@@ -16,6 +16,8 @@ class Comment extends Model
      */
     protected $fillable = [
         'body',
+        'game_session_id',
+        'user_id',
     ];
 
     public function user()
