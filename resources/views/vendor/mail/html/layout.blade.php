@@ -57,7 +57,7 @@
                         <p style="margin:0;">
                             You received this email because you opted in to receive updates from us.
                             If you no longer wish to receive notifications, you can
-                            <a href="{{ $unsubscribeUrl ?? '#' }}" style="color:#4f46e5; text-decoration:underline;">
+                            <a href="{{ route('unsubscribe') ?? '#' }}" style="color:#4f46e5; text-decoration:underline;">
                                 unsubscribe here
                             </a>.
                         </p>

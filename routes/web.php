@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GameSession\CreateSessionController;
+use App\Http\Controllers\GameSession\FinalizeGameSessionController;
 use App\Http\Controllers\GameSession\InteractionController;
 use App\Http\Controllers\GameSession\ManagementController as GameSessionManagementController;
 use App\Http\Controllers\GameSessionRequestController;
@@ -46,6 +47,8 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
     Route::patch('/game-session/{uuid}/core-info', [GameSessionManagementController::class, 'updateCoreInfo'])->name('game-session.manage.update.core-info');
     Route::patch('/game-session/{uuid}/status', [GameSessionManagementController::class, 'updateStatus'])->name('game-session.manage.update.status');
     Route::patch('/game-session/{uuid}/organizer', [GameSessionManagementController::class, 'updateOrganizer'])->name('game-session.manage.update.organizer');
+    Route::get('/game-session/{uuid}/finalize', [FinalizeGameSessionController::class, 'create'])->name('game-session.finalize.create');
+    Route::post('/game-session/{uuid}/finalize', [FinalizeGameSessionController::class, 'store'])->name('game-session.finalize.store');
 
     //comments:
     Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
@@ -56,8 +59,9 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
     Route::post('/game-session-request', [GameSessionRequestController::class, 'store'])->name('game-session-request.store');
 
     //notification subscriptions
-    Route::get('/notification', [NotificationSubscriptionController::class, 'edit'])->name('notification-subscription.edit');
-    Route::post('/notification', [NotificationSubscriptionController::class, 'update'])->name('notification-subscription.update');
+    Route::get('/notification-subscription', [NotificationSubscriptionController::class, 'edit'])->name('notification-subscription.edit');
+    Route::post('/notification-subscription', [NotificationSubscriptionController::class, 'update'])->name('notification-subscription.update');
+    Route::get('/unsubscribe', [NotificationSubscriptionController::class, 'edit'])->name('unsubscribe');
 
     //notifications:
     Route::get('/notifications', [InAppNotificationController::class, 'index'])->name('in-app-notifications.index');

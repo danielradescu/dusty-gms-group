@@ -28,7 +28,7 @@ class UpdateStatusRequest extends FormRequest
         }
 
         // Deny if not found or status/type is not RECRUITING_PARTICIPANTS
-        return $this->gameSession && in_array($this->gameSession->status, [GameSessionStatus::RECRUITING_PARTICIPANTS, GameSessionStatus::CONFIRMED_BY_ORGANIZER]);
+        return $this->gameSession &&  $this->gameSession->canChangeStatus();
     }
 
     /**

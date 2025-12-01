@@ -31,11 +31,7 @@ class SessionOrganizerOfASessionHandler extends NotificationHandlerBase
         }
 
         // Session must be in valid state
-        if (! in_array(
-            $this->session->status,
-            [GameSessionStatus::RECRUITING_PARTICIPANTS, GameSessionStatus::CONFIRMED_BY_ORGANIZER],
-            true
-        )) {
+        if (! $this->session->canChangeStatus()) {
             return RelevanceResult::fail('Session is not open for organization');
         }
 

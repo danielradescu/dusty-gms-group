@@ -4,6 +4,7 @@ namespace App\Http\Requests\GameSession;
 
 use App\Enums\GameComplexity;
 use App\Enums\GameSessionStatus;
+use App\Enums\RegistrationStatus;
 use App\Models\GameSession;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -92,6 +93,11 @@ class UpdateCoreInfoRequest extends FormRequest
                 'integer',
                 'gt:min_players', // greater than min
                 'max:12',
+                function ($attribute, $value, $fail) {
+                    if ($this->gameSession->registrations()->where('status', RegistrationStatus::Confirmed)->count() > $value) {
+                        $fail('You have more people that already confirmed the attendance for this game session. You need to choose a greater value.');
+                    }
+                }
             ],
 
             'complexity' => [

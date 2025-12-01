@@ -10,6 +10,7 @@ return [
         'comment_session' => 1, //day
         'request_session_weekly' => 3, //week
         'participate_completed_successful_session' => 10, //every time
+        'invited_new_member_plays_a_session' => 1, //per successfully game session
 
         // Organizer actions
         'organizer_create_session' => 5, //every time

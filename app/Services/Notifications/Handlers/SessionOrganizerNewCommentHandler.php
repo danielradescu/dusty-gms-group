@@ -41,11 +41,7 @@ class SessionOrganizerNewCommentHandler extends NotificationHandlerBase
         }
 
         // Skip if session not accepting participants anymore
-        if (! in_array(
-            $this->session->status,
-            [GameSessionStatus::RECRUITING_PARTICIPANTS, GameSessionStatus::CONFIRMED_BY_ORGANIZER],
-            true
-        )) {
+        if (! $this->session->canChangeStatus()) {
             return RelevanceResult::fail('Session not open for participant interaction');
         }
 

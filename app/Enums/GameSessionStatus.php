@@ -16,8 +16,8 @@ enum GameSessionStatus: int
             self::RECRUITING_PARTICIPANTS => 'Recruiting participants',
             self::CONFIRMED_BY_ORGANIZER => 'Confirmed by organizer',
             self::CANCELLED => 'Cancelled',
-            self::FAILED => 'Failed',
-            self::SUCCEEDED => 'Succeeded',
+            self::FAILED => '👎 Failed 👎',
+            self::SUCCEEDED => '👍 Succeeded 👍',
 
         };
     }

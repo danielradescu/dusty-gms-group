@@ -17,4 +17,5 @@ enum NotificationType: int
     // this notification for when you organize or other promote you to organizer of a session (admin when create a session || organizer or admin when they manage session)
     case SESSION_FEEDBACK = 11;     // “Issue or suggestion regarding a session”
     case WEBSITE_FEEDBACK = 12;     // “Issue or suggestion regarding the website”
+    case NEW_JOIN_COMMUNITY_REQUEST = 13;// possible a new member to join us
 }

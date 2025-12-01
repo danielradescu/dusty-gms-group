@@ -69,7 +69,7 @@
                                     </p>
                                 </div>
 
-                                <a href="{{ route('game-session.manage.edit', $session->uuid) }}"
+                                <a href="{{ route('game-session.finalize.create', $session->uuid) }}"
                                    class="inline-flex items-center px-3 py-1.5 rounded-md bg-rose-600 text-white hover:bg-rose-700
                                       focus:outline-none focus:ring-2 focus:ring-rose-400 shadow-sm transition text-sm">
                                     Finalize

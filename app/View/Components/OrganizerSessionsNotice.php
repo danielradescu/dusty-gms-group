@@ -33,8 +33,9 @@ class OrganizerSessionsNotice extends Component
             $this->finishedSessions = GameSession::query()
                 ->where('organized_by', $user->id)
                 ->where('start_at', '<', now())
-                ->whereIn('status', [ GameSessionStatus::CONFIRMED_BY_ORGANIZER ])
-                ->orderBy('start_at') ->get();
+                ->whereIn('status', [ GameSessionStatus::RECRUITING_PARTICIPANTS, GameSessionStatus::CONFIRMED_BY_ORGANIZER ])
+                ->orderBy('start_at')
+                ->get();
         }
     }
 

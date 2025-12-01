@@ -50,5 +50,8 @@
                 {{ __('Register') }}
             </x-primary-button>
         </div>
+        @if (session('error'))
+            <x-input-error :messages="session('error')" class="mt-2" />
+        @endif
     </form>
 </x-guest-layout>

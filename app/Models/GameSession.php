@@ -32,6 +32,8 @@ class GameSession extends Model
         'location',
         'start_at',
         'name',
+        'status',
+        'note',
     ];
 
     protected $casts = [
@@ -64,14 +66,18 @@ class GameSession extends Model
 
     public function isEditable(): bool
     {
-        return (now() < $this->start_at)
-            && in_array($this->status, [GameSessionStatus::RECRUITING_PARTICIPANTS, GameSessionStatus::CONFIRMED_BY_ORGANIZER]);
+        return (now() < $this->start_at) && $this->canChangeStatus();
     }
 
     public function myRegistration()
     {
         return $this->hasOne(\App\Models\Registration::class)
             ->where('user_id', auth()->id());
+    }
+
+    public function canChangeStatus()
+    {
+        return in_array($this->status, [GameSessionStatus::CONFIRMED_BY_ORGANIZER, GameSessionStatus::RECRUITING_PARTICIPANTS], true);
     }
 
 }

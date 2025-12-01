@@ -12,6 +12,13 @@
         'RECRUITING_PARTICIPANTS' =>
             'bg-yellow-100 text-yellow-800 border border-yellow-200
              dark:bg-yellow-700/40 dark:text-yellow-100 dark:border-yellow-600/50',
+        'SUCCEEDED' =>
+            'bg-gradient-to-r from-green-100 to-emerald-200 text-green-800 border border-green-300
+             dark:from-green-700/60 dark:to-emerald-700/40 dark:text-green-100 dark:border-green-600/60',
+
+        'FAILED' =>
+            'bg-gradient-to-r from-red-100 to-rose-200 text-red-800 border border-red-300
+             dark:from-red-700/50 dark:to-rose-700/40 dark:text-red-100 dark:border-red-600/60',
     ];
 
 
