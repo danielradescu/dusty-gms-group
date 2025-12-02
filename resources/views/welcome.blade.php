@@ -211,9 +211,9 @@
         </div>
 
         <p class="text-sm text-gray-600 dark:text-gray-400">
-            Contact: <a href="mailto:{{ env('APP_CONTACT_EMAIL') }}"
+            Contact: <a href="mailto:{{ config('app.contact_email') }}"
                         class="text-indigo-600 dark:text-indigo-400 hover:underline">
-                {{ env('APP_CONTACT_EMAIL') }}
+                {{ config('app.contact_email') }}
             </a>
         </p>
 

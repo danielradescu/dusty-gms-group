@@ -107,7 +107,7 @@
                         <h2 class="text-xl font-semibold mb-2">12. Contact</h2>
                         <p>
                             If you have any questions regarding these Terms, email us at:
-                            <strong>{{env('APP_CONTACT_EMAIL')}}</strong>.
+                            <strong>{{config('app.contact_email')}}</strong>.
                         </p>
                     </section>
 

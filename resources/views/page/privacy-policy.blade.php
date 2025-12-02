@@ -73,7 +73,7 @@
                         <p>
                             You have the right to access, correct, delete, or export your personal data at any time.
                             You may also withdraw consent or edit your notification preferences in your account settings.
-                            To exercise these rights, contact us at <strong>{{ env('APP_CONTACT_EMAIL') }}</strong>.
+                            To exercise these rights, contact us at <strong>{{ config('app.contact_email') }}</strong>.
                         </p>
                     </section>
 
@@ -85,7 +85,7 @@
 
                     <section>
                         <h2 class="text-xl font-semibold mb-2">9. Contact Us</h2>
-                        <p>If you have questions or requests regarding your personal data or this policy, contact us at <strong>{{ env('APP_CONTACT_EMAIL') }}</strong>.</p>
+                        <p>If you have questions or requests regarding your personal data or this policy, contact us at <strong>{{ config('app.contact_email') }}</strong>.</p>
                     </section>
 
                 </div>

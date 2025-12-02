@@ -118,7 +118,7 @@ class RegisteredUserController extends Controller
                 'email' => $request->email,
             ]);
 
-            return redirect()->back()->with('error', 'Error registering, try again later or contact us if the problem persists at: ' . env('APP_CONTACT_EMAIL'));
+            return redirect()->back()->with('error', 'Error registering, try again later or contact us if the problem persists at: ' . config('app.contact_email'));
         }
 
     }
