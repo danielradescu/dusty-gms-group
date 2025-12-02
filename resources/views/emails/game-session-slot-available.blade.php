@@ -23,7 +23,7 @@
                     If you still want to play, grab your spot soon — seats tend to fill up quickly.
                 </p>
 
-                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid)])
+                @component('mail::button', ['url' => $mainButtonLink])
                     Join the Session
                 @endcomponent
 
@@ -34,9 +34,11 @@
 
                 <p style="margin-top:20px;">
                     We can’t wait to see you at the table!<br>
-                    <strong>The Iasi Board Gaming Community Team</strong>
+                    <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent

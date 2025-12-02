@@ -23,7 +23,7 @@
                 <tr>
                     <td style="background:#4f46e5; padding:24px; text-align:center;">
                         <h1 style="margin:0; color:white; font-size:22px; font-weight:600;">
-                            Iasi Board Gaming Community
+                            Iași Board Gaming Community
                         </h1>
                     </td>
                 </tr>
@@ -44,29 +44,7 @@
                         </td>
                     </tr>
                 @endisset
-
-                <!-- FOOTER -->
-                <tr>
-                    <td style="background:#f9fafb; padding:20px 32px; text-align:center;
-                                   font-size:12px; color:#6b7280; line-height:1.6;">
-
-                        <p style="margin:0 0 8px;">
-                            © {{ date('Y') }} Iasi Board Gaming Community. All rights reserved.
-                        </p>
-
-                        <p style="margin:0;">
-                            You received this email because you opted in to receive updates from us.
-                            If you no longer wish to receive notifications, you can
-                            <a href="{{ route('unsubscribe') ?? '#' }}" style="color:#4f46e5; text-decoration:underline;">
-                                unsubscribe here
-                            </a>.
-                        </p>
-
-                    </td>
-                </tr>
-
             </table>
-
         </td>
     </tr>
 </table>

@@ -3,7 +3,7 @@
 
         <!-- Copyright -->
         <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-            © {{ date('Y') }} Iasi Board Gaming Community. All rights reserved.
+            © {{ date('Y') }} Iași Board Gaming Community. All rights reserved.
         </p>
 
         <!-- Links -->

@@ -4,13 +4,13 @@
         <tr>
             <td>
                 <h1 style="font-size:24px; font-weight:700; color:#4f46e5; margin-bottom:20px;">
-                    🎉 Welcome to the Iasi Board Gaming Community!
+                    🎉 Welcome to the Iași Board Gaming Community!
                 </h1>
 
                 <p style="margin:0 0 16px 0;">Hey <strong>{{ $joinRequest->name }}</strong>,</p>
 
                 <p style="margin:0 0 24px 0;">
-                    Great news — your request to join the <strong>Iasi Board Gaming Community</strong> has been approved!
+                    Great news — your request to join the <strong>Iași Board Gaming Community</strong> has been approved!
                     We’re excited to welcome you into our circle of players, strategists, and board game lovers.
                 </p>
 
@@ -39,9 +39,11 @@
                 </p>
 
                 <p style="margin-top:20px;">
-                    — <strong>The Iasi Board Gaming Community Team</strong>
+                    — <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer')
+    @endcomponent
 @endcomponent

@@ -1,5 +1,5 @@
 <div class="w-full px-3 sm:px-6 lg:px-8 py-8">
-    <h2 class="text-lg font-semibold text-gray-100 mb-4 flex items-center gap-2">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
         🎲 Upcoming Game Sessions
     </h2>
 

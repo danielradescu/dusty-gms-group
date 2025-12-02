@@ -24,7 +24,7 @@
                     We’re sorry for any inconvenience caused. Please check our platform for other available sessions — we’d love to see you join another game soon!
                 </p>
 
-                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid)])
+                @component('mail::button', ['url' => $mainButtonLink])
                     View Game Session
                 @endcomponent
 
@@ -35,4 +35,6 @@
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent

@@ -15,15 +15,31 @@ class MagicLoginController extends Controller
 
         $record = MagicLink::where('token', hash('sha256', $token))->first();
 
+        // If the user is already logged in, skip token check entirely
+        if (Auth::check()) {
+            if ($record && Auth::id() === $record->user_id) {
+                // same user — proceed normally
+                return redirect()->intended($redirect);
+            }
+
+            // different user — log out to avoid cross-session confusion
+            Auth::logout();
+        }
+
+        // Otherwise, process magic link normally
         if ($record && ! $record->isExpired()) {
             Auth::loginUsingId($record->user_id);
+            // optional: $record->delete();
             return redirect()->intended($redirect);
         }
 
-        // Save intended URL before forcing login
+        // fallback: session intended + login redirect
         session()->put('url.intended', $redirect);
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with(
+            'error',
+            'Your link is invalid or expired. Please log in manually.'
+        );
     }
 
     protected function validateRedirect(?string $redirect): string

@@ -91,7 +91,7 @@
                     Ready to take charge? You can manage everything directly from your organizer dashboard:
                 </p>
 
-                @component('mail::button', ['url' => route('game-session.manage.edit', $session->uuid)])
+                @component('mail::button', ['url' => $mainButtonLink])
                     Manage Session
                 @endcomponent
 
@@ -101,9 +101,11 @@
                 </p>
 
                 <p style="margin-top:20px;">
-                    — <strong>The Iasi Board Gaming Community Team</strong>
+                    — <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent

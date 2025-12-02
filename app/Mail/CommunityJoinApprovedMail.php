@@ -16,7 +16,7 @@ class CommunityJoinApprovedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('🎉 Welcome to the Iasi Board Gaming Community!')
+        return $this->subject('🎉 Welcome to the Iași Board Gaming Community!')
             ->markdown('emails.community-join-approved');
     }
 }

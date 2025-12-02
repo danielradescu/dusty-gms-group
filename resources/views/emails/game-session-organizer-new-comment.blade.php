@@ -39,15 +39,17 @@
                     A small follow-up message or clarification can go a long way.
                 </p>
 
-                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid) . '#post-comment'])
+                @component('mail::button', ['url' => $mainButtonLink . '#post-comment'])
                     View Comment & Reply
                 @endcomponent
 
                 <p style="margin-top:20px;">
                     🎲 Thanks for keeping the community engaged.<br>
-                    — <strong>The Iasi Board Gaming Community Team</strong>
+                    — <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent

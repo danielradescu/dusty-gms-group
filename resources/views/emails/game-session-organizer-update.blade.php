@@ -28,15 +28,17 @@
                     You can view the session details and continue the discussion with the community:
                 </p>
 
-                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid) . '#post-comment'])
+                @component('mail::button', ['url' => $mainButtonLink])
                     View Game Session
                 @endcomponent
 
                 <p style="margin-top:28px;">
                     Thanks for being part of the community,<br>
-                    <strong>The Iasi Board Gaming Community Team</strong>
+                    <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent

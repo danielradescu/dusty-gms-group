@@ -25,7 +25,7 @@
                     </p>
                 </div>
 
-                @component('mail::button', ['url' => route('game-session.create')])
+                @component('mail::button', ['url' => $mainButtonLink])
                     Create a Session
                 @endcomponent
 
@@ -35,9 +35,11 @@
                 </p>
 
                 <p style="margin-top:20px;">
-                    — <strong>The Iasi Board Gaming Community Team</strong>
+                    — <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent

@@ -23,7 +23,7 @@
                     @endif
                 </table>
 
-                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid)])
+                @component('mail::button', ['url' => $mainButtonLink])
                     View Game Session
                 @endcomponent
 
@@ -34,9 +34,11 @@
 
                 <p style="margin-top:20px;">
                     Thanks for being part of the community,<br>
-                    <strong>The Iasi Board Gaming Community Team</strong>
+                    <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent

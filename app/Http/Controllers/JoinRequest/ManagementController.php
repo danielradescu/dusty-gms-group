@@ -38,6 +38,7 @@ class ManagementController extends Controller
     public function update(UpdateJoinRequestRequest $request, JoinRequest $joinRequest)
     {
         $joinRequest->status = $request->get('status');
+        $joinRequest->reviewed_by = auth()->user()->id;
         $joinRequest->save();
 
         if ($joinRequest->status == JoinRequestStatus::APPROVED) {

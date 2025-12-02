@@ -30,9 +30,11 @@
 
                 <p style="margin-top:24px;">
                     Stay secure,<br>
-                    <strong>The Iasi Board Gaming Community Team</strong>
+                    <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer')
+    @endcomponent
 @endcomponent

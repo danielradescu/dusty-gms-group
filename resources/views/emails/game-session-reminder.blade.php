@@ -22,15 +22,17 @@
                     Please take a moment to confirm if you’ll be joining — your spot helps us plan better for everyone! 🎲
                 </p>
 
-                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid)])
+                @component('mail::button', ['url' => $mainButtonLink])
                     View Session & Confirm
                 @endcomponent
 
                 <p style="margin-top:28px;">
                     We can’t wait to see you at the table!<br>
-                    <strong>The Iasi Board Gaming Community Team</strong>
+                    <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent

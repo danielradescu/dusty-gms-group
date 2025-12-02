@@ -8,7 +8,7 @@
                 </h1>
 
                 <p style="margin:0 0 16px 0;">
-                    We're excited to have you as part of the <strong>Iasi Board Gaming Community</strong>!
+                    We're excited to have you as part of the <strong>Iași Board Gaming Community</strong>!
                 </p>
 
                 <p style="margin:0 0 24px 0;">
@@ -36,9 +36,11 @@
 
                 <p style="margin-top:24px;">
                     Thanks for joining us,<br>
-                    <strong>The Iasi Board Gaming Community Team</strong>
+                    <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer')
+    @endcomponent
 @endcomponent

@@ -1,5 +1,5 @@
 <section class="mt-10">
-    <h3 class="text-lg font-semibold text-gray-100 mb-4 flex items-center gap-2">
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
         💬 Comments
     </h3>
 

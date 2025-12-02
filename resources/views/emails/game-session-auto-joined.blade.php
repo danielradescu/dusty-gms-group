@@ -22,15 +22,17 @@
                     If you don’t plan to join, update your status so others can take your spot.
                 </p>
 
-                @component('mail::button', ['url' => route('game-session.interaction.show', $session->uuid)])
+                @component('mail::button', ['url' => $mainButtonLink])
                     View or Update Attendance
                 @endcomponent
 
                 <p style="margin-top:28px;">
                     Thanks for being part of the community,<br>
-                    <strong>The Iasi Board Gaming Community Team</strong>
+                    <strong>The Iași Board Gaming Community Team</strong>
                 </p>
             </td>
         </tr>
     </table>
+    @component('mail::footer', ['unsubscribeLink' => $unsubscribeLink])
+    @endcomponent
 @endcomponent
