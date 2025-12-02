@@ -10,7 +10,7 @@
             <section class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 leading-relaxed">
                 <h1 class="text-3xl font-bold mb-6">Terms of Service</h1>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-10">
-                    Last updated: {{ date('F d, Y') }}
+                    Last updated: 24 November 2025
                 </p>
 
                 <div class="space-y-8 leading-relaxed">
