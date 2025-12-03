@@ -203,4 +203,36 @@ class GroupNotificationService
             );
         }
     }
+
+    public function organizerFinalizeGameSession(int $sessionId): void
+    {
+        $session = GameSession::findOrFail($sessionId);
+        $organizerId = $session->organizer_id;
+
+        if ($organizerId === null) {
+            return;
+        }
+
+        $this->userNotifications->organizerFinalizeGameSession(
+            userId: $organizerId,
+            sessionId: $sessionId,
+        );
+    }
+
+    public function adminFinalizeGameSession(int $sessionId): void
+    {
+        // fetch users with role 'admin'
+        $admins = User::admins()->get();
+
+        if ($admins->isEmpty()) {
+            return;
+        }
+
+        foreach ($admins as $admin) {
+            $this->userNotifications->adminFinalizeGameSession(
+                userId: $admin->id,
+                sessionId: $sessionId,
+            );
+        }
+    }
 }

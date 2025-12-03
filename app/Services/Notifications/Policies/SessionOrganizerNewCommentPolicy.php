@@ -2,7 +2,9 @@
 
 namespace App\Services\Notifications\Policies;
 
+use App\Enums\NotificationSubscriptionType;
 use App\Enums\NotificationType;
+use App\Models\NotificationSubscription;
 use App\Models\User;
 
 class SessionOrganizerNewCommentPolicy extends BaseNotificationPolicy implements NotificationChannelPolicyInterface
@@ -13,8 +15,10 @@ class SessionOrganizerNewCommentPolicy extends BaseNotificationPolicy implements
 
         // Optional email/push if user allows session updates
         if ($this->allowsExternalNotifications($user)) {
-            $channels[] = 'email';
-            $channels[] = 'push';
+            if (NotificationSubscription::isUserSubscribed($user->id, NotificationSubscriptionType::NEW_COMMENT_ON_MY_SESSION)) {
+                $channels[] = 'email';
+                $channels[] = 'push';
+            }
         }
 
         return $channels;

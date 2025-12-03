@@ -130,10 +130,7 @@
                 <div class="text-xs text-gray-500 dark:text-gray-400">
                     You can change these preferences anytime.
                 </div>
-                <button type="submit"
-                        class="px-4 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-500">
-                    💾 Save Preferences
-                </button>
+                <x-button class="!w-auto" variant="primary">💾 Save Preferences</x-button>
             </div>
         </form>
 

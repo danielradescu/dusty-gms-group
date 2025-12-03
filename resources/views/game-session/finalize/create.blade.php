@@ -140,9 +140,7 @@
                             </label>
 
                             <div class="hidden mt-4" id="finalizeButton">
-                                <x-primary-button>
-                                    ✅ Finalize Session
-                                </x-primary-button>
+                                <x-button variant="primary">✅ Finalize Session</x-button>
                             </div>
                             @if (session('error'))
                                 <x-input-error :messages="session('error')" class="mt-2"/>

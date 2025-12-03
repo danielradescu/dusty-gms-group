@@ -57,6 +57,10 @@ class UserManagementController extends Controller
             unset($data['password']);
         }
 
+        if (! isset($data['is_blocked'])) {
+            $data['is_blocked'] = 0;
+        }
+
         $user->update($data);
 
         return redirect()->route('admin.user.edit', $user->id)

@@ -69,9 +69,7 @@
                         @endif
                     </div>
 
-                    <a href="{{route('game-session.interaction.show', $gameSession->uuid)}}" class="px-4 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white
-                                               hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400">Go
-                        to session</a>
+                    <x-link-button class="!w-auto" href="{{route('game-session.interaction.show', $gameSession->uuid)}}" variant="primary">Go to session</x-link-button>
 
                     <!-- Early engagement preview -->
                     <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">

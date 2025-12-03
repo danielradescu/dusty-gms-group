@@ -39,9 +39,7 @@
 
             <!-- Submit Button (hidden until checkbox checked) -->
             <div class="save-button hidden mt-4">
-                <x-primary-button>
-                    🔁 Change Organizer
-                </x-primary-button>
+                <x-button variant="primary">🔁 Change Organizer</x-button>
             </div>
             @if (session('organizerSaved'))
                 <span

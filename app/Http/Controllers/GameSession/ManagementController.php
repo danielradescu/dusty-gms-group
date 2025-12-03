@@ -2,27 +2,15 @@
 
 namespace App\Http\Controllers\GameSession;
 
-use App\Enums\GameComplexity;
 use App\Enums\GameSessionStatus;
-use App\Enums\NotificationType;
 use App\Enums\RegistrationStatus;
-
 use App\Http\Requests\GameSession\UpdateCoreInfoRequest;
 use App\Http\Requests\GameSession\UpdateOrganizerRequest;
 use App\Http\Requests\GameSession\UpdateStatusRequest;
-use App\Http\Requests\CreateGameSessionRequestRequest;
 use App\Models\GameSession;
-use App\Models\GameSessionRequest;
-use App\Models\Registration;
-use App\Models\User;
-use App\Services\GameSessionSlotService;
 use App\Services\GroupNotificationService;
 use App\Services\UserNotificationService;
-use App\Services\XP;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Redirect;
 
 class ManagementController extends Controller
 {
@@ -93,6 +81,7 @@ class ManagementController extends Controller
 
             if ($gameSession->status === GameSessionStatus::CONFIRMED_BY_ORGANIZER) {
                 app(GroupNotificationService::class)->gameSessionConfirmed($gameSession->id);
+                app(GroupNotificationService::class)->adminFinalizeGameSession($gameSession->id);
             }
             if ($gameSession->status === GameSessionStatus::CANCELLED) {
                 app(GroupNotificationService::class)->gameSessionCanceled($gameSession->id);
@@ -117,6 +106,10 @@ class ManagementController extends Controller
         $gameSession->save();
 
         app(UserNotificationService::class)->organizerOfASession($gameSession->organized_by, $gameSession->id);
+        //need to move this notification on the new organizer
+        if ($gameSession->status === GameSessionStatus::CONFIRMED_BY_ORGANIZER) {
+            app(UserNotificationService::class)->organizerFinalizeGameSession($gameSession->organized_by, $gameSession->id);
+        }
 
         return redirect()->route('game-session.interaction.show', $gameSession->uuid);
     }

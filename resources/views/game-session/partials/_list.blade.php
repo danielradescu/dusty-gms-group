@@ -5,10 +5,12 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($gameSessions as $session)
+            @php
+                $isHiddenForNow = $session->delay_until && $session->delay_until->isFuture();
+            @endphp
             <div
-                class="rounded-xl shadow hover:shadow-lg border p-5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1
-               bg-white border-gray-200 hover:border-gray-300
-               dark:bg-gray-800 dark:border-gray-700"
+                class="relative rounded-xl shadow hover:shadow-lg border p-5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1
+               {{ $isHiddenForNow ? 'bg-gray-200 dark:bg-gray-700 border-dashed border-amber-400/60 opacity-70' : 'bg-white border-gray-200 hover:border-gray-300 dark:bg-gray-800 dark:border-gray-700' }}"
             >
                 <!-- Header -->
                 <div>
@@ -18,8 +20,8 @@
                     <p class="text-sm text-gray-600 dark:text-gray-400">
                         Organized by
                         <span class="font-medium text-indigo-600 dark:text-indigo-400">
-                    {{ $session->organizer->name ?? 'Unknown' }}
-                </span>
+                            {{ $session->organizer->name ?? 'Unknown' }}
+                        </span>
                     </p>
                 </div>
 
@@ -36,12 +38,12 @@
                     </p>
                     @if($session->myRegistration)
                         <span class="text-xs italic text-gray-500 dark:text-gray-500">
-                    {{$session->myRegistration->status->label()}}
-                </span>
+                            {{$session->myRegistration->status->label()}}
+                        </span>
                     @else
                         <span class="text-xs italic text-gray-500 dark:text-gray-500">
-                    You haven’t responded to this session yet.
-                </span>
+                            You haven’t responded to this session yet.
+                        </span>
                     @endif
                 </div>
 
@@ -59,16 +61,19 @@
                         <span>{{ $session->max_players }}</span>
                     </div>
 
-                    <x-session-status-badge :status="$session->status"/>
+                    @if($isHiddenForNow)
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200
+                            dark:bg-yellow-700/40 dark:text-yellow-100 dark:border-yellow-600/50">
+                            🔒 Hidden until {{ $session->delay_until->format('d M Y, H:i') }}
+                        </span>
+                    @else
+                        <x-session-status-badge :status="$session->status"/>
+                    @endif
                 </div>
 
                 <!-- Action -->
-                <a href="{{ route('game-session.interaction.show', $session->uuid) }}"
-                   class="mt-6 w-full text-center px-4 py-2 rounded-md font-medium transition
-                  bg-indigo-500 hover:bg-indigo-600 text-white
-                  dark:bg-indigo-500 dark:hover:bg-indigo-600">
-                    View Details
-                </a>
+
+                <x-link-button class="mt-6" href="{{ route('game-session.interaction.show', $session->uuid) }}" variant="primary">View Details</x-link-button>
             </div>
         @endforeach
 

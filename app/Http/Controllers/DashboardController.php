@@ -17,7 +17,15 @@ class DashboardController extends Controller
         $toReturn['gameSessions'] = GameSession::whereBetween('start_at', [
             Carbon::now(),
             Carbon::now()->endOfWeek(),
-        ])->with('organizer', 'registrations', 'myRegistration')->orderBy('start_at', 'asc')->get();
+        ])
+            ->where(function ($q) {
+                $q->whereNull('delay_until')
+                    ->orWhere('delay_until', '<', now())
+                    ->orWhere('organized_by', Auth::id()); // organizer override
+            })
+            ->with(['organizer', 'registrations', 'myRegistration'])
+            ->orderBy('start_at', 'asc')
+            ->get();
 
         $referenceDay = GameSessionSlotService::getReferenceDay();
         $start = $referenceDay->copy()->startOfWeek(Carbon::MONDAY);

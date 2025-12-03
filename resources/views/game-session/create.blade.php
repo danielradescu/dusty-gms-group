@@ -169,9 +169,7 @@
 
                     <!-- Submit Button -->
                     <div class="pt-4">
-                        <x-primary-button>
-                            💾 Create Session
-                        </x-primary-button>
+                        <x-button variant="primary">💾 Create Session</x-button>
                     </div>
                 </form>
             </div>

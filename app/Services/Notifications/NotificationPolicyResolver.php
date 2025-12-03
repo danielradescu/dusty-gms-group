@@ -4,7 +4,11 @@ namespace App\Services\Notifications;
 
 use App\Enums\NotificationType;
 use App\Models\User;
-use App\Services\Notifications\Policies\{NotificationChannelPolicyInterface,
+use App\Services\Notifications\Handlers\AdminFinalizeSessionHandler;
+use App\Services\Notifications\Handlers\OrganizerFinalizeSessionHandler;
+use App\Services\Notifications\Policies\{AdminFinalizeSessionPolicy,
+    NotificationChannelPolicyInterface,
+    OrganizerFinalizeSessionPolicy,
     OrganizerOfASessionPolicy,
     OrganizerPromptCreatePolicy,
     SessionAutoJoinedPolicy,
@@ -29,6 +33,8 @@ class NotificationPolicyResolver
         NotificationType::ORGANIZER_PROMPT_CREATE->value => OrganizerPromptCreatePolicy::class,
         NotificationType::NEW_COMMENT->value => SessionOrganizerNewCommentPolicy::class,
         NotificationType::ORGANIZER_OF_A_SESSION->value => OrganizerOfASessionPolicy::class,
+        NotificationType::ORGANIZER_FINALIZE_SESSION->value => OrganizerFinalizeSessionPolicy::class,
+        NotificationType::ADMIN_FINALIZE_SESSION->value => AdminFinalizeSessionPolicy::class,
         // ... other types
     ];
 

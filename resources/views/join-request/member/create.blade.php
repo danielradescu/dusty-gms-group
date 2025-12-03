@@ -41,13 +41,7 @@
                         @enderror
                     </div>
                     <div>
-                        <button type="submit"
-                                class="w-full px-4 py-2 rounded-md bg-indigo-500
-                                    text-white hover:bg-indigo-600 shadow-sm focus:outline-none focus:ring-2
-                                    focus:ring-indigo-300 dark:bg-indigo-500 dark:hover:bg-indigo-400
-                                    dark:focus:ring-indigo-800">
-                            Send Invite
-                        </button>
+                        <x-button variant="primary">Send Invite</x-button>
                     </div>
                 </form>
                 <div class="mt-8 border-t border-gray-700 pt-6">

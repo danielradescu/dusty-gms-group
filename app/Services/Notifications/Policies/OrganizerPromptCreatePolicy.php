@@ -2,7 +2,9 @@
 
 namespace App\Services\Notifications\Policies;
 
+use App\Enums\NotificationSubscriptionType;
 use App\Enums\NotificationType;
+use App\Models\NotificationSubscription;
 use App\Models\User;
 
 class OrganizerPromptCreatePolicy extends BaseNotificationPolicy implements NotificationChannelPolicyInterface
@@ -12,8 +14,10 @@ class OrganizerPromptCreatePolicy extends BaseNotificationPolicy implements Noti
         $channels = ['in_app']; // Always visible in-app
 
         if ($this->allowsExternalNotifications($user)) {
-            $channels[] = 'email';
-            $channels[] = 'push';
+            if (NotificationSubscription::isUserSubscribed($user->id, NotificationSubscriptionType::GAME_SESSION_REQUESTS)) {
+                $channels[] = 'email';
+                $channels[] = 'push';
+            }
         }
 
         return $channels;

@@ -133,6 +133,17 @@ class CreateSessionController extends Controller
                     if ($userToJoin->id != $organizer->id) {
                         $notifications->push(app(UserNotificationService::class)->gameSessionCreated($userToJoin->id, $gameSession->id, $hoursDelay));
                     }
+                    //register only the organizer
+                    Registration::firstOrCreate(
+                        [
+                            'user_id' => $organizer->id,
+                            'game_session_id' => $gameSession->id,
+                        ],
+                        [
+                            'status' => RegistrationStatus::Confirmed,
+                        ]
+                    );
+
                     continue;
                 }
 
@@ -158,6 +169,9 @@ class CreateSessionController extends Controller
                 }
                 $confirmedRegistrations++;
             }
+
+            //admin to check this session a few days after starts, original time
+            app(UserNotificationService::class)->organizerFinalizeGameSession($gameSession->organized_by, $gameSession->id);
 
             // Redirect to the confirmation/preview route
             return redirect()->route('game-session.create.show', $gameSession->uuid)

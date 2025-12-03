@@ -134,9 +134,7 @@
 
                 <!-- Submit Button (hidden until checkbox checked) -->
                 <div class="save-button hidden mt-4">
-                    <x-primary-button>
-                        💾 Save Session Details
-                    </x-primary-button>
+                    <x-button variant="primary">💾 Save Session Details</x-button>
                 </div>
                 @if (session('coreInfoSaved'))
                     <span

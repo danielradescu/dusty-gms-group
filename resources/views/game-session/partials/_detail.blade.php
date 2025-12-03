@@ -4,12 +4,7 @@
     <div class="p-6 text-gray-900 dark:text-gray-100 space-y-4">
         <div class="mb-4">
             @if(auth()->check())
-                <a href="{{ route('dashboard') }}"
-                   class="inline-flex items-center px-4 py-2 rounded-md bg-gray-200 text-gray-700
-                  hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600
-                  focus:outline-none focus:ring-2 focus:ring-gray-400 transition text-sm font-medium">
-                    ← Back to Dashboard
-                </a>
+                <x-link-button class="!w-auto" href="{{ route('dashboard') }}" variant="secondary">← Back to Dashboard</x-link-button>
             @endif
         </div>
         <!-- Session Overview -->
@@ -155,12 +150,7 @@
                             @csrf
                             @if ($gameSession->hasOpenPositions())
                                 @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
-                                    <button type="submit" name="action" value="confirm"
-                                            class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
-                                                       shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
-                                                       dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
-                                        🎯 Count me in — reserve my seat!
-                                    </button>
+                                    <x-button name="action" value="confirm" variant="primary">🎯 Count me in — reserve my seat!</x-button>
                                 @endif
 
                                 @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::RemindMe2Days->value)
@@ -169,14 +159,9 @@
                                     @endphp
 
                                     @if($hoursUntilTwoDaysBeforeEvent > 2)
-                                        <button type="submit" name="action" value="2day"
-                                                class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
-                                                   hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
-                                                   dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
-                                            ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) —
-                                            still
-                                            deciding.
-                                        </button>
+                                        <x-button name="action" value="2day" variant="tertiary">
+                                            ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still deciding.
+                                        </x-button>
                                     @endif
                                 @endif
                             @else
@@ -188,24 +173,18 @@
                                                 )
 
                                             )
-                                    <button type="submit" name="action" value="openPosition"
-                                            class="w-full px-4 py-2 rounded-md border border-emerald-200 bg-emerald-50 text-emerald-800
-                                                       hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-200
-                                                       dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30">
+                                    <x-button name="action" value="openPosition" variant="tertiary">
                                         ⏰ Let me know as soon as a position is opened
-                                    </button>
+                                    </x-button>
                                 @endif
                             @endif
 
 
 
                             @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Declined->value)
-                                <button type="submit" name="action" value="decline"
-                                        class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-700
-                                                 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300
-                                                 dark:border-gray-700 dark:bg-gray-800/30 dark:text-gray-300 dark:hover:bg-gray-800/50">
+                                <x-button name="action" value="decline" variant="secondary">
                                     🚫 I can’t make it
-                                </button>
+                                </x-button>
                             @endif
                         </form>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 italic leading-relaxed">
@@ -216,12 +195,7 @@
                             and important announcements necessary for participation and coordination.
                         </p>
                     @else
-                        <a href="{{ route('game-session.manage.edit', $gameSession->uuid) }}"
-                           class="block w-full text-center px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
-                                  shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
-                                  dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800 transition">
-                            ⚙️ Manage session
-                        </a>
+                        <x-link-button href="{{ route('game-session.manage.edit', $gameSession->uuid) }}" variant="primary">⚙️ Manage session</x-link-button>
                     @endif
                 @else
                     <p class="text-xs text-gray-500 dark:text-gray-400 italic leading-relaxed">
@@ -233,12 +207,7 @@
                     // Save intended URL if user sees this section
                     session()->put('url.intended', route('game-session.interaction.show', $gameSession->uuid));
                 @endphp
-                <a href="{{route('login')}}" type="submit" name="action" value="confirm"
-                   class="w-full px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600
-                                           shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300
-                                           dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
-                    Login to interact
-                </a>
+                <x-link-button href="{{route('login')}}" variant="primary">Login to interact</x-link-button>
             @endif
         </div>
     </div>

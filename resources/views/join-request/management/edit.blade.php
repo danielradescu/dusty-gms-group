@@ -12,12 +12,7 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100 space-y-6">
 
                     <div class="mb-4">
-                        <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('management-join-request-index') }}"
-                           class="inline-flex items-center px-4 py-2 rounded-md bg-gray-200 text-gray-700
-                              hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600
-                              focus:outline-none focus:ring-2 focus:ring-gray-400 transition text-sm font-medium">
-                            ← Back
-                        </a>
+                        <x-link-button class="!w-auto" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('management-join-request-index') }}" variant="secondary">← Back</x-link-button>
                     </div>
 
                     <h3 class="text-lg font-semibold">Request Details</h3>
@@ -125,15 +120,7 @@
                                 </div>
 
                                 <div class="flex items-center gap-3">
-                                    <button type="submit"
-                                            class="px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-800">
-                                        💾 Save Changes
-                                    </button>
-
-                                    <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('management-join-request-index') }}"
-                                       class="px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300">
-                                        Cancel
-                                    </a>
+                                    <x-button variant="primary">💾 Save Changes</x-button>
                                 </div>
                             </form>
                         </div>

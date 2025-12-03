@@ -244,7 +244,37 @@ class UserNotificationService
             type: NotificationType::ORGANIZER_OF_A_SESSION,
             data: ['session_id' => $sessionId],
             sendAt: now()->addMinute(),
-            hashParts: [$sessionId, NotificationType::ORGANIZER_PROMPT_CREATE->name, now()->format('Y-m-d')] //if any changes in the organizer, only once a day
+            hashParts: [$sessionId, NotificationType::ORGANIZER_OF_A_SESSION->name, now()->format('Y-m-d')] //if any changes in the organizer, only once a day
+        );
+    }
+
+    /** Organizer is notified to finalize his session */
+    public function organizerFinalizeGameSession(int $userId, int $sessionId): Notification
+    {
+        $session = GameSession::findOrFail($sessionId);
+        $sendAt = $session->start_at->copy()->addDays(1);
+
+        return $this->schedule(
+            userId: $userId,
+            type: NotificationType::ORGANIZER_OF_A_SESSION,
+            data: ['session_id' => $sessionId],
+            sendAt: $sendAt,
+            hashParts: [$sessionId, NotificationType::ORGANIZER_OF_A_SESSION->name] //per session
+        );
+    }
+
+    /** Admin is notified about a session that is not finalized */
+    public function adminFinalizeGameSession(int $userId, int $sessionId): Notification
+    {
+        $session = GameSession::findOrFail($sessionId);
+        $sendAt = $session->start_at->copy()->addDays(3);
+
+        return $this->schedule(
+            userId: $userId,
+            type: NotificationType::ADMIN_FINALIZE_SESSION,
+            data: ['session_id' => $sessionId],
+            sendAt: $sendAt,
+            hashParts: [$sessionId, NotificationType::ADMIN_FINALIZE_SESSION->name] //per session
         );
     }
 }

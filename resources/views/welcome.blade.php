@@ -98,17 +98,13 @@
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/login"
-               class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow">
+            <x-link-button href="{{ route('login') }}" variant="primary">
                 Autentificare
-            </a>
+            </x-link-button>
 
-            <a href="{{ route('public-join-create') }}"
-               class="px-6 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600
-                      text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600
-                      font-medium rounded-md shadow">
+            <x-link-button href="{{ route('public-join-create') }}" variant="secondary">
                 Cere o invitație
-            </a>
+            </x-link-button>
         </div>
     </div>
 </section>
@@ -181,10 +177,9 @@
                     Lasă-ne datele de contact și te vom contacta pentru o scurtă discuție prietenoasă.
                 </p>
 
-                <a href="{{ route('public-join-create') }}"
-                   class="inline-block px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow font-medium">
+                <x-link-button href="{{ route('public-join-create') }}" variant="primary">
                     Cere o invitație
-                </a>
+                </x-link-button>
             </div>
         </div>
     </div>

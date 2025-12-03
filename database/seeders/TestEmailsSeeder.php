@@ -13,6 +13,7 @@ use App\Mail\{GameSessionAutoJoinedMail,
     GameSessionOrganizerNewCommentMail,
     GameSessionOrganizerUpdateMail,
     GameSessionReminderMail,
+    OrganizerFinalizeGameSessionMail,
     OrganizerOfASessionMail,
     OrganizerPromptCreateGameSessionMail};
 use App\Mail\CommunityJoinApprovedMail;
@@ -51,6 +52,7 @@ class TestEmailsSeeder extends Seeder
         Mail::to($user->email)->send(new GameSessionReminderMail($user, $session));//9
         Mail::to($user->email)->send(new OrganizerOfASessionMail($user, $session));//10
         Mail::to($user->email)->send(new OrganizerPromptCreateGameSessionMail($user, date('Y-m-d H:i:s'), rand(2,10)));//11
+        Mail::to($user->email)->send(new OrganizerFinalizeGameSessionMail($user, $session));//12
 
         $this->command->info('✅ All test emails have been sent to ' . $user->email . ' and ' . $joinRequest->email);
     }

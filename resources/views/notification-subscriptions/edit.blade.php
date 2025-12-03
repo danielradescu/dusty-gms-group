@@ -90,12 +90,7 @@
                     @endif
                     <div class="m-5">
                         @include('partials._errors')
-                        <button type="submit"
-                                class="px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white
-                                               text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-300
-                                               dark:focus:ring-indigo-800 shadow-sm">
-                            💾 Save Preferences
-                        </button>
+                        <x-button variant="primary">💾 Save Preferences</x-button>
                         @if (session('status'))
                             <span
                                 x-data="{ show: true }"

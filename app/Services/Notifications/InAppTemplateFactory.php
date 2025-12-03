@@ -98,6 +98,27 @@ class InAppTemplateFactory
                 ),
                 'link' => route('game-session.manage.edit', $context['session']->uuid),
             ],
+            NotificationType::ORGANIZER_FINALIZE_SESSION => [
+                'title' => '📋 Finalize Your Game Session',
+                'message' => sprintf(
+                    'Your session "%s" took place recently. Please review attendance and finalize details.',
+                    $context['session']->name
+                ),
+                'link' => route('game-session.finalize.create', $context['session']->uuid),
+            ],
+            NotificationType::ADMIN_FINALIZE_SESSION => [
+                'title' => '⚠️ Session Needs Finalization',
+                'message' => sprintf(
+                    'The session "%s" hosted by %s has not been finalized yet. Please review it.',
+                    $context['session']->name,
+                    $context['session']->organizer?->name ?? 'unknown organizer'
+                ),
+                'link' => $context['session']
+                    ? route('game-session.interaction.show', $context['session']->uuid)
+                    : null,
+            ],
+
+
 
 
 

@@ -64,13 +64,7 @@
 
             <!-- Submit Button (shown only when confirmed) -->
             <div class="mt-4 flex justify-end" x-show="confirmed" x-transition>
-                <button
-                    type="submit"
-                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm
-                   focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                >
-                    🚀 Send Announcement
-                </button>
+                <x-button class="!w-auto" variant="primary">🚀 Send Announcement</x-button>
             </div>
         </form>
 

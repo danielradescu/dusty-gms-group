@@ -18,4 +18,6 @@ enum NotificationType: int
     case SESSION_FEEDBACK = 11;     // “Issue or suggestion regarding a session”
     case WEBSITE_FEEDBACK = 12;     // “Issue or suggestion regarding the website”
     case NEW_JOIN_COMMUNITY_REQUEST = 13;// possible a new member to join us
+    case ORGANIZER_FINALIZE_SESSION = 14;// Organizer is notified to finalize his session
+    case ADMIN_FINALIZE_SESSION = 15;// Admin is notified about a session that is not finalized
 }

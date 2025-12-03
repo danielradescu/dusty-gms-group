@@ -64,7 +64,7 @@
                             $unreadCount = 0;
                             if (! request()->routeIs('in-app-notifications.index')) {
                                 $user = Auth::user();
-                                $unreadCount = Cache::remember("user_{$user->id}_unread_count", 30, function () use ($user) {
+                                $unreadCount = Cache::remember("user_{$user->id}_unread_count", 10, function () use ($user) {
                                     return $user->inAppNotifications()->whereNull('read_at')->count();
                                 });
                             }

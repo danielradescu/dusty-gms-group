@@ -38,10 +38,7 @@
                                         {{ $request->created_at->format('M d, Y') }}
                                     </td>
                                     <td class="px-4 py-3 text-right">
-                                        <a href="{{ route('management-join-request-edit', $request->id) }}"
-                                           class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 transition">
-                                            ⚙ Manage →
-                                        </a>
+                                        <x-link-button class="!w-auto" href="{{ route('management-join-request-edit', $request->id) }}" variant="secondary">⚙ Manage →</x-link-button>
                                     </td>
                                 </tr>
                             @empty

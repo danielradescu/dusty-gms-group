@@ -19,12 +19,7 @@
 
                     <!-- Back to Dashboard -->
                     <div class="mb-4">
-                        <a href="{{ route('dashboard') }}"
-                           class="inline-flex items-center px-4 py-2 rounded-md bg-gray-200 text-gray-700
-                                  hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600
-                                  focus:outline-none focus:ring-2 focus:ring-gray-400 transition text-sm font-medium">
-                            ← Back to Dashboard
-                        </a>
+                        <x-link-button class="!w-auto" href="{{ route('dashboard') }}" variant="secondary">← Back to Dashboard</x-link-button>
                     </div>
 
                     <!-- Intro -->
@@ -88,11 +83,7 @@
 
                         <!-- Submit -->
                         <div class="flex justify-end">
-                            <button type="submit"
-                                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm
-                                           focus:outline-none focus:ring-2 focus:ring-indigo-400 transition">
-                                ✉️ Send Message
-                            </button>
+                            <x-button variant="primary">✉️ Send Message</x-button>
                         </div>
                     </form>
                 </div>

@@ -24,13 +24,7 @@
             <input type="hidden" name="game_session_uuid" value="{{ $gameSession->uuid }}">
 
             <div class="mt-2 flex justify-end">
-                <button
-                    type="submit"
-                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md font-medium shadow-sm
-                       focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                >
-                    Post Comment
-                </button>
+                <x-button class="!w-auto" variant="primary">Post Comment</x-button>
             </div>
         </form>
     @endif
