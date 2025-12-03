@@ -44,14 +44,12 @@
                                 class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700
                                            bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-sm"
                             >
-                            <button type="button"
-                                    x-data
-                                    @click="navigator.clipboard.writeText(document.getElementById('sessionLink').value);
+                            <x-button
+                                x-data
+                                @click="navigator.clipboard.writeText(document.getElementById('sessionLink').value);
                                                 $dispatch('notify', { message: 'Link copied to clipboard!' })"
-                                    class="px-4 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white
-                                               hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-                                Copy
-                            </button>
+                                class="!w-auto"
+                                variant="primary">Copy</x-button>
                         </div>
 
                         @if ($gameSession->delay_until > now())
