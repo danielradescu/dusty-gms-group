@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GameSession;
 use App\Services\GameSessionSlotService;
+use App\Services\WeekendRangeService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,10 +14,12 @@ class DashboardController extends Controller
     {
         $toReturn = [];
 
-        // get sessions from Monday to Sunday of this week
+        $now = Carbon::now();
+
+        // get sessions for the next 7 days
         $toReturn['gameSessions'] = GameSession::whereBetween('start_at', [
-            Carbon::now(),
-            Carbon::now()->endOfWeek(),
+            $now,
+            $now->copy()->addDays(7),//won't be able to create a session more than 7 days in advance
         ])
             ->where(function ($q) {
                 $q->whereNull('delay_until')
@@ -27,10 +30,10 @@ class DashboardController extends Controller
             ->orderBy('start_at', 'asc')
             ->get();
 
-        $referenceDay = GameSessionSlotService::getReferenceDay();
-        $start = $referenceDay->copy()->startOfWeek(Carbon::MONDAY);
+        $weekendRangeService = app(WeekendRangeService::class);
+        $start = $weekendRangeService->getFirstDay();
 
-        $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests()->where('preferred_time', '>', $start)->get();
+        $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests()->where('preferred_time', '>=', $start)->get();
         $toReturn['slots'] = GameSessionSlotService::getCurrentWeekSlots($toReturn['gameSessionRequests']);
 
         return view('dashboard')->with($toReturn);

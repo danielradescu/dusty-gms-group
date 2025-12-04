@@ -56,7 +56,7 @@
                                         <span class="font-medium">{{ $slot['label'] }}</span>
                                         <br>
                                         <span class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $slot['time']->format('M d, H:i') }}
+                                                {{ $slot['time']->format('d M') }}
                                             </span>
                                     </div>
 

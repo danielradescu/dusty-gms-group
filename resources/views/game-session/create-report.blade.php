@@ -49,7 +49,7 @@
                                 @click="navigator.clipboard.writeText(document.getElementById('sessionLink').value);
                                                 $dispatch('notify', { message: 'Link copied to clipboard!' })"
                                 class="!w-auto"
-                                variant="primary">Copy</x-button>
+                                variant="primary" :disableOnClick="false">Copy</x-button>
                         </div>
 
                         @if ($gameSession->delay_until > now())
@@ -84,7 +84,7 @@
                                 <div
                                     class="p-4 rounded-md bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700">
                                     <p class="text-sm text-gray-700 dark:text-gray-300">
-                                        <strong>Players joined:</strong>
+                                        <strong>Members joined:</strong>
                                     </p>
                                     <p class="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-1">
                                         {{ $autoJoinCount ?? 0 }}
@@ -94,7 +94,7 @@
                                 <div
                                     class="p-4 rounded-md bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700">
                                     <p class="text-sm text-gray-700 dark:text-gray-300">
-                                        <strong>Players to be notified:</strong>
+                                        <strong>Members to be notified:</strong>
                                     </p>
                                     <p class="text-2xl font-bold text-amber-700 dark:text-amber-300 mt-1">
                                         {{ $notifyCount ?? 0 }}

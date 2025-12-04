@@ -1,4 +1,7 @@
-@props(['variant' => 'primary'])
+@props([
+    'variant' => 'primary',
+    'disableOnClick' => true,
+])
 
 @php
     $base = '
@@ -22,22 +25,40 @@
 
 <button
     x-data="{ loading: false }"
-    x-on:click="setTimeout(() => loading = true, 100)"
+    @if($disableOnClick)
+        x-on:click.prevent="
+            const form = $el.closest('form');
+            if (form && form.checkValidity()) {
+                loading = true;
+                form.submit();
+            } else {
+                form.reportValidity();
+            }
+        "
     x-bind:disabled="loading"
+    @endif
     {{ $attributes->merge(['class' => $base.' '.$variants[$variant]]) }}
 >
-    <!-- Normal state -->
-    <span x-show="!loading" class="flex items-center gap-2">
-        {{ $slot }}
-    </span>
+    @if($disableOnClick)
+        <!-- Normal state -->
+        <span x-show="!loading" class="flex items-center gap-2">
+            {{ $slot }}
+        </span>
 
-    <!-- Loading state -->
-    <span x-show="loading" class="flex items-center gap-2" x-cloak>
-        <svg class="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-        </svg>
-        <span>Processing...</span>
-    </span>
+        <!-- Loading state -->
+        <span x-show="loading" class="flex items-center gap-2" x-cloak>
+            <svg class="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none"
+                 viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <span>Processing...</span>
+        </span>
+    @else
+        <!-- Default static version -->
+        <span class="flex items-center gap-2">
+            {{ $slot }}
+        </span>
+    @endif
 </button>

@@ -19,6 +19,7 @@ use App\Services\UserNotificationService;
 use App\Services\XP;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Services\WeekendRangeService;
 
 class CreateSessionController extends Controller
 {
@@ -46,21 +47,25 @@ class CreateSessionController extends Controller
     public function create()
     {
 
-        // Get this week’s defined slot times (Friday/Saturday/Sunday)
-        $slotDefinitions = GameSessionSlotService::getSlotDefinitions();
-        $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        /** @var WeekendRangeService $weekendService */
+        $weekendService = app(WeekendRangeService::class);
 
-        $interestStats = collect($slotDefinitions)->map(function ($slot) use ($weekStart) {
-            $dt = $weekStart->copy()->addDays($slot['dayOffset'])->setTime($slot['hour'], $slot['minute']);
+        // Get the active or upcoming weekend’s boundaries (context-aware)
+        $start = $weekendService->getFirstDay();
+        $end   = $weekendService->getLastDay();
 
-            return [
-                'label' => $slot['label'],
-                'time' => $dt,
-                'count' => GameSessionRequest::where('preferred_time', $dt)->count(),
-            ];
-        });
+        // Build interest stats for each day between start and end
+        $interestStats = collect();
 
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            $count = GameSessionRequest::whereDate('preferred_time', $date->toDateString())->count();
 
+            $interestStats->push([
+                'label' => $date->format('l'),
+                'time'  => $date->copy(),
+                'count' => $count,
+            ]);
+        }
 
         $toReturn = [
             'organizers' => auth()->user()->hasAdminPermission() ? User::all() : [],
@@ -105,17 +110,17 @@ class CreateSessionController extends Controller
             XP::grant($organizer, 'organizer_create_session');
             app(UserNotificationService::class)->organizerOfASession($gameSession->organized_by, $gameSession->id);
 
-            // 1️⃣ Get all auto-joining users for the session date (excluding organizer)
+            // Get all auto-joining users for the session date (excluding organizer)
             $usersToAutoJoin = GameSessionRequest::with('user')
                 ->whereDate('preferred_time', $gameSession->start_at->toDateString())
                 ->where('auto_join', true)
                 ->get()
-                ->pluck('user') // ✅ we only need the users, not the requests
+                ->pluck('user') // we only need the users, not the requests
                 ->reject(fn ($user) => $user->id === $organizer->id)
                 ->sortByDesc('level')
                 ->values();
 
-            // 2️⃣ Prepend the organizer as the top user
+            // Prepend the organizer as the top user
             $usersToAutoJoin->prepend($organizer);
 
             $confirmedRegistrations = 0;
@@ -143,7 +148,6 @@ class CreateSessionController extends Controller
                             'status' => RegistrationStatus::Confirmed,
                         ]
                     );
-
                     continue;
                 }
 
@@ -175,7 +179,7 @@ class CreateSessionController extends Controller
 
             // Redirect to the confirmation/preview route
             return redirect()->route('game-session.create.show', $gameSession->uuid)
-                ->with('autoJoinCount', $usersToAutoJoin->count())
+                ->with('autoJoinCount', Registration::where('game_session_id', $gameSession->id)->count())
                 ->with('notifyCount', $notifications->count());
         });
     }

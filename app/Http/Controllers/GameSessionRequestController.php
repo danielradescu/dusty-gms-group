@@ -7,6 +7,7 @@ use App\Http\Requests\CreateGameSessionRequestRequest;
 use App\Models\GameSessionRequest;
 use App\Services\GameSessionSlotService;
 use App\Services\GroupNotificationService;
+use App\Services\WeekendRangeService;
 use App\Services\XP;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -31,11 +32,8 @@ class GameSessionRequestController extends Controller
         DB::transaction(function () use ($toCreate) {
             $user = auth()->user();
 
-            $referenceDay = GameSessionSlotService::getReferenceDay();
-
-            // Current week: Monday 00:00:00 → Sunday 23:59:59
-//            $start = $referenceDay->copy()->startOfWeek(Carbon::MONDAY);
-            $end   = $referenceDay->copy()->endOfWeek(Carbon::SUNDAY)->setTime(23, 59, 59);
+            $weekendRangeService = app(WeekendRangeService::class);
+            $end = $weekendRangeService->getLastDay();
 
             // Delete this user's requests for the current week and cleanup the past
             $user->gameSessionRequests()

@@ -16,9 +16,9 @@ class CreateGameSessionRequestRequest extends FormRequest
 
     public function rules(): array
     {
-        $allowedDatetimes = collect(GameSessionSlotService::getAvailableSlots(collect()))
+        $allowedDates = collect(GameSessionSlotService::getAvailableSlots(collect()))
             ->pluck('dt')
-            ->map(fn($dt) => $dt->format('Y-m-d H:i:s'))
+            ->map(fn($dt) => $dt->format('Y-m-d'))
             ->toArray();
 
         return [
@@ -27,12 +27,11 @@ class CreateGameSessionRequestRequest extends FormRequest
             'requests.*' => [
                 'nullable',
                 Rule::in(['auto', 'notify', null, '']),
-                function ($attribute, $value, $fail) use ($allowedDatetimes) {
-                    // Extract the datetime key from "requests.2025-11-15 15:00:00"
+                function ($attribute, $value, $fail) use ($allowedDates) {
                     $parts = explode('.', $attribute);
                     $dateTime = $parts[1] ?? null;
 
-                    if (!in_array($dateTime, $allowedDatetimes)) {
+                    if (!in_array($dateTime, $allowedDates)) {
                         $fail('Invalid time slot selected: ' . $dateTime);
                     }
                 },

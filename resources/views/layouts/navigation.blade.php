@@ -18,7 +18,7 @@
                         </x-nav-link>
                         <x-nav-link :href="route('notification-subscription.edit')"
                                     :active="request()->routeIs('notification-subscription.edit')">
-                            {{ __('Notification settings') }}
+                            {{ __('Email and Push') }}
                         </x-nav-link>
                         @if (Auth::user()->canInvite())
                             <x-nav-link :href="route('member-invite-create')"
@@ -34,6 +34,10 @@
                             <x-nav-link :href="route('management-join-request-index')"
                                         :active="request()->routeIs('management-join-request-index')">
                                 {{ __('Join requests') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('extended-weekend.edit')"
+                                        :active="request()->routeIs('extended-weekend.edit')">
+                                {{ __('Extended Weekend') }}
                             </x-nav-link>
                         @endif
                         @if(Auth::user()->hasAdminPermission())
@@ -150,7 +154,7 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('notification-subscription.edit')"
                                        :active="request()->routeIs('notification-subscription.edit')">
-                    {{ __('Notification settings') }}
+                    {{ __('Email and Push') }}
                 </x-responsive-nav-link>
                 @if (Auth::user()->canInvite())
                     <x-responsive-nav-link :href="route('member-invite-create')"
@@ -166,6 +170,10 @@
                     <x-responsive-nav-link :href="route('management-join-request-index')"
                                            :active="request()->routeIs('management-join-request-index')">
                         {{ __('Join requests') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('extended-weekend.edit')"
+                                           :active="request()->routeIs('extended-weekend.edit')">
+                        {{ __('Extended Weekend') }}
                     </x-responsive-nav-link>
                 @endif
                 @if(Auth::user()->hasAdminPermission())

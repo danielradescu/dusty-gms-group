@@ -61,7 +61,7 @@
                 @foreach($slots as $slot)
                     @php
                         $disabled = !$slot['dt'] || $slot['dt']->isPast();
-                        $name = 'requests['.$slot['dt']?->toDateTimeString().']'; // e.g. requests[2025-11-08 18:00:00]
+                        $name = 'requests['.$slot['dt']?->toDateString().']';
                     @endphp
 
                     <fieldset class="rounded-md border border-gray-200 dark:border-gray-700 p-4
@@ -69,7 +69,7 @@
                         <legend
                             class="flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-gray-100">
                             <span>
-                                {{ $slot['label'] }}
+                                {{  $slot['label'] }}
                                 @if($disabled)
                                     <span class="ml-1 text-xs text-gray-500">(passed)</span>
                                 @endif

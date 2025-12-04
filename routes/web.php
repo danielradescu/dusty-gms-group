@@ -18,6 +18,7 @@ use App\Http\Controllers\NotificationSubscriptionController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\ExtendedWeekendController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -91,6 +92,9 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
     //contact
     Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+    Route::get('/extended-weekend', [ExtendedWeekendController::class, 'edit'])->name('extended-weekend.edit');
+    Route::patch('/extended-weekend', [ExtendedWeekendController::class, 'update'])->name('extended-weekend.update');
 });
 
 //Pages:

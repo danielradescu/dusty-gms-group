@@ -16,7 +16,7 @@ class GameSessionRequest extends Model
     ];
 
     protected $casts = [
-        'preferred_time' => 'datetime',
+        'preferred_time' => 'date',
         'fulfilled_at'   => 'datetime',
         'auto_join'      => 'boolean',
         'notified'       => 'boolean',
