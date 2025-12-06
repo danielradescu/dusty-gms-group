@@ -24,10 +24,27 @@
                     </p>
 
                     @if (session('success'))
-                        <div class="bg-emerald-100 dark:bg-emerald-800/30 border border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 rounded-md p-3">
-                            {{ session('success') }}
+                        <div
+                            class="flex items-start gap-2 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700
+                                    text-emerald-800 dark:text-emerald-200 rounded-md p-3 shadow-sm">
+                            <span class="text-xl">✅</span>
+                            <div class="flex-1">
+                                {{ session('success') }}
+                            </div>
                         </div>
                     @endif
+
+                    @if (session('error'))
+                        <div
+                            class="flex items-start gap-2 bg-rose-50 dark:bg-rose-900/30 border border-rose-300 dark:border-rose-700
+                                    text-rose-800 dark:text-rose-200 rounded-md p-3 shadow-sm">
+                            <span class="text-xl">❌</span>
+                            <div class="flex-1">
+                                {{ session('error') }}
+                            </div>
+                        </div>
+                    @endif
+
 
                     <form action="{{ route('public-join-store') }}" method="POST" class="space-y-5">
                         @csrf

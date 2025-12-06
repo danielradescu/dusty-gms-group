@@ -28,7 +28,7 @@ class CreateSessionController extends Controller
     public function __construct()
     {
         // Only allow admins and organizers
-        $this->middleware(['auth', 'hasPermission:' . Role::Organizer->name]);
+        $this->middleware(['auth', 'isAdminOrGameSessionOwner']);
     }
 
     public function show(string $uuid)

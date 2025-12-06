@@ -57,8 +57,11 @@ class GameSessionSlotService
                 continue;
             }
 
-            // Skip past days
-            if ($date->lt($now->startOfDay())) {
+
+            $today = $now->copy()->startOfDay();
+
+            // Always skip past days
+            if ($date->startOfDay()->lte($today)) {
                 continue;
             }
 
@@ -72,7 +75,6 @@ class GameSessionSlotService
             $days[] = [
                 'label'            => $date->format('l · d M'),
                 'dt'               => $date->copy(),
-                'isAvailable'      => true,
                 'value'            => $value,
                 'total_interested' => $allRequests->count(),
                 'auto_joiners'     => $allRequests->where('auto_join', true)->count(),

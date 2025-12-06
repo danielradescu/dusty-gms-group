@@ -9,17 +9,17 @@
 
                 <p style="margin:0 0 16px 0;">Hey <strong>{{ $joinRequest->name }}</strong>,</p>
 
-                <p style="margin:0 0 24px 0;">
-                    Great news — your request to join the <strong>Iași Board Gaming Community</strong> has been approved!
-                    We’re excited to welcome you into our circle of players, strategists, and board game lovers.
+                <p>
+                    We’re excited to have you join our group of players, strategists, and board game enthusiasts.
                 </p>
+
 
                 <p style="margin:0 0 24px 0;">
                     To complete your registration, please click the button below.
                     You can use your current email address ({{ $joinRequest->email }}) or a different one if you prefer by clicking the "Complete Your Registration" button bellow.
                 </p>
 
-                @component('mail::button', ['url' => url('/register') . '?invitation_token=' . $joinRequest->invitation_token])
+                @component('mail::button', ['url' => route('simple_register', '?invitation_token=' . $joinRequest->invitation_token)])
                     Complete Your Registration
                 @endcomponent
 

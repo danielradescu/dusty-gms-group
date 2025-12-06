@@ -23,12 +23,12 @@
                class="text-indigo-600 dark:text-indigo-400 hover:underline hover:text-indigo-700 dark:hover:text-indigo-300">
                 Terms of Service
             </a>
-            @if(! Auth::check())
-                <a href="{{ route('register') }}"
-                   class="text-green-600 dark:text-green-400 hover:underline hover:text-green-700 dark:hover:text-green-300 text-xs sm:text-sm">
-                    ➕ Register
-                </a>
-            @endif
+{{--            @if(! Auth::check())--}}
+{{--                <a href="{{ route('register') }}"--}}
+{{--                   class="text-green-600 dark:text-green-400 hover:underline hover:text-green-700 dark:hover:text-green-300 text-xs sm:text-sm">--}}
+{{--                    ➕ Register--}}
+{{--                </a>--}}
+{{--            @endif--}}
         </div>
 
         <!-- Contact Email -->

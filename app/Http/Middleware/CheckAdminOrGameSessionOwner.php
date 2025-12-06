@@ -35,7 +35,12 @@ class CheckAdminOrGameSessionOwner
         }
 
         if ($session->organized_by !== $user->id) {
-            abort(Response::HTTP_FORBIDDEN, 'You are not authorized to manage this session.');
+            \Log::warning('Unauthorized management link access attempt', [
+                'user_id' => $user->id,
+                'session_uuid' => $uuid,
+            ]);
+            return redirect()->route('game-session.interaction.show', $uuid);
+//            abort(Response::HTTP_FORBIDDEN, 'You are not authorized to manage this session.');
         }
 
         // Attach for controller use

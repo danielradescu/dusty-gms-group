@@ -26,7 +26,7 @@ class ManagementController extends Controller
 
         // Deny if not found or status is not RECRUITING_PARTICIPANTS or CONFIRMED_BY_ORGANIZER
         if (! $gameSession->isEditable()) {
-            abort(403, 'At this point in time the session is not editable.');
+            return redirect()->route('game-session.interaction.show', $uuid);
         }
 
         $toReturn = [

@@ -21,7 +21,10 @@ class PublicController extends Controller
     {
         $validatedData = $request->validated();
 
-        JoinRequest::create($validatedData);
+        JoinRequest::updateOrCreate(
+            ['email' => $validatedData['email']],
+            $validatedData
+        );
 
         foreach (User::organizers()->get() as $user) {
             InAppNotification::create([

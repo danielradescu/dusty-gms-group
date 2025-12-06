@@ -20,7 +20,7 @@
                         <th class="px-4 py-3 font-semibold">Name</th>
                         <th class="px-4 py-3 font-semibold">Role</th>
                         <th class="px-4 py-3 font-semibold">Level</th>
-                        <th class="px-4 py-3 font-semibold">Joined</th>
+                        <th class="px-4 py-3 font-semibold">Member since</th>
                     </tr>
                     </thead>
                     <tbody>

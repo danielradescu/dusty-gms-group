@@ -60,7 +60,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 @foreach($slots as $slot)
                     @php
-                        $disabled = !$slot['dt'] || $slot['dt']->isPast();
+                        $disabled = false;//!$slot['dt'] || $slot['dt']->isPast();
                         $name = 'requests['.$slot['dt']?->toDateString().']';
                     @endphp
 

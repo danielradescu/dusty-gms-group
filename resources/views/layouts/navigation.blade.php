@@ -1,3 +1,24 @@
+@php
+    $coreLinks = [
+        ['route' => 'dashboard', 'label' => 'Dashboard'],
+        ['route' => 'notification-subscription.edit', 'label' => 'Email settings'],
+        ['route' => 'member-invite-create', 'label' => 'Invitations', 'permission' => 'canInvite'],
+        ['route' => 'contact.create', 'label' => 'Contact'],
+    ];
+
+    $organizerLinks = [
+        ['route' => 'game-session.create', 'label' => 'Create Session'],
+        ['route' => 'management-join-request-index', 'label' => 'Join Requests'],
+        ['route' => 'extended-weekend.edit', 'label' => 'Extended Weekend'],
+    ];
+
+    $adminLinks = [
+        ['route' => 'admin.users.index', 'label' => 'Manage Users'],
+    ];
+
+    $user = Auth::user();
+@endphp
+
 <nav x-data="{ open: false }"
      class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
@@ -11,32 +32,23 @@
                             class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"/>
                     </a>
                 </div>
-
                 <!-- Desktop Navigation Links -->
                 <div class="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex items-center">
-                    @if (Auth::user() && Auth::user()->isReviewed())
-                        <!-- Core Links -->
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
+                    @if ($user && $user->isReviewed())
+                        {{-- Core Navigation --}}
+                        @foreach ($coreLinks as $link)
+                            @php
+                                $canShow = !isset($link['permission']) || ($user && $user->{$link['permission']}());
+                            @endphp
+                            @if ($canShow)
+                                <x-nav-link :href="route($link['route'])" :active="request()->routeIs($link['route'])">
+                                    {{ __($link['label']) }}
+                                </x-nav-link>
+                            @endif
+                        @endforeach
 
-                        <x-nav-link :href="route('notification-subscription.edit')"
-                                    :active="request()->routeIs('notification-subscription.edit')">
-                            {{ __('E-mail settings') }}
-                        </x-nav-link>
-
-                        @if (Auth::user()->canInvite())
-                            <x-nav-link :href="route('member-invite-create')"
-                                        :active="request()->routeIs('member-invite-create')">
-                                {{ __('Invitations') }}
-                            </x-nav-link>
-                        @endif
-                        <x-nav-link :href="route('contact.create')"
-                                    :active="request()->routeIs('contact.create')">
-                            {{ __('Contact') }}
-                        </x-nav-link>
-                        <!-- Organizer Dropdown -->
-                        @if (Auth::user()->hasOrganizerPermission())
+                        {{-- Organizer Dropdown --}}
+                        @if ($user->hasOrganizerPermission())
                             <x-dropdown align="bottom" width="48">
                                 <x-slot name="trigger">
                                     <button
@@ -54,26 +66,18 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <x-dropdown-link :href="route('game-session.create')"
-                                                     :active="request()->routeIs('game-session.create')">
-                                        {{ __('Create Session') }}
-                                    </x-dropdown-link>
-
-                                    <x-dropdown-link :href="route('management-join-request-index')"
-                                                     :active="request()->routeIs('management-join-request-index')">
-                                        {{ __('Join Requests') }}
-                                    </x-dropdown-link>
-
-                                    <x-dropdown-link :href="route('extended-weekend.edit')"
-                                                     :active="request()->routeIs('extended-weekend.edit')">
-                                        {{ __('Extended Weekend') }}
-                                    </x-dropdown-link>
+                                    @foreach ($organizerLinks as $link)
+                                        <x-dropdown-link :href="route($link['route'])"
+                                                         :active="request()->routeIs($link['route'])">
+                                            {{ __($link['label']) }}
+                                        </x-dropdown-link>
+                                    @endforeach
                                 </x-slot>
                             </x-dropdown>
                         @endif
 
-                        <!-- Admin Dropdown -->
-                        @if (Auth::user()->hasAdminPermission())
+                        {{-- Admin Dropdown --}}
+                        @if ($user->hasAdminPermission())
                             <x-dropdown align="bottom" width="48">
                                 <x-slot name="trigger">
                                     <button
@@ -91,22 +95,22 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <x-dropdown-link :href="route('admin.users.index')"
-                                                     :active="request()->routeIs('admin.users.index')">
-                                        {{ __('Manage Users') }}
-                                    </x-dropdown-link>
+                                    @foreach ($adminLinks as $link)
+                                        <x-dropdown-link :href="route($link['route'])"
+                                                         :active="request()->routeIs($link['route'])">
+                                            {{ __($link['label']) }}
+                                        </x-dropdown-link>
+                                    @endforeach
                                 </x-slot>
                             </x-dropdown>
                         @endif
-
-
                     @endif
                 </div>
             </div>
 
             <!-- Right Section -->
             <div class="flex items-center gap-3">
-                @if (Auth::user() && Auth::user()->isReviewed())
+                @if ($user && $user->isReviewed())
                     <!-- Notification Button -->
                     <a href="{{ route('in-app-notifications.index') }}"
                        class="relative inline-flex items-center justify-center
@@ -117,7 +121,6 @@
                         @php
                             $unreadCount = 0;
                             if (! request()->routeIs('in-app-notifications.index')) {
-                                $user = Auth::user();
                                 $unreadCount = Cache::remember("user_{$user->id}_unread_count", 10, fn() =>
                                     $user->inAppNotifications()->whereNull('read_at')->count());
                             }
@@ -141,8 +144,8 @@
                                        text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300
                                        focus:outline-none transition ease-in-out duration-150">
                                 <img class="h-10 w-10 rounded-full object-cover"
-                                     src="{{ asset(Auth::user()->getPhotoURL()) }}" alt="Profile Image">
-                                <div class="ms-1">{{ Auth::user()->name }}</div>
+                                     src="{{ asset($user->getPhotoURL()) }}" alt="Profile Image">
+                                <div class="ms-1">{{ $user->name }}</div>
                                 <svg class="ms-1 h-4 w-4 fill-current"
                                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
@@ -174,9 +177,7 @@
                             class="inline-flex items-center justify-center p-2 rounded-md
                                    text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400
                                    hover:bg-gray-100 dark:hover:bg-gray-900
-                                   focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900
-                                   focus:text-gray-500 dark:focus:text-gray-400
-                                   transition duration-150 ease-in-out">
+                                   focus:outline-none transition duration-150 ease-in-out">
                         <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                             <path :class="{'hidden': open, 'inline-flex': ! open}" class="inline-flex"
                                   stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -194,62 +195,54 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            @if(Auth::user() && Auth::user()->isReviewed())
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link :href="route('notification-subscription.edit')" :active="request()->routeIs('notification-subscription.edit')">
-                    {{ __('E-mail settings') }}
-                </x-responsive-nav-link>
-
-                @if (Auth::user()->canInvite())
-                    <x-responsive-nav-link :href="route('member-invite-create')" :active="request()->routeIs('member-invite-create')">
-                        {{ __('Invitations') }}
+            @foreach ($coreLinks as $link)
+                @php
+                    $canShow = !isset($link['permission']) || ($user && $user->{$link['permission']}());
+                @endphp
+                @if ($canShow)
+                    <x-responsive-nav-link :href="route($link['route'])" :active="request()->routeIs($link['route'])">
+                        {{ __($link['label']) }}
                     </x-responsive-nav-link>
                 @endif
-                <x-responsive-nav-link :href="route('contact.create')" :active="request()->routeIs('contact.create')">
-                    {{ __('Contact') }}
-                </x-responsive-nav-link>
+            @endforeach
 
-                @if(Auth::user()->hasOrganizerPermission())
-                    <div class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
-                        <div class="px-4 text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
-                            Organizer Tools
-                        </div>
-                        <x-responsive-nav-link :href="route('game-session.create')" :active="request()->routeIs('game-session.create')">
-                            {{ __('Create Session') }}
-                        </x-responsive-nav-link>
-                        <x-responsive-nav-link :href="route('management-join-request-index')" :active="request()->routeIs('management-join-request-index')">
-                            {{ __('Join Requests') }}
-                        </x-responsive-nav-link>
-                        <x-responsive-nav-link :href="route('extended-weekend.edit')" :active="request()->routeIs('extended-weekend.edit')">
-                            {{ __('Extended Weekend') }}
-                        </x-responsive-nav-link>
+            @if ($user->hasOrganizerPermission())
+                <div class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
+                    <div class="px-4 text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+                        Organizer Tools
                     </div>
-                @endif
+                    @foreach ($organizerLinks as $link)
+                        <x-responsive-nav-link :href="route($link['route'])"
+                                               :active="request()->routeIs($link['route'])">
+                            {{ __($link['label']) }}
+                        </x-responsive-nav-link>
+                    @endforeach
+                </div>
+            @endif
 
-                @if(Auth::user()->hasAdminPermission())
-                    <div class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
-                        <div class="px-4 text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
-                            Admin Panel
-                        </div>
-                        <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
-                            {{ __('Manage Users') }}
-                        </x-responsive-nav-link>
+            @if ($user->hasAdminPermission())
+                <div class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
+                    <div class="px-4 text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+                        Admin Panel
                     </div>
-                @endif
+                    @foreach ($adminLinks as $link)
+                        <x-responsive-nav-link :href="route($link['route'])"
+                                               :active="request()->routeIs($link['route'])">
+                            {{ __($link['label']) }}
+                        </x-responsive-nav-link>
+                    @endforeach
+                </div>
             @endif
         </div>
 
         <!-- Responsive Settings -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4 text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
-                Profile section
+                Profile Section
             </div>
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ $user->name }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ $user->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">

@@ -49,7 +49,7 @@
         </div>
 
         <div>
-            <x-input-label for="profile_image" :value="__('Profile Image')" />
+            <x-input-label for="profile_image" :value="__('Profile Image') . ' (2Mb max)'" />
 
             <input id="profile_image"
                    name="profile_image"
