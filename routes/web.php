@@ -22,6 +22,11 @@ use App\Http\Controllers\ExtendedWeekendController;
 use App\Http\Controllers\RankingController;
 use Illuminate\Support\Facades\Route;
 
+// --- Custom Route Binding (runs before routes load)
+Route::bind('admin_user', function ($value) {
+    return User::withoutGlobalScopes()->findOrFail($value);
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -70,15 +75,16 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
 
     //admin user management
     Route::prefix('admin')->group(function () {
+        Route::get('/users', [UserManagementController::class, 'index'])
+            ->name('admin.users.index');
 
-        // custom binding for admin routes (bypass global scopes)
-        Route::bind('user', function ($value) {
-            return \App\Models\User::withoutGlobalScopes()->findOrFail($value);
-        });
+        Route::get('/users/{admin_user}/edit', [UserManagementController::class, 'edit'])
+            ->name('admin.user.edit');
 
-        Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
-        Route::get('/users/{user}/edit', [UserManagementController::class, 'edit'])->name('admin.user.edit');
-        Route::patch('/users/{user}', [UserManagementController::class, 'update'])->name('admin.user.update');
+        Route::patch('/users/{admin_user}', [UserManagementController::class, 'update'])
+            ->name('admin.user.update');
+    });
+    ute::patch('/users/{user}', [UserManagementController::class, 'update'])->name('admin.user.update');
     });
 
     //join-request member
