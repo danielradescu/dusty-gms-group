@@ -84,7 +84,6 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
         Route::patch('/users/{admin_user}', [UserManagementController::class, 'update'])
             ->name('admin.user.update');
     });
-    Route::patch('/users/{user}', [UserManagementController::class, 'update'])->name('admin.user.update');
 
     //join-request member
     Route::get('/invite', [MemberController::class, 'create'])->name('member-invite-create');
