@@ -16,10 +16,10 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:locale" content="ro_RO">
-    <meta property="og:title" content="Comunitatea de Board Games Iași — Joacă, Conectează-te, Relax!">
+    <meta property="og:title" content="Comunitatea de Board Games Iași — Joacă, Conectează-te, Relaxează-te!">
     <meta property="og:description"
           content="Alătură-te comunității de board games din Iași și descoperă oameni, jocuri și momente de relaxare offline.">
-    <meta property="og:image" content="{{ asset('images/og_preview_iasi.jpg') }}">
+    <meta property="og:image" content="{{ asset('images/logo_dusty_gms.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="Comunitatea Board Games Iași">
 
