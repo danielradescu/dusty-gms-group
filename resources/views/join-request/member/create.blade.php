@@ -25,7 +25,7 @@
                                 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500
                                 focus:ring-indigo-500" required>
                         @error('name')
-                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                            <p class="text-sm text-red-500 mt-1">{{ old('name') }}</p>
                         @enderror
                     </div>
                     <div>
@@ -37,10 +37,22 @@
                                     dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500
                                     focus:ring-indigo-500" required>
                         @error('email')
-                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                            <p class="text-sm text-red-500 mt-1">{{ old('email') }}</p>
                         @enderror
                     </div>
                     <div>
+                        <label for="phone"
+                               class="block text-sm font-medium textgray-700 dark:text-gray-300">Phone number (optional)</label>
+                        <input type="text" id="phone" name="phone"
+                               value="{{ old('phone') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300
+                                    dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500
+                                    focus:ring-indigo-500" required>
+                        @error('phone')
+                            <p class="text-sm text-red-500 mt-1">{{ old('phone') }}</p>
+                        @enderror
+                    </div>
+                    <div class="pt-3">
                         <x-button variant="primary">Send Invite</x-button>
                     </div>
                 </form>

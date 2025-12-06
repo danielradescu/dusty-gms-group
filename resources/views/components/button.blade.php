@@ -27,14 +27,31 @@
     x-data="{ loading: false }"
     @if($disableOnClick)
         x-on:click.prevent="
-            const form = $el.closest('form');
-            if (form && form.checkValidity()) {
-                loading = true;
-                form.submit();
+        const form = $el.closest('form');
+        if (!form) return;
+
+        // ✅ Inject button name/value before submitting
+        if ($el.name && $el.value) {
+            const existing = form.querySelector(`input[name='${$el.name}']`);
+            if (!existing) {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = $el.name;
+                hidden.value = $el.value;
+                form.appendChild(hidden);
             } else {
-                form.reportValidity();
+                existing.value = $el.value;
             }
-        "
+        }
+
+        if (form.checkValidity()) {
+            loading = true;
+            form.submit();
+        } else {
+            form.reportValidity();
+        }
+    "
+
     x-bind:disabled="loading"
     @endif
     {{ $attributes->merge(['class' => $base.' '.$variants[$variant]]) }}

@@ -3,6 +3,7 @@
         ['route' => 'dashboard', 'label' => 'Dashboard'],
         ['route' => 'notification-subscription.edit', 'label' => 'Email settings'],
         ['route' => 'member-invite-create', 'label' => 'Invitations', 'permission' => 'canInvite'],
+        ['route' => 'ranking.index', 'label' => 'Ranking'],
         ['route' => 'contact.create', 'label' => 'Contact'],
     ];
 

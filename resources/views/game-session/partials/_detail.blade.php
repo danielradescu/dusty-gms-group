@@ -150,7 +150,7 @@
                             @csrf
                             @if ($gameSession->hasOpenPositions())
                                 @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Confirmed->value)
-                                    <x-button name="action" value="confirm" variant="primary">🎯 Count me in — reserve my seat!</x-button>
+                                    <x-button type="submit" name="action" value="confirm" variant="primary">🎯 Count me in — reserve my seat!</x-button>
                                 @endif
 
                                 @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::RemindMe2Days->value)
@@ -159,7 +159,7 @@
                                     @endphp
 
                                     @if($hoursUntilTwoDaysBeforeEvent > 2)
-                                        <x-button name="action" value="2day" variant="tertiary">
+                                        <x-button type="submit" name="action" value="2day" variant="tertiary">
                                             ⏰ Remind me two days before (in {{$hoursUntilTwoDaysBeforeEvent}} hours) — still deciding.
                                         </x-button>
                                     @endif
@@ -173,7 +173,7 @@
                                                 )
 
                                             )
-                                    <x-button name="action" value="openPosition" variant="tertiary">
+                                    <x-button type="submit" name="action" value="openPosition" variant="tertiary">
                                         ⏰ Let me know as soon as a position is opened
                                     </x-button>
                                 @endif
@@ -182,7 +182,7 @@
 
 
                             @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::Declined->value)
-                                <x-button name="action" value="decline" variant="secondary">
+                                <x-button type="submit" name="action" value="decline" variant="secondary">
                                     🚫 I can’t make it
                                 </x-button>
                             @endif
