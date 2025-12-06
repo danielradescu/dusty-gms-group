@@ -49,6 +49,12 @@
         </div>
 
         <div>
+            <x-input-label for="phone" :value="__('Phone number')" />
+            <x-text-input id="phone" name="phone_number" type="text" class="mt-1 block w-full" :value="old('phone_number', $user->phone_number)" required autofocus autocomplete="phone" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone_number')" />
+        </div>
+
+        <div>
             <x-input-label for="profile_image" :value="__('Profile Image') . ' (2Mb max)'" />
 
             <input id="profile_image"

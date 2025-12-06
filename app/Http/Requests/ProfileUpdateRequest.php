@@ -31,6 +31,7 @@ class ProfileUpdateRequest extends FormRequest
                 }
             ],
             'profile_image' => ['nullable', 'image', 'max:2048'], // limit to 2MB
+            'phone_number' => ['nullable', 'string', 'min:10', 'max:20'],
         ];
     }
 }

@@ -26,16 +26,20 @@ class UserManagementController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    public function edit(User $user)
+    public function edit(int $id)
     {
+        $user = User::withoutGlobalScopes()->findOrFail($id);
+
         return view('admin.users.edit', [
             'user' => $user,
             'roles' => \App\Enums\Role::cases(),
         ]);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, int $id)
     {
+        $user = User::withoutGlobalScopes()->findOrFail($id);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', "unique:users,email,{$user->id}"],

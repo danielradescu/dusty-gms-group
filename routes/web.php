@@ -22,11 +22,6 @@ use App\Http\Controllers\ExtendedWeekendController;
 use App\Http\Controllers\RankingController;
 use Illuminate\Support\Facades\Route;
 
-// --- Custom Route Binding (runs before routes load)
-Route::bind('admin_user', function ($value) {
-    return App\Models\User::withoutGlobalScopes()->findOrFail($value);
-});
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -35,10 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::middleware('role:Admin')->group(function () {
-    Route::get('/admin/dashboard', fn () => view('admin.dashboard'));
 });
 
 Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
@@ -78,10 +69,10 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
         Route::get('/users', [UserManagementController::class, 'index'])
             ->name('admin.users.index');
 
-        Route::get('/users/{admin_user}/edit', [UserManagementController::class, 'edit'])
+        Route::get('/users/{id}/edit', [UserManagementController::class, 'edit'])
             ->name('admin.user.edit');
 
-        Route::patch('/users/{admin_user}', [UserManagementController::class, 'update'])
+        Route::patch('/users/{id}', [UserManagementController::class, 'update'])
             ->name('admin.user.update');
     });
 
