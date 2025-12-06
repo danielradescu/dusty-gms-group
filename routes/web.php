@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 // --- Custom Route Binding (runs before routes load)
 Route::bind('admin_user', function ($value) {
-    return User::withoutGlobalScopes()->findOrFail($value);
+    return App\Models\User::withoutGlobalScopes()->findOrFail($value);
 });
 
 Route::get('/', function () {
