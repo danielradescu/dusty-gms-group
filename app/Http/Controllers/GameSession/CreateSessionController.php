@@ -7,13 +7,11 @@ use App\Enums\GameSessionStatus;
 use App\Enums\RegistrationStatus;
 use App\Enums\Role;
 use App\Http\Requests\CreateGameSessionRequest;
-use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use App\Models\GameSession;
 use App\Models\GameSessionRequest;
 use App\Models\Registration;
 use App\Models\User;
-use App\Services\GameSessionSlotService;
 use App\Services\GroupNotificationService;
 use App\Services\UserNotificationService;
 use App\Services\XP;
@@ -28,7 +26,7 @@ class CreateSessionController extends Controller
     public function __construct()
     {
         // Only allow admins and organizers
-        $this->middleware(['auth', 'isAdminOrGameSessionOwner']);
+        $this->middleware(['auth', 'hasPermission:' . Role::Organizer->name]);
     }
 
     public function show(string $uuid)

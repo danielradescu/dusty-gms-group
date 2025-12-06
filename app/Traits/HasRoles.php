@@ -68,4 +68,11 @@ trait HasRoles
             Role::Organizer->value,
         ]);
     }
+
+    public function scopeAdmins($query)
+    {
+        return $query->whereIn('role', [
+            Role::Admin->value,
+        ]);
+    }
 }

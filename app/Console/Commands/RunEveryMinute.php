@@ -31,9 +31,15 @@ class RunEveryMinute extends Command
             // Log heartbeat
             Log::info("[Scheduler] RunEveryMinute executed at {$now}");
 
-            Notification::where('send_at', '<=', $now)
-                ->whereIn('status', [NotificationStatus::SCHEDULED, NotificationStatus::RETRY])
-                ->orderBy('send_at')
+            $query = Notification::whereIn('status', [
+                NotificationStatus::SCHEDULED,
+                NotificationStatus::RETRY
+            ]);
+
+//            if (!app()->environment('local')) {
+//                $query->where('send_at', '<=', $now);
+//            }
+            $query->orderBy('send_at')
                 ->chunkById(100, function ($notifications) use (&$processedCount) {
                     foreach ($notifications as $notification) {
                         try {
