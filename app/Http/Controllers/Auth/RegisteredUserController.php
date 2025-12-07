@@ -104,6 +104,7 @@ class RegisteredUserController extends Controller
                 'name' => $joinRequest->name,
                 'email' => $joinRequest->email,
                 'phone_number' => $joinRequest->phone,
+                'info' => $joinRequest->message,
             ]);
 
 

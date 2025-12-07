@@ -101,19 +101,19 @@ class JoinRequest extends Model
     protected function isDeclined(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->status === JoinRequestStatus::DECLINED,
+            get: fn() => $this->status === JoinRequestStatus::REJECTED,
         );
     }
 
-    /**
-     * Accessor for determining if request is invited.
-     */
-    protected function isInvited(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->status === JoinRequestStatus::INVITED,
-        );
-    }
+//    /**
+//     * Accessor for determining if request is invited.
+//     */
+//    protected function isInvited(): Attribute
+//    {
+//        return Attribute::make(
+//            get: fn() => $this->status === JoinRequestStatus::INVITED,
+//        );
+//    }
 
     /**
      * Scope: filter pending requests.
@@ -123,13 +123,13 @@ class JoinRequest extends Model
         return $query->where('status', JoinRequestStatus::PENDING);
     }
 
-    /**
-     * Scope: filter invited requests.
-     */
-    public function scopeInvited($query)
-    {
-        return $query->where('status', JoinRequestStatus::INVITED);
-    }
+//    /**
+//     * Scope: filter invited requests.
+//     */
+//    public function scopeInvited($query)
+//    {
+//        return $query->where('status', JoinRequestStatus::INVITED);
+//    }
 
     /**
      * Scope: filter approved requests.
@@ -144,6 +144,6 @@ class JoinRequest extends Model
      */
     public function scopeDeclined($query)
     {
-        return $query->where('status', JoinRequestStatus::DECLINED);
+        return $query->where('status', JoinRequestStatus::REJECTED);
     }
 }
