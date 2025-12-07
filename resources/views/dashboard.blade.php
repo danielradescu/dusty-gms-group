@@ -15,7 +15,8 @@
             </div>
         </div>
     @endif
-    @if(empty($slots) && empty($gameSessions))
+
+    @if(empty($slots) && (!count($gameSessions)))
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -25,7 +26,7 @@
                             🎲 No sessions available to join right now — but don’t worry!
                             <br/>
                             We’re setting up new tables soon. Drop by on <strong>Monday</strong> to see next week’s
-                            sessions or request your own game night!
+                            sessions or request your own game day!
                             <br/>
                             <br/>
                             <span

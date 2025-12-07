@@ -19,7 +19,7 @@
                     You can use your current email address ({{ $joinRequest->email }}) or a different one if you prefer by clicking the "Complete Your Registration" button bellow.
                 </p>
 
-                @component('mail::button', ['url' => route('simple_register', '?invitation_token=' . $joinRequest->invitation_token)])
+                @component('mail::button', ['url' => route('simple_register', 'invitation_token=' . $joinRequest->invitation_token)])
                     Complete Your Registration
                 @endcomponent
 

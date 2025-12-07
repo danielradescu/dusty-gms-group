@@ -47,7 +47,7 @@
                                value="{{ old('phone') }}"
                                class="mt-1 block w-full rounded-md border-gray-300
                                     dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500
-                                    focus:ring-indigo-500" required>
+                                    focus:ring-indigo-500">
                         @error('phone')
                             <p class="text-sm text-red-500 mt-1">{{ old('phone') }}</p>
                         @enderror

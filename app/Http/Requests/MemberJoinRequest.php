@@ -24,7 +24,7 @@ class MemberJoinRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
-            'phone' => ['nullable', 'phone', 'max:255'],
+            'phone' => ['nullable', 'string', 'min:10', 'max:20'],
         ];
     }
 

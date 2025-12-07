@@ -34,7 +34,7 @@ class PublicJoinRequest extends FormRequest
                     $fail('We already received a request to join for this email address.');
                 }
             }],
-            'phone' => ['nullable', 'string', 'max:50'],
+            'phone' => ['nullable', 'string', 'min:10', 'max:20'],
             'other_means_of_contact' => ['nullable', 'string', 'max:1000'],
             'message' => ['nullable', 'string', 'max:2000'],
         ];
