@@ -36,9 +36,9 @@ class RunEveryMinute extends Command
                 NotificationStatus::RETRY
             ]);
 
-//            if (!app()->environment('local')) {
-//                $query->where('send_at', '<=', $now);
-//            }
+            if (!app()->environment('local')) {
+                $query->where('send_at', '<=', $now);
+            }
             $query->orderBy('send_at')
                 ->chunkById(100, function ($notifications) use (&$processedCount) {
                     foreach ($notifications as $notification) {
