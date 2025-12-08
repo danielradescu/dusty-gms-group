@@ -256,10 +256,10 @@ class UserNotificationService
 
         return $this->schedule(
             userId: $userId,
-            type: NotificationType::ORGANIZER_OF_A_SESSION,
+            type: NotificationType::ORGANIZER_FINALIZE_SESSION,
             data: ['session_id' => $sessionId],
             sendAt: $sendAt,
-            hashParts: [$sessionId, NotificationType::ORGANIZER_OF_A_SESSION->name] //per session
+            hashParts: [$sessionId, NotificationType::ORGANIZER_FINALIZE_SESSION->name] //per session
         );
     }
 
