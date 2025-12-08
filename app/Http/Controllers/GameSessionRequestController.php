@@ -32,8 +32,7 @@ class GameSessionRequestController extends Controller
         DB::transaction(function () use ($toCreate) {
             $user = auth()->user();
 
-            $weekendRangeService = app(WeekendRangeService::class);
-            $end = $weekendRangeService->getLastDay();
+            $end = now()->copy()->addDays(6);
 
             // Delete this user's requests for the current week and cleanup the past
             $user->gameSessionRequests()

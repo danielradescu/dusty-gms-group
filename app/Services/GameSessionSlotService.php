@@ -5,15 +5,16 @@ namespace App\Services;
 use App\Enums\GameSessionStatus;
 use App\Models\GameSession;
 use App\Models\GameSessionRequest;
-use App\Services\WeekendRangeService;
-use Auth;
-use Carbon\Carbon;
+use App\Models\DayWePlay;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class GameSessionSlotService
 {
     /**
-     * Get available slots for the current or next weekend (extended or default).
+     * Get available slots for the next 6 days based on `days_we_play` table.
+     * Excludes days with an existing GameSession.
      *
      * @param  Collection  $userGameSessionRequests
      * @param  Carbon|null  $reference
@@ -22,70 +23,78 @@ class GameSessionSlotService
     public static function getAvailableSlots(Collection $userGameSessionRequests, ?Carbon $reference = null): array
     {
         $reference ??= now();
-        $weekendRangeService = app(WeekendRangeService::class);
+        $now = now()->startOfDay();
 
-        $start = $weekendRangeService->getFirstDay($reference);
-        $end   = $weekendRangeService->getLastDay($reference);
-        $now   = now();
+        // Get the next 6 days starting from tomorrow
+        $days = collect();
+        for ($i = 1; $i <= 6; $i++) {
+            $days->push($reference->copy()->addDays($i)->startOfDay());
+        }
 
-        // 1) Get ALL requests within that weekend range
-        $requestsThisRange = GameSessionRequest::whereBetween('preferred_time', [$start, $end])
-            ->get()
-            ->groupBy(fn($r) => $r->preferred_time->toDateString());
+        // Get all playable weekdays from DayWePlay
+        $playableDays = DayWePlay::where('playable', true)
+            ->pluck('day_of_week')
+            ->map(fn($d) => strtolower($d))
+            ->toArray();
 
-        // 2) Get ALL sessions within the same range
-        $sessionsThisRange = GameSession::whereBetween('start_at', [$start, $end])
+        // Fetch GameSessions within the next 6 days
+        $sessions = GameSession::query()
+            ->whereBetween('start_at', [$now, $reference->copy()->addDays(6)->endOfDay()])
             ->whereIn('status', [
                 GameSessionStatus::CONFIRMED_BY_ORGANIZER,
                 GameSessionStatus::RECRUITING_PARTICIPANTS
             ])
-            ->where(function ($q) use ($now) {
-                $q->whereNull('delay_until')
-                    ->orWhere('delay_until', '<', $now)
-                    ->orWhere('organized_by', Auth::id());
-            })
             ->get()
             ->groupBy(fn($s) => $s->start_at->toDateString());
 
-        // 3) Loop over each day in weekend range
-        $days = [];
-        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+        // Fetch GameSessionRequests in the same range
+        $requests = GameSessionRequest::whereBetween('preferred_time', [$now, $reference->copy()->addDays(6)->endOfDay()])
+            ->get()
+            ->groupBy(fn($r) => $r->preferred_time->toDateString());
+
+        // Build result list
+        $result = [];
+
+        foreach ($days as $date) {
             $dateKey = $date->toDateString();
+            $weekday = strtolower($date->format('l'));
 
-            // Skip if there’s an existing game session that day
-            if ($sessionsThisRange->has($dateKey)) {
+            // Skip non-playable days
+            if (!in_array($weekday, $playableDays)) {
                 continue;
             }
 
-
-            $today = $now->copy()->startOfDay();
-
-            // Always skip past days
-            if ($date->startOfDay()->lte($today)) {
+            // Skip if session already exists for this day
+            if ($sessions->has($dateKey)) {
                 continue;
             }
 
-            // Check if user already has a request that day
-            $userRequest = $userGameSessionRequests->first(fn($r) => $r->preferred_time->isSameDay($date));
-            $value = $userRequest ? ($userRequest->auto_join ? 'auto' : 'notify') : '';
+            // User’s own request, if any
+            $userRequest = $userGameSessionRequests->first(
+                fn($r) => $r->preferred_time->isSameDay($date)
+            );
 
-            // Collect all requests for this date
-            $allRequests = $requestsThisRange->get($dateKey, collect());
+            $value = $userRequest
+                ? ($userRequest->auto_join ? 'auto' : 'notify')
+                : '';
 
-            $days[] = [
+            // All requests for this date
+            $requestsForDay = $requests->get($dateKey, collect());
+
+            $result[] = [
                 'label'            => $date->format('l · d M'),
                 'dt'               => $date->copy(),
                 'value'            => $value,
-                'total_interested' => $allRequests->count(),
-                'auto_joiners'     => $allRequests->where('auto_join', true)->count(),
+                'total_interested' => $requestsForDay->count(),
+                'auto_joiners'     => $requestsForDay->where('auto_join', true)->count(),
             ];
         }
 
-        return $days;
+        return $result;
     }
 
     /**
-     * For compatibility — simply calls getAvailableSlots with today as reference.
+     * Shortcut for compatibility (like old `getCurrentWeekSlots()`).
      */
     public static function getCurrentWeekSlots(Collection $gameSessionRequests): array
     {

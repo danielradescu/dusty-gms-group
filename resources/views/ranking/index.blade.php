@@ -57,8 +57,8 @@
                                             @if(auth()->id() === $user->id)
                                                 {{-- "YOU" badge --}}
                                                 <span class="bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold animate-pulse">
-                    YOU
-                </span>
+                                                    YOU
+                                                </span>
                                             @endif
 
                                             {{-- Avatar + Name --}}

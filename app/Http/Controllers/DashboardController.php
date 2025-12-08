@@ -30,10 +30,8 @@ class DashboardController extends Controller
             ->orderBy('start_at', 'asc')
             ->get();
 
-        $weekendRangeService = app(WeekendRangeService::class);
-        $start = $weekendRangeService->getFirstDay();
 
-        $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests()->where('preferred_time', '>=', $start)->get();
+        $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests()->where('preferred_time', '>=', now())->get();
         $toReturn['slots'] = GameSessionSlotService::getCurrentWeekSlots($toReturn['gameSessionRequests']);
 
         return view('dashboard')->with($toReturn);

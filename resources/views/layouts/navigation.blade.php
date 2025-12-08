@@ -10,7 +10,7 @@
     $organizerLinks = [
         ['route' => 'game-session.create', 'label' => 'Create Session'],
         ['route' => 'management-join-request-index', 'label' => 'Join Requests'],
-        ['route' => 'extended-weekend.edit', 'label' => 'Extended Weekend'],
+        ['route' => 'days-we-play.edit', 'label' => 'Days we play'],
     ];
 
     $adminLinks = [
