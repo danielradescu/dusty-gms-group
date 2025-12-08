@@ -1,5 +1,10 @@
 <div
     class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-5 shadow-inner border border-gray-200 dark:border-gray-700">
+
+    <div class="mb-4">
+        <x-link-button class="!w-auto" href="{{ route('game-session.interaction.show', $gameSession->uuid) }}" variant="secondary">← Back to session view</x-link-button>
+    </div>
+
     <h3 class="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-3">
         Notify Participants
     </h3>

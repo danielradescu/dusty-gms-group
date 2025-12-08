@@ -5,7 +5,9 @@
               class="space-y-6">
             @csrf
             @method('PATCH')
-
+            <div class="mb-4">
+                <x-link-button class="!w-auto" href="{{ route('game-session.interaction.show', $gameSession->uuid) }}" variant="secondary">← Back to session view</x-link-button>
+            </div>
             <!-- Section Header -->
             <h3 class="font-semibold text-lg text-gray-800 dark:text-gray-200 flex items-center gap-2">
                 ⚙️ Update Session Details

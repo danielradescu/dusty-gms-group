@@ -17,11 +17,11 @@
                             <li class="flex items-center justify-between bg-gray-50 dark:bg-gray-800/50
                                border border-gray-200 dark:border-gray-700 rounded-md px-3 py-2 text-sm">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-indigo-600 dark:text-indigo-400 font-semibold">
+                                    <span class="w-20 text-indigo-600 dark:text-indigo-400 font-semibold">
                                         {{ $req->preferred_time->format('l') }}
                                     </span>
                                     <span class="text-gray-600 dark:text-gray-300">
-                                        {{ $req->preferred_time->format('M d · H:i') }}
+                                        {{ $req->preferred_time->format('d F') }}
                                     </span>
                                 </div>
 
@@ -118,10 +118,12 @@
                             </label>
                         </div>
                         <!-- Counter -->
-                        <div class="mt-5 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-3">
-                            <span>👥 {{ $slot['total_interested'] ?? 0 }} total interested</span>
-                            <span>⚡ {{ $slot['auto_joiners'] ?? 0 }} auto-joiners</span>
-                        </div>
+                        <span class="mt-3 inline-block">
+                            👥 {{ $slot['total_interested'] ?? 0 }}
+                            <span class="text-gray-400 dark:text-gray-500">
+                                ({{ $slot['auto_joiners'] ?? 0 }} auto-join)
+                            </span>
+                        </span>
                     </fieldset>
                 @endforeach
             </div>
