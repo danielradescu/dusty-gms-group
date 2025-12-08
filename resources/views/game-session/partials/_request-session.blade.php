@@ -54,7 +54,7 @@
                 Pick the days you're interested in.
                 For each day, choose whether you want to <strong>auto-join</strong> a session if it’s created, or <strong>only receive a notification</strong> about it.
                 <br/>
-                <strong>Note:</strong> The listed hours are reference times only — the organizer may adjust the final start time when creating the session.
+                <strong>Note:</strong> The organizer selects the initial start time. You can later request a change or communicate your planned arrival time.
             </p>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
