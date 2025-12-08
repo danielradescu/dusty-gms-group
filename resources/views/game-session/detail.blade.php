@@ -14,7 +14,7 @@
             <meta property="og:url" content="{{ request()->url() }}">
 
             {{-- Image (optional) --}}
-            <meta property="og:image" content="{{ asset('images/complexity/' . $gameSession->complexity->label() . '.png') }}">
+            <meta property="og:image" content="{{ asset('images/complexity/' . strtolower($gameSession->complexity->label()) . '.png') }}">
             <meta property="og:image:width" content="1200">
             <meta property="og:image:height" content="630">
 
@@ -23,7 +23,7 @@
             <meta name="twitter:title" content="{{ $gameSession->name }}">
             <meta name="twitter:description"
                   content="Join us for a session on {{ $gameSession->start_at->format('l, M d, Y') }}.">
-            <meta name="twitter:image" content="{{ asset('images/complexity/' . $gameSession->complexity->label() . '.png') }}">
+            <meta name="twitter:image" content="{{ asset('images/complexity/' . strtolower($gameSession->complexity->label()) . '.png') }}">
         @endif
     </x-slot>
     <div class="py-12 pb-0">
