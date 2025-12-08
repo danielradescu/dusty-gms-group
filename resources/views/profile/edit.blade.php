@@ -8,7 +8,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 10000)"
                     class="text-emerald-800 dark:text-emerald-300 text-sm font-medium"
-                > - {{ __('Saved.') }}</span>
+                > - ✅ {{ __('Saved.') }}</span>
             @endif
         </h2>
     </x-slot>
