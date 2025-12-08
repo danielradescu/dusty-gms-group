@@ -7,6 +7,7 @@ use App\Enums\GameSessionStatus;
 use App\Enums\RegistrationStatus;
 use App\Enums\Role;
 use App\Http\Requests\CreateGameSessionRequest;
+use App\Services\GameSessionSlotService;
 use Illuminate\Routing\Controller;
 use App\Models\GameSession;
 use App\Models\GameSessionRequest;
@@ -45,25 +46,19 @@ class CreateSessionController extends Controller
     public function create()
     {
 
-        /** @var WeekendRangeService $weekendService */
-        $weekendService = app(WeekendRangeService::class);
+        // Fetch current user's game session requests
+        $userRequests = GameSessionRequest::where('user_id', auth()->id())->get();
 
-        // Get the active or upcoming weekend’s boundaries (context-aware)
-        $start = $weekendService->getFirstDay();
-        $end   = $weekendService->getLastDay();
+        // Use the refactored service to get available slots
+        $availableSlots = GameSessionSlotService::getAvailableSlots($userRequests);
 
-        // Build interest stats for each day between start and end
-        $interestStats = collect();
-
-        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
-            $count = GameSessionRequest::whereDate('preferred_time', $date->toDateString())->count();
-
-            $interestStats->push([
-                'label' => $date->format('l'),
-                'time'  => $date->copy(),
-                'count' => $count,
-            ]);
-        }
+        // Transform for your $interestStats collection format
+        $interestStats = collect($availableSlots)->map(fn($slot) => [
+            'label' => $slot['label'],
+            'time'  => $slot['dt'],
+            'count' => $slot['total_interested'],
+            'auto_joiners' => $slot['auto_joiners'],
+        ]);
 
         $toReturn = [
             'organizers' => auth()->user()->hasAdminPermission() ? User::all() : [],
