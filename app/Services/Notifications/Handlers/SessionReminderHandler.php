@@ -49,10 +49,10 @@ class SessionReminderHandler extends NotificationHandlerBase
             ->exists();
 
         if (! $isRemindUser) {
-            return false;
+            return RelevanceResult::fail('User must still be in RemindMe2Days status for this session.');
         }
 
-        return true;
+        return RelevanceResult::ok();
     }
 
     /**
