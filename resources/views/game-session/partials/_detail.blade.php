@@ -181,12 +181,19 @@
                                         in — reserve my seat!
                                     </x-button>
                                 @else
+                                    @php
+                                        $googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' .
+                                            '&text=' . urlencode($gameSession->name) .
+                                            '&details=' . urlencode("Join us for a board game session organized by " . ($gameSession->organizer->name ?? 'Unknown')) .
+                                            '&location=' . urlencode($gameSession->location ?? 'Iași') .
+                                            '&dates=' . $gameSession->start_at->format('Ymd\THis') . '/' . ($gameSession->end_at ?? $gameSession->start_at->copy()->addHours(3))->format('Ymd\THis');
+                                    @endphp
                                     <x-link-button
-                                        href="{{ route('game-session.interaction.calendar', $gameSession->uuid) }}"
+                                        href="{{ $googleUrl }}"
                                         variant="tertiary"
                                         class="flex items-center gap-2"
                                     >
-                                        📅 Add to Calendar
+                                        📅 Add to Google Calendar
                                     </x-link-button>
                                 @endif
 
