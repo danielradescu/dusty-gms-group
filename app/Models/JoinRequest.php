@@ -75,6 +75,13 @@ class JoinRequest extends Model
         return $this->belongsTo(User::class, 'reviewed_by');
     }
 
+    protected function isEditable(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => in_array($this->status, [JoinRequestStatus::PENDING]),
+        );
+    }
+
     /**
      * Accessor for determining if request is approved.
      */

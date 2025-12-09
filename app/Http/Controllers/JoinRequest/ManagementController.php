@@ -32,11 +32,18 @@ class ManagementController extends Controller
 
     public function edit(JoinRequest $joinRequest)
     {
+        if (! $joinRequest->isEditable) {
+            abort(403, 'Cannot change status for this join request / invitation.');
+        }
         return view('join-request.management.edit')->with(['joinRequest' => $joinRequest]);
     }
 
     public function update(UpdateJoinRequestRequest $request, JoinRequest $joinRequest)
     {
+        if (! $joinRequest->isEditable) {
+            abort(403, 'Cannot change status for this join request / invitation.');
+        }
+
         $joinRequest->status = $request->get('status');
         $joinRequest->reviewed_by = auth()->user()->id;
         $joinRequest->save();

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            👥 {{ __('User Management') }}
+            👥 {{ __('Join Requests / Invitations') }}
         </h2>
     </x-slot>
 
@@ -38,7 +38,9 @@
                                         {{ $request->created_at->format('M d, Y') }}
                                     </td>
                                     <td class="px-4 py-3 text-right">
-                                        <x-link-button class="!w-auto" href="{{ route('management-join-request-edit', $request->id) }}" variant="secondary">⚙ Manage →</x-link-button>
+                                        @if ($request->isEditable)
+                                            <x-link-button class="!w-auto" href="{{ route('management-join-request-edit', $request->id) }}" variant="secondary">⚙ Manage →</x-link-button>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

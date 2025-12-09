@@ -97,7 +97,7 @@
                     <thead>
                     <tr class="text-gray-700 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
                         <th class="py-2 px-3">Day</th>
-                        <th class="py-2 px-3 text-center">Status</th>
+                        <th class="py-2 px-3 text-center">Playable</th>
                         <th class="py-2 px-3 text-center">Changed By</th>
                     </tr>
                     </thead>
@@ -123,9 +123,9 @@
 
                             <td class="py-2 px-3 text-center">
                                 @if($day->playable)
-                                    <span class="px-2 py-1 rounded-full bg-green-600 text-white text-xs">Playable</span>
+                                    <span class="px-2 py-1 rounded-full bg-green-600 text-white text-xs">YES</span>
                                 @else
-                                    <span class="px-2 py-1 rounded-full bg-red-600 text-white text-xs">Not Playable</span>
+                                    <span class="px-2 py-1 rounded-full bg-red-600 text-white text-xs">NO</span>
                                 @endif
                             </td>
 

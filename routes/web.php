@@ -41,6 +41,7 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
     Route::post('/create-game-session', [CreateSessionController::class, 'store'])->name('game-session.store');
     Route::get('/game-session/{uuid}/created', [CreateSessionController::class, 'show'])->name('game-session.create.show');
     Route::post('/game-session/{uuid}', [InteractionController::class, 'store'])->name('game-session.interaction.store');
+    Route::get('/game-session/{uuid}/calendar', [InteractionController::class, 'calendar'])->name('game-session.interaction.calendar');
     Route::get('/game-session/{uuid}/manage', [GameSessionManagementController::class, 'edit'])->name('game-session.manage.edit');
     Route::patch('/game-session/{uuid}/core-info', [GameSessionManagementController::class, 'updateCoreInfo'])->name('game-session.manage.update.core-info');
     Route::patch('/game-session/{uuid}/status', [GameSessionManagementController::class, 'updateStatus'])->name('game-session.manage.update.status');

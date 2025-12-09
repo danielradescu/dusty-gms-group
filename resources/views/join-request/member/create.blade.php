@@ -63,7 +63,7 @@
                         <tr class="border-b border-gray-700 text-left textgray-400 uppercase text-xs">
                             <th class="py-2">Name</th>
                             <th class="py-2">Email</th>
-{{--                            <th class="py-2">Status</th>--}}
+                            <th class="py-2">Status</th>
                             <th class="py-2">Date</th>
                         </tr>
                         </thead>
@@ -72,13 +72,13 @@
                             <tr class="border-b border-gray-700">
                                 <td class="py-2">{{ $invite->name }}</td>
                                 <td class="py-2">{{ $invite->email }}</td>
-{{--                                <td class="py-2">{{ $invite->status->name }}</td>--}}
+                                <td class="py-2"><x-join-request-status-badge :joinRequestStatus="$invite->status"/></td>
                                 <td class="py-2">{{ $invite->created_at->format('d M Y') }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="py-4 text-gray-500 textcenter">You haven’t made any invites
-                                    yet.
+                                <td colspan="3" class="py-4 text-gray-500 textcenter">
+                                    You don't have any invites.
                                 </td>
                             </tr>
                         @endforelse
@@ -86,6 +86,11 @@
                     </table>
                     <div class="mt-4">
                         {{ $invites->links() }}
+                    </div>
+                    <div class="flex items-center justify-between pt-2">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                            Note: Each invite will be removed after 7 days.
+                        </div>
                     </div>
                 </div>
             </div>

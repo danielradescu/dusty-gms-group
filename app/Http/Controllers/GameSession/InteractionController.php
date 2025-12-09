@@ -10,6 +10,7 @@ use App\Models\Registration;
 use App\Services\GroupNotificationService;
 use App\Services\UserNotificationService;
 use App\Services\XP;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -133,5 +134,34 @@ class InteractionController
         }
 
         return redirect()->route('game-session.interaction.show', $uuid);
+    }
+
+    public function calendar(string $uuid)
+    {
+        $session = GameSession::where('uuid', $uuid)->firstOrFail();
+
+        $start = Carbon::parse($session->start_at)->format('Ymd\THis');
+        $end = Carbon::parse($session->start_at->copy()->addHours(5))->format('Ymd\THis');
+
+        $ics = "BEGIN:VCALENDAR
+                VERSION:2.0
+                PRODID:-//Board Games Iasi//EN
+                CALSCALE:GREGORIAN
+                METHOD:PUBLISH
+                BEGIN:VEVENT
+                UID:session-{$session->uuid}@iasi.games
+                DTSTART:{$start}
+                DTEND:{$end}
+                SUMMARY:Board Game Session - {$session->name}
+                DESCRIPTION:Join us for a board game session organized by {$session->organizer->name}.
+                LOCATION:{$session->location}
+                STATUS:CONFIRMED
+                END:VEVENT
+                END:VCALENDAR";
+
+        return response($ics, 200, [
+            'Content-Type' => 'text/calendar; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="boardgame-session.ics"',
+        ]);
     }
 }

@@ -180,6 +180,14 @@
                                     <x-button type="submit" name="action" value="confirm" variant="primary">🎯 Count me
                                         in — reserve my seat!
                                     </x-button>
+                                @else
+                                    <x-link-button
+                                        href="{{ route('game-session.interaction.calendar', $gameSession->uuid) }}"
+                                        variant="tertiary"
+                                        class="flex items-center gap-2"
+                                    >
+                                        📅 Add to Calendar
+                                    </x-link-button>
                                 @endif
 
                                 @if(empty($registrationStatus) || $registrationStatus?->value !== \App\Enums\RegistrationStatus::RemindMe2Days->value)
