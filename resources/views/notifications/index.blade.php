@@ -27,6 +27,8 @@
                                            class="block font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
                                             {{ $note->title ?? 'View details' }}
                                         </a>
+                                    @else
+                                        <p class="block font-medium text-gray-500 dark:text-gray-400">{{ $note->title }}</p>
                                     @endif
 
                                     <p class="font-medium text-gray-800 dark:text-gray-200 {{ $note->link ? 'mt-1' : '' }}">
@@ -67,7 +69,7 @@
                                         {{ $note->title ?? 'View details' }}
                                     </a>
                                 @else
-                                    <p class="block font-medium">{{ $note->title }}</p>
+                                    <p class="block font-medium text-gray-500 dark:text-gray-400">{{ $note->title }}</p>
                                 @endif
 
                                 <p class="font-medium text-gray-800 dark:text-gray-200 {{ $note->link ? 'mt-1' : '' }}">
