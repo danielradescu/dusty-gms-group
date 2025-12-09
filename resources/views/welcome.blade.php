@@ -44,7 +44,7 @@
 <!-- Banner -->
 <section
     class="w-full bg-amber-200 dark:bg-amber-700 py-6 shadow-inner border-y border-amber-400 dark:border-amber-600">
-    <div class="max-w-5xl mx-auto px-6 text-center">
+    <div class="max-w-6xl mx-auto px-6 text-center">
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
             <span class="text-3xl">🚧</span>
             <p class="text-lg font-semibold text-amber-900 dark:text-amber-100">
@@ -61,7 +61,7 @@
 <!-- =============================== -->
 <!-- HERO -->
 <!-- =============================== -->
-<section class="w-full py-20 sm:py-28 bg-white dark:bg-gray-800 shadow-sm relative overflow-hidden">
+<section class="w-full py-20 sm:py-28 bg-white dark:bg-gray-900 shadow-sm relative overflow-hidden">
     <!-- Background Image of Iași -->
     <img src="/images/palat.png" alt="Palatul Culturii Iași"
          class="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-15">
@@ -70,7 +70,7 @@
         <img src="/images/logo_dusty_gms.png" alt="Logo"
              class="mx-auto w-24 h-auto mb-8 opacity-90">
 
-        <h1 class="text-3xl sm:text-5xl font-semibold mb-6">
+        <h1 class="text-3xl sm:text-6xl font-semibold mb-6">
             Joacă, conectează-te și relaxează-te — împreună, la Iași.
         </h1>
 
@@ -160,7 +160,7 @@
 <!-- JOIN INFO -->
 <!-- =============================== -->
 <section class="w-full py-20 bg-gray-50 dark:bg-gray-800">
-    <div class="max-w-5xl mx-auto px-6">
+    <div class="max-w-6xl mx-auto px-6">
         <h2 class="text-3xl font-semibold text-center mb-12">Cum te poți alătura</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -185,10 +185,83 @@
     </div>
 </section>
 
+@php
+    $galleryPath = public_path('images/gallery');
+    $galleryImages = collect(glob($galleryPath . '/*.{jpg,jpeg,png,webp}', GLOB_BRACE))
+        ->map(fn($path) => basename($path))
+        ->values();
+@endphp
+
+@if ($galleryImages->isNotEmpty())
+    <!-- =============================== -->
+    <!-- GALLERY / COMMUNITY MOMENTS -->
+    <!-- =============================== -->
+    <section class="w-full py-5 bg-gray-100 dark:bg-gray-900 relative">
+        <div class="max-w-6xl mx-auto text-center relative">
+            <div
+                x-data="{
+                    active: 0,
+                    images: {{ json_encode($galleryImages) }},
+                    loaded: false,
+                    next() { this.active = (this.active + 1) % this.images.length; }
+                }"
+                x-init="loaded = true; setInterval(() => next(), 10000)"
+                class="relative overflow-hidden rounded-2xl mx-auto aspect-[16/9]
+                       bg-gray-200 dark:bg-gray-800
+                       shadow-[0_0_20px_rgba(0,0,0,0.4)] ring-1 ring-gray-300/40 dark:ring-gray-700/50
+                       before:absolute before:inset-0 before:rounded-2xl before:shadow-inner before:shadow-black/40"
+            >
+                <!-- Placeholder while loading -->
+                <div class="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" x-show="!loaded"></div>
+
+                <!-- Carousel Images -->
+                <template x-for="(image, index) in images" :key="index">
+                    <img
+                        x-show="active === index"
+                        x-transition:enter="transition ease-in-out duration-1000"
+                        x-transition:enter-start="opacity-0 scale-105"
+                        x-transition:enter-end="opacity-100 scale-100"
+                        :src="`/images/gallery/${image}`"
+                        alt="Board game moment"
+                        class="absolute inset-0 w-full h-full object-cover object-center rounded-2xl"
+                        loading="lazy"
+                        @load="loaded = true"
+                    >
+                </template>
+
+                <!-- Subtle gradient overlay for contrast -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent rounded-2xl pointer-events-none"></div>
+
+                <!-- Navigation Dots -->
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-20">
+                    <template x-for="(image, index) in images" :key="index">
+                        <button
+                            @click="active = index"
+                            :class="active === index ? 'bg-indigo-500 scale-125' : 'bg-gray-300 dark:bg-gray-600'"
+                            class="w-3 h-3 rounded-full transition-all duration-300"
+                        ></button>
+                    </template>
+                </div>
+
+                <!-- Destination Iași Logo (only for this section) -->
+                <div class="absolute bottom-2 right-2 opacity-50 z-30">
+                    <picture>
+                        <img src="{{ asset('images/logo-iasi-stacked-dark.png') }}"
+                             alt="Destination Iași"
+                             class="w-20 sm:w-24 h-auto opacity-70 hover:opacity-100 transition duration-300 drop-shadow-md">
+                    </picture>
+                </div>
+            </div>
+        </div>
+    </section>
+@endif
+
+
+
 <!-- =============================== -->
 <!-- FOOTER -->
 <!-- =============================== -->
-<section class="w-full py-20 bg-white dark:bg-gray-900 text-center border-t border-gray-200 dark:border-gray-700">
+<section class="w-full py-20 bg-white dark:bg-gray-800 text-center dark:border-gray-700">
     <div class="max-w-4xl mx-auto px-6">
         <h2 class="text-2xl sm:text-3xl font-semibold mb-6">
             „Ne jucăm ca să ne deconectăm de la ecrane și să ne reconectăm cu oamenii.”
@@ -241,8 +314,6 @@
         ],
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
 </script>
-
-
 
 </body>
 </html>
