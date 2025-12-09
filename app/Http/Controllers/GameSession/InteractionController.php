@@ -135,5 +135,5 @@ class InteractionController
 
         return redirect()->route('game-session.interaction.show', $uuid);
     }
-    
+
 }

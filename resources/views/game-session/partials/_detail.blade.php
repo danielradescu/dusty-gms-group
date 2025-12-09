@@ -194,7 +194,7 @@
                                             . '&ctz=Europe/Bucharest';
                                     @endphp
 
-                                    <x-link-button href="{!! $googleUrl !!}" variant="secondary" class="!w-auto flex items-center gap-2" target="_blank">
+                                    <x-link-button href="{!! $googleUrl !!}" variant="tertiary" class="flex items-center gap-2" target="_blank">
                                         🗓️ Add to Google Calendar
                                     </x-link-button>
                                 @endif
