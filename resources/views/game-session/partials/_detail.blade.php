@@ -182,18 +182,20 @@
                                     </x-button>
                                 @else
                                     @php
-                                        $googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' .
-                                            '&text=' . urlencode($gameSession->name) .
-                                            '&details=' . urlencode("Join us for a board game session organized by " . ($gameSession->organizer->name ?? 'Unknown')) .
-                                            '&location=' . urlencode($gameSession->location ?? 'Iași') .
-                                            '&dates=' . $gameSession->start_at->format('Ymd\THis') . '/' . ($gameSession->end_at ?? $gameSession->start_at->copy()->addHours(3))->format('Ymd\THis');
+                                        $startUtc = $gameSession->start_at->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
+                                        $endUtc = ($gameSession->end_at ?? $gameSession->start_at->copy()->addHours(3))
+                                            ->setTimezone('UTC')->format('Ymd\THis\Z');
+
+                                        $googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+                                            . '&text=' . urlencode($gameSession->name)
+                                            . '&details=' . urlencode("Join us for a board game session organized by " . ($gameSession->organizer->name ?? 'Unknown'))
+                                            . '&location=' . urlencode($gameSession->location ?? 'Iași')
+                                            . '&dates=' . $startUtc . '/' . $endUtc
+                                            . '&ctz=Europe/Bucharest';
                                     @endphp
-                                    <x-link-button
-                                        href="{{ $googleUrl }}"
-                                        variant="tertiary"
-                                        class="flex items-center gap-2"
-                                    >
-                                        📅 Add to Google Calendar
+
+                                    <x-link-button href="{!! $googleUrl !!}" variant="secondary" class="!w-auto flex items-center gap-2" target="_blank">
+                                        🗓️ Add to Google Calendar
                                     </x-link-button>
                                 @endif
 
