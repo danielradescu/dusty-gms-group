@@ -138,30 +138,36 @@ class InteractionController
 
     public function calendar(string $uuid)
     {
-        $session = GameSession::where('uuid', $uuid)->firstOrFail();
+        $session = \App\Models\GameSession::where('uuid', $uuid)->firstOrFail();
 
         $start = Carbon::parse($session->start_at)->format('Ymd\THis');
-        $end = Carbon::parse($session->start_at->copy()->addHours(5))->format('Ymd\THis');
+        $end   = Carbon::parse($session->start_at->copy()->addHours(5))->format('Ymd\THis');
 
-        $ics = "BEGIN:VCALENDAR
-                VERSION:2.0
-                PRODID:-//Board Games Iasi//EN
-                CALSCALE:GREGORIAN
-                METHOD:PUBLISH
-                BEGIN:VEVENT
-                UID:session-{$session->uuid}@iasi.games
-                DTSTART:{$start}
-                DTEND:{$end}
-                SUMMARY:Board Game Session - {$session->name}
-                DESCRIPTION:Join us for a board game session organized by {$session->organizer->name}.
-                LOCATION:{$session->location}
-                STATUS:CONFIRMED
-                END:VEVENT
-                END:VCALENDAR";
+        // Clean up text fields (ICS doesn't like newlines or commas unescaped)
+        $summary     = addcslashes($session->name, ',;');
+        $description = addcslashes("Join us for a board game session organized by " . ($session->organizer->name ?? 'Unknown'), ',;');
+        $location    = addcslashes($session->location ?? 'Iași', ',;');
+        $uid         = "session-{$session->uuid}@boardgamesiasi.ro";
+
+        $ics = "BEGIN:VCALENDAR\r\n" .
+            "VERSION:2.0\r\n" .
+            "PRODID:-//Board Games Iasi//EN\r\n" .
+            "CALSCALE:GREGORIAN\r\n" .
+            "METHOD:PUBLISH\r\n" .
+            "BEGIN:VEVENT\r\n" .
+            "UID:$uid\r\n" .
+            "DTSTART:$start\r\n" .
+            "DTEND:$end\r\n" .
+            "SUMMARY:$summary\r\n" .
+            "DESCRIPTION:$description\r\n" .
+            "LOCATION:$location\r\n" .
+            "STATUS:CONFIRMED\r\n" .
+            "END:VEVENT\r\n" .
+            "END:VCALENDAR\r\n";
 
         return response($ics, 200, [
             'Content-Type' => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="boardgame-session.ics"',
+            'Content-Disposition' => 'attachment; filename=\"boardgame-session.ics\"',
         ]);
     }
 }
