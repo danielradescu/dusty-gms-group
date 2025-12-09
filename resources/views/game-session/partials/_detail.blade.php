@@ -183,11 +183,11 @@
                                 @else
                                     @php
                                         $startUtc = $gameSession->start_at->copy()->setTimezone('UTC')->format('Ymd\THis\Z');
-                                        $endUtc = ($gameSession->end_at ?? $gameSession->start_at->copy()->addHours(3))
+                                        $endUtc = ($gameSession->start_at->copy()->addHours(5))
                                             ->setTimezone('UTC')->format('Ymd\THis\Z');
 
                                         $googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
-                                            . '&text=' . urlencode($gameSession->name)
+                                            . '&text=' . urlencode('Boardgame: ' . $gameSession->name)
                                             . '&details=' . urlencode("Join us for a board game session organized by " . ($gameSession->organizer->name ?? 'Unknown'))
                                             . '&location=' . urlencode($gameSession->location ?? 'Iași')
                                             . '&dates=' . $startUtc . '/' . $endUtc

@@ -135,39 +135,5 @@ class InteractionController
 
         return redirect()->route('game-session.interaction.show', $uuid);
     }
-
-    public function calendar(string $uuid)
-    {
-        $session = \App\Models\GameSession::where('uuid', $uuid)->firstOrFail();
-
-        $start = Carbon::parse($session->start_at)->format('Ymd\THis');
-        $end   = Carbon::parse($session->start_at->copy()->addHours(5))->format('Ymd\THis');
-
-        // Clean up text fields (ICS doesn't like newlines or commas unescaped)
-        $summary     = addcslashes($session->name, ',;');
-        $description = addcslashes("Join us for a board game session organized by " . ($session->organizer->name ?? 'Unknown'), ',;');
-        $location    = addcslashes($session->location ?? 'Iași', ',;');
-        $uid         = "session-{$session->uuid}@boardgamesiasi.ro";
-
-        $ics = "BEGIN:VCALENDAR\r\n" .
-            "VERSION:2.0\r\n" .
-            "PRODID:-//Board Games Iasi//EN\r\n" .
-            "CALSCALE:GREGORIAN\r\n" .
-            "METHOD:PUBLISH\r\n" .
-            "BEGIN:VEVENT\r\n" .
-            "UID:$uid\r\n" .
-            "DTSTART:$start\r\n" .
-            "DTEND:$end\r\n" .
-            "SUMMARY:$summary\r\n" .
-            "DESCRIPTION:$description\r\n" .
-            "LOCATION:$location\r\n" .
-            "STATUS:CONFIRMED\r\n" .
-            "END:VEVENT\r\n" .
-            "END:VCALENDAR\r\n";
-
-        return response($ics, 200, [
-            'Content-Type' => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename=\"boardgame-session.ics\"',
-        ]);
-    }
+    
 }
