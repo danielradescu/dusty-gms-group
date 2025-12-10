@@ -141,7 +141,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function canInvite()
     {
-        return $this->hasOrganizerPermission() || $this->created_at > now()->addDay();
+        return $this->hasOrganizerPermission() || $this->created_at->copy()->addDay()->lt(now());
     }
 
     public function hasExternalNotifications(): bool
