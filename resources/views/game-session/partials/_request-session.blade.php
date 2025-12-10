@@ -127,13 +127,17 @@
                     </fieldset>
                 @endforeach
             </div>
+            <div class="flex flex-col items-center md:items-start text-center md:text-left pt-2 gap-3">
+                <x-button class="w-full md:w-1/5 min-w-[10rem]" variant="primary">
+                    💾 Save Preferences
+                </x-button>
 
-            <div class="flex items-center justify-between pt-2">
                 <div class="text-xs text-gray-500 dark:text-gray-400">
                     You can change these preferences anytime.
                 </div>
-                <x-button class="!w-auto" variant="primary">💾 Save Preferences</x-button>
             </div>
+
+
         </form>
 
 </div>
