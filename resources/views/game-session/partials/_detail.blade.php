@@ -92,14 +92,24 @@
 
                     {{-- Show confirmed participants with glow --}}
                     @foreach($confirmedRegistrations as $r)
-                        <div class="relative group">
-                            <img src="{{ asset($r->user->getPhotoURL()) }}"
-                                 class="inline-block w-16 h-16 rounded-full ring-2 ring-indigo-400 dark:ring-indigo-500
-                                object-cover transition-transform duration-200 group-hover:scale-105
-                                shadow-[0_0_10px_rgba(99,102,241,0.6)] dark:shadow-[0_0_10px_rgba(129,140,248,0.7)]"
-                                 alt="profile image">
+                        <div class="relative group inline-block">
+                            <img
+                                src="{{ asset($r->user->getPhotoURL()) }}"
+                                class="w-16 h-16 rounded-full ring-2 ring-indigo-400 dark:ring-indigo-500
+                                   object-cover transition-transform duration-200 group-hover:scale-105
+                                   shadow-[0_0_10px_rgba(99,102,241,0.6)] dark:shadow-[0_0_10px_rgba(129,140,248,0.7)]"
+                                alt="{{ $r->user->name ?? 'Meeple' }}"
+                            >
+                            @if($r->participated)
+                                <span
+                                    class="absolute bottom-0 left-0 right-0 text-[10px] text-white bg-black/60 rounded-b-full
+                                   py-0.5 font-medium">
+                                    Participated
+                                </span>
+                            @endif
                         </div>
                     @endforeach
+
 
                     {{-- Empty slots --}}
                     @for($i = 0; $i < $remainingSlots; $i++)
