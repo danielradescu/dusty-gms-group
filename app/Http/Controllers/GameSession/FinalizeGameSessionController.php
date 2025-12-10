@@ -98,7 +98,8 @@ class FinalizeGameSessionController extends Controller
                     foreach ($validated['attendance'] as $registrationId => $status) {
                         $registration = $session->registrations()->find($registrationId);
                         if ($registration) {
-                            $registration->update(['participated' => true]);
+                            $registration->participated = true;
+                            $registration->save();
                             if ($user = $registration->user) {
                                 //will reward the participant
                                 XP::grant($user, 'participate_completed_successful_session');
