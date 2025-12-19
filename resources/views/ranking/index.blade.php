@@ -113,12 +113,7 @@
                         </thead>
                         <tbody>
                         @forelse ($organizers as $index => $organizer)
-                            <tr
-                                @class([
-                                    'border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition',
-                                    'bg-gradient-to-r from-emerald-50 to-white dark:from-emerald-900/20 dark:to-gray-800 font-semibold shadow-inner' => auth()->id() === $organizer->id,
-                                ])
-                            >
+                            <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
                                 <td class="py-2 px-2 text-center">
                                     @if($index === 0)
                                         🥇
@@ -131,12 +126,18 @@
                                     @endif
                                 </td>
 
-                                <td class="py-2 px-2 text-emerald-700 dark:text-emerald-400">
+                                <td class="py-2 px-2">
                                     {{ $organizerTitles[$index + 1] ?? '-' }}
                                 </td>
 
                                 <td class="py-2 px-2">
                                     <div class="flex items-center gap-2">
+                                        @if(auth()->id() === $organizer->id)
+                                            {{-- "YOU" badge --}}
+                                            <span class="bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold animate-pulse">
+                                                    YOU
+                                                </span>
+                                        @endif
                                         <img src="{{ asset($organizer->getPhotoURL()) }}" alt="{{ $organizer->name }}'s avatar"
                                              class="w-8 h-8 rounded-full ring-2
                                                     {{ auth()->id() === $organizer->id
@@ -151,7 +152,7 @@
                                     <span class="font-semibold text-gray-700 dark:text-gray-200">
                                         {{ $organizer->sessions_count }}
                                     </span>
-                                                                    <span class="text-gray-500 dark:text-gray-400 text-xs">
+                                    <span class="text-gray-500 dark:text-gray-400 text-xs">
                                         {{ \Illuminate\Support\Str::plural('session', $organizer->sessions_count) }}
                                     </span>
                                 </td>
