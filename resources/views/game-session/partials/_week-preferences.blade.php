@@ -45,19 +45,10 @@
         </div>
     </div>
 
-
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Pick the days you're interested in.</h3>
+    <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">The organizer selects the initial start time. You can later request a change or communicate your planned arrival time.</p>
     <form action="{{ route('game-session-request.store') }}" method="POST" class="space-y-6">
         @csrf
-
-
-        <h3>Pick the days you're interested in.
-            <x-info
-                title="For each day"
-                description="choose whether you want to <strong>auto-join</strong> a session if it’s created, or <strong>only receive a notification</strong> about it.
-            <br/>
-            <strong>Note:</strong> The organizer selects the initial start time. You can later request a change or communicate your planned arrival time."
-            />
-        </h3>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Per-Day Cards -->
@@ -69,24 +60,6 @@
                 <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm hover:shadow-md transition">
                     <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center justify-between">
                         <span>{{ $slot['label'] }}</span>
-                        <x-info
-                            title="Day Preferences"
-                            description="
-                                🟢 <b>Join & Notify</b>: You’ll be auto-joined for the first session created this day that has
-                                <b>Casual</b> or <b>Flexible</b> complexity. You’ll still receive notifications for
-                                <b>Competitive</b> sessions or any other session created this day.
-                                <br><br>
-                                🔔 <b>Notify Only</b>: You’ll receive an <b>instant notification</b> whenever a new session
-                                is created for this day, inviting you to join.
-                                <br><br>
-                                🚫 <b>Not Available</b>: This will <b>reset</b> any of your existing preferences for this day —
-                                you won’t receive auto-joins or notifications until you change it again.
-                                <br><br>
-                                After joining a session, your setting will automatically switch to <b>Notify Only</b>.
-                                Users who have selected a day will always receive notifications first, giving them early access
-                                to join or auto-join new sessions.
-                            "
-                        />
                         @if($disabled)
                             <span class="text-xs text-gray-400">(passed)</span>
                         @endif
@@ -123,15 +96,6 @@
                 <div class="rounded-xl border border-indigo-200 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-900/20 p-5 shadow-sm hover:shadow-md transition">
                     <h4 class="text-base font-semibold text-indigo-700 dark:text-indigo-300 mb-3 flex items-center gap-2">
                         🌍 Any Day Notifications
-                        <x-info
-                            title="Any Day Notifications"
-                            :description="<<<'HTML'
-            🔔 <b>Any Day Notifications</b>: You’ll receive alerts for <b>any new game session</b> — even if you didn’t select a specific day.<br><br>
-            ⏱️ These notifications are <b>delayed by about 2 hours</b> after the day-specific notifications are sent.<br>
-            This encourages players to <b>vote for specific days</b>, helping organizers plan better.<br><br>
-            You can enable this as a general backup to make sure you never miss a new session announcement.
-        HTML"
-                        />
                     </h4>
 
 
@@ -158,5 +122,62 @@
                 You can change these preferences anytime.
             </div>
         </div>
+
     </form>
+
+    <!-- Info Section -->
+
+    <h3 class="mt-5 text-base font-semibold text-gray-800 dark:text-gray-100 mb-4">
+        Understanding Your Notification Settings:
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+
+        <!-- Day Preferences -->
+        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm">
+            <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Day Preferences
+            </h4>
+            <p>
+                🟢 <b>Join &amp; Notify</b>: You’ll be auto-joined for the first session created this day that has
+                <b>Casual</b> or <b>Flexible</b> complexity. You’ll still receive notifications for
+                <b>Competitive</b> sessions or any other session created this day.
+            </p>
+            <br>
+            <p>
+                🔔 <b>Notify Only</b>: You’ll receive an <b>instant notification</b> whenever a new session
+                is created for this day, inviting you to join.
+            </p>
+            <br>
+            <p>
+                🚫 <b>Not Available</b>: This will <b>reset</b> any of your existing preferences for this day —
+                you won’t receive auto-joins or notifications until you change it again.
+            </p>
+            <br>
+            <p>
+                After joining a session, your setting will automatically switch to <b>Notify Only</b>.
+                Users who have selected a day will always receive notifications first, giving them early access
+                to join or auto-join new sessions.
+            </p>
+        </div>
+
+        <!-- Any Day Notifications -->
+        <div class="bg-indigo-50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800 rounded-lg p-4 shadow-sm">
+            <h4 class="font-semibold text-indigo-800 dark:text-indigo-300 mb-2">
+                Any Day Notifications
+            </h4>
+            <p>
+                🔔 <b>Any Day Notifications</b>: You’ll receive alerts for <b>any new game session</b> — even if you didn’t select a specific day.
+            </p>
+            <br>
+            <p>
+                ⏱️ These notifications are <b>delayed by about 2 hours</b> after the day-specific notifications are sent.
+                This encourages players to <b>vote for specific days</b>, helping organizers plan better.
+            </p>
+            <br>
+            <p>
+                You can enable this as a general backup to make sure you never miss a new session announcement.
+            </p>
+        </div>
+
+    </div>
 </div>
