@@ -68,7 +68,7 @@
 
             $interestedRegistrations = $registrations->whereIn('status', $interestedStatuses);
 
-            $declinedCount = $registrations->where('status', \App\Enums\RegistrationStatus::Declined->value)->count();
+            $declinedRegistrations = $registrations->where('status', \App\Enums\RegistrationStatus::Declined->value);
         @endphp
         <hr class="mt-10 my-8 border-0 h-px bg-gradient-to-r from-transparent via-indigo-400 to-transparent dark:via-indigo-600">
 
@@ -98,15 +98,17 @@
                                 class="w-16 h-16 rounded-full ring-2 ring-indigo-400 dark:ring-indigo-500
                                    object-cover transition-transform duration-200 group-hover:scale-105
                                    shadow-[0_0_10px_rgba(99,102,241,0.6)] dark:shadow-[0_0_10px_rgba(129,140,248,0.7)]"
-                                alt="{{ $r->user->name ?? 'Meeple' }}"
+                                alt="Meeple"
                             >
-                            @if($r->participated)
-                                <span
-                                    class="absolute bottom-0 left-0 right-0 text-[10px] text-white bg-black/60 rounded-b-full
+                            <span
+                                class="absolute bottom-0 left-0 right-0 text-[10px] text-white bg-black/60 rounded-b-full
                                    py-0.5 font-medium">
+                                @if($r->participated)
                                     Participated
-                                </span>
-                            @endif
+                                @else
+                                    {{$r->user->shortName}}
+                                @endif
+                            </span>
                         </div>
                     @endforeach
 
@@ -140,9 +142,20 @@
 
                 <div class="flex flex-wrap justify-center gap-3">
                     @forelse($interestedRegistrations as $r)
-                        <img src="{{ asset($r->user->getPhotoURL()) }}"
-                             class="inline-block w-10 h-10 rounded-full ring-2 ring-white dark:ring-gray-900 object-cover"
-                             alt="{{ $r->user->name }}">
+                        <div class="relative group inline-block">
+                            <img
+                                src="{{ asset($r->user->getPhotoURL()) }}"
+                                class="w-12 h-12 rounded-full ring-2 ring-black dark:ring-black
+                                       object-cover transition-transform duration-200 group-hover:scale-105
+                                       shadow-[0_0_15px_rgba(0,0,0,0.8)] dark:shadow-[0_0_20px_rgba(0,0,0,1)]"
+                                alt="Meeple"
+                            >
+                            <span
+                                class="absolute bottom-0 left-0 right-0 text-[9px] text-white bg-black/60 rounded-b-full
+                               py-0.5 font-medium">
+                                {{$r->user->shortName}}
+                            </span>
+                        </div>
                     @empty
                         <span class="text-gray-500 dark:text-gray-400 text-sm italic">– None –</span>
                     @endforelse
@@ -154,9 +167,24 @@
                 <span class="block font-semibold text-gray-800 dark:text-gray-100 mb-1">
                     🚫 Declined:
                 </span>
-                <span class="text-gray-600 dark:text-gray-400 text-sm">
-                    x{{ $declinedCount ?? 0 }}
-                </span>
+                @forelse($declinedRegistrations as $r)
+                    <div class="relative group inline-block">
+                        <img
+                            src="{{ asset($r->user->getPhotoURL()) }}"
+                            class="w-12 h-12 rounded-full ring-2 ring-black dark:ring-black
+                                   object-cover transition-transform duration-200 group-hover:scale-105
+                                   shadow-[0_0_15px_rgba(0,0,0,0.8)] dark:shadow-[0_0_20px_rgba(0,0,0,1)]"
+                            alt="Meeple"
+                        >
+                        <span
+                            class="absolute bottom-0 left-0 right-0 text-[9px] text-white bg-black/60 rounded-b-full
+                               py-0.5 font-medium">
+                                {{$r->user->shortName}}
+                            </span>
+                    </div>
+                @empty
+                    <span class="text-gray-500 dark:text-gray-400 text-sm italic">– None –</span>
+                @endforelse
             </div>
         </div>
 

@@ -83,10 +83,18 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getPhotoURL()
     {
-        if (is_null($this->photo))
+        if (is_null($this->photo) || (!\Auth::check()) || (env('APP_ENV') == 'local'))
             return Storage::disk('random_profile_photo')->url('profile' . $this->id % 10 . '.jpg');
         else
             return Storage::disk('profile_photo')->url($this->photo);
+    }
+
+    public function getShortNameAttribute()
+    {
+        if (!\Auth::check()) {
+            return "";
+        }
+        return explode(' ', trim($this->name))[0];
     }
 
     public function comments(): HasMany
