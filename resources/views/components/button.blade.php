@@ -30,7 +30,6 @@
         const form = $el.closest('form');
         if (!form) return;
 
-        // ✅ Inject button name/value before submitting
         if ($el.name && $el.value) {
             const existing = form.querySelector(`input[name='${$el.name}']`);
             if (!existing) {

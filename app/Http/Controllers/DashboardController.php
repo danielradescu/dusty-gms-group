@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\NotificationSubscriptionType;
 use App\Models\GameSession;
 use App\Services\GameSessionSlotService;
 use App\Services\WeekendRangeService;
@@ -33,6 +34,10 @@ class DashboardController extends Controller
 
         $toReturn['gameSessionRequests'] = Auth::user()->gameSessionRequests()->where('preferred_time', '>=', now())->get();
         $toReturn['slots'] = GameSessionSlotService::getCurrentWeekSlots($toReturn['gameSessionRequests']);
+
+        $toReturn['notifyAllDays'] = auth()
+            ->user()
+            ->notificationSubscription()->where('type', NotificationSubscriptionType::NEW_GAME_SESSION)->exists();
 
         return view('dashboard')->with($toReturn);
     }

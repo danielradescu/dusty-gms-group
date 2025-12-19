@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\NotificationSubscriptionType;
 use App\Enums\Role;
 use App\Http\Requests\CreateGameSessionRequestRequest;
 use App\Models\GameSessionRequest;
@@ -29,8 +30,23 @@ class GameSessionRequestController extends Controller
             ];
         }
 
-        DB::transaction(function () use ($toCreate) {
+        $notifyAllDays = $request->get('notify_all_days');
+
+
+
+        DB::transaction(function () use ($toCreate, $notifyAllDays) {
+
             $user = auth()->user();
+
+            if ($notifyAllDays) {
+                if (! $user->notifications_disabled) {
+                    $user->notificationSubscription()->updateOrCreate(['type' => NotificationSubscriptionType::NEW_GAME_SESSION]);
+                }
+            }
+
+
+
+
 
             $end = now()->copy()->addDays(6);
 

@@ -108,7 +108,7 @@
                             <th class="py-2 px-2">#</th>
                             <th class="py-2 px-2">Title</th>
                             <th class="py-2 px-2">Organizer</th>
-                            <th class="py-2 px-2">Sessions</th>
+                            <th class="py-2 px-2">Organized:</th>
                         </tr>
                         </thead>
                         <tbody>
