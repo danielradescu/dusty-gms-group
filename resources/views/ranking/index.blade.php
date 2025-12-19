@@ -48,7 +48,7 @@
 
                                     {{-- Honorific Title --}}
                                     <td class="py-2 px-2 @if($index === 0) text-red-600 dark:text-red-400 @endif">
-                                        {{ $honorificTitles[$index + 1] ?? '-' }}
+                                        {{ $participantTitles[$index + 1] ?? '-' }}
                                     </td>
 
                                     {{-- Player Cell --}}
@@ -64,12 +64,12 @@
                                             {{-- Avatar + Name --}}
                                             <img src="{{ asset($user->getPhotoURL()) }}" alt="{{ $user->name }}'s avatar"
                                                  class="w-8 h-8 rounded-full ring-2
-                        {{ auth()->id() === $user->id
-                            ? 'ring-indigo-500 dark:ring-indigo-400'
-                            : 'ring-white dark:ring-gray-900' }}">
-                                            <span class="{{ auth()->id() === $user->id ? 'text-indigo-700 dark:text-indigo-300 font-bold' : '' }}">
-                {{ $user->name }}
-            </span>
+                                                            {{ auth()->id() === $user->id
+                                                                ? 'ring-indigo-500 dark:ring-indigo-400'
+                                                                : 'ring-white dark:ring-gray-900' }}">
+                                                 <span class="{{ auth()->id() === $user->id ? 'text-indigo-700 dark:text-indigo-300 font-bold' : '' }}">
+                                                    {{ $user->name }}
+                                                </span>
                                         </div>
                                     </td>
                                 </tr>
@@ -88,6 +88,87 @@
 
                 <div class="text-xs text-gray-500 dark:text-gray-400 italic">
                     XP and rankings are calculated from your activity on the platform — primarily through participating in gaming sessions and engaging with the community. Updates happen automatically as you earn more XP
+                </div>
+            </div>
+        </div>
+    </div>
+            <div class="py-12 pb-0">
+                <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-xl p-6 text-gray-900 dark:text-gray-100 space-y-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold">Organizer Rankings</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Updated {{ now()->format('M d, Y H:i') }}</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm table-fixed">
+                        <thead>
+                        <tr class="border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 uppercase text-xs tracking-wide">
+                            <th class="py-2 px-2">#</th>
+                            <th class="py-2 px-2">Title</th>
+                            <th class="py-2 px-2">Organizer</th>
+                            <th class="py-2 px-2">Sessions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse ($organizers as $index => $organizer)
+                            <tr
+                                @class([
+                                    'border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition',
+                                    'bg-gradient-to-r from-emerald-50 to-white dark:from-emerald-900/20 dark:to-gray-800 font-semibold shadow-inner' => auth()->id() === $organizer->id,
+                                ])
+                            >
+                                <td class="py-2 px-2 text-center">
+                                    @if($index === 0)
+                                        🥇
+                                    @elseif($index === 1)
+                                        🥈
+                                    @elseif($index === 2)
+                                        🥉
+                                    @else
+                                        {{ $index + 1 }}
+                                    @endif
+                                </td>
+
+                                <td class="py-2 px-2 text-emerald-700 dark:text-emerald-400">
+                                    {{ $organizerTitles[$index + 1] ?? '-' }}
+                                </td>
+
+                                <td class="py-2 px-2">
+                                    <div class="flex items-center gap-2">
+                                        <img src="{{ asset($organizer->getPhotoURL()) }}" alt="{{ $organizer->name }}'s avatar"
+                                             class="w-8 h-8 rounded-full ring-2
+                                                    {{ auth()->id() === $organizer->id
+                                                        ? 'ring-emerald-500 dark:ring-emerald-400'
+                                                        : 'ring-white dark:ring-gray-900' }}">
+                                        <span class="{{ auth()->id() === $organizer->id ? 'text-emerald-700 dark:text-emerald-300 font-bold' : '' }}">
+                                            {{ $organizer->name }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="py-2 px-2">
+                                    <span class="font-semibold text-gray-700 dark:text-gray-200">
+                                        {{ $organizer->sessions_count }}
+                                    </span>
+                                                                    <span class="text-gray-500 dark:text-gray-400 text-xs">
+                                        {{ \Illuminate\Support\Str::plural('session', $organizer->sessions_count) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-4 text-center text-gray-500 dark:text-gray-400">
+                                    No organizers found.
+                                </td>
+                            </tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-xs text-gray-500 dark:text-gray-400 italic">
+                    Rankings are based on the number of game sessions organized successfully. The more sessions you create confirm and finalize, the higher your rank climbs!
                 </div>
             </div>
         </div>
