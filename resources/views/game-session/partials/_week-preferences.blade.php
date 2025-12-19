@@ -98,11 +98,8 @@
                         🌍 Any Day Notifications
                     </h4>
 
-
-
-
                     <p class="text-sm text-indigo-800 dark:text-indigo-200 mb-4">
-                        Get notified about <strong>any new session</strong> — even if you didn’t select a specific day.
+                        Get a delayed notification about <strong>any new session</strong> — even if you haven’t selected a specific day yet.
                     </p>
 
                     <label class="flex items-center gap-2">
@@ -159,25 +156,25 @@
                 to join or auto-join new sessions.
             </p>
         </div>
-
-        <!-- Any Day Notifications -->
-        <div class="bg-indigo-50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800 rounded-lg p-4 shadow-sm">
-            <h4 class="font-semibold text-indigo-800 dark:text-indigo-300 mb-2">
-                Any Day Notifications
-            </h4>
-            <p>
-                🔔 <b>Any Day Notifications</b>: You’ll receive alerts for <b>any new game session</b> — even if you didn’t select a specific day.
-            </p>
-            <br>
-            <p>
-                ⏱️ These notifications are <b>delayed by about 2 hours</b> after the day-specific notifications are sent.
-                This encourages players to <b>vote for specific days</b>, helping organizers plan better.
-            </p>
-            <br>
-            <p>
-                You can enable this as a general backup to make sure you never miss a new session announcement.
-            </p>
-        </div>
-
+        @if (! auth()->user()->notifications_disabled)
+            <!-- Any Day Notifications -->
+            <div class="bg-indigo-50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800 rounded-lg p-4 shadow-sm">
+                <h4 class="font-semibold text-indigo-800 dark:text-indigo-300 mb-2">
+                    Any Day Notifications
+                </h4>
+                <p>
+                    🔔 <b>Any Day Notifications</b>: You’ll receive alerts for <b>any new game session</b> — even if you didn’t select a specific day.
+                </p>
+                <br>
+                <p>
+                    ⏱️ These notifications are <b>delayed by about 2 hours</b> after the day-specific notifications are sent.
+                    This encourages players to <b>vote for specific days</b>, helping organizers plan better.
+                </p>
+                <br>
+                <p>
+                    You can enable this as a general backup to make sure you never miss a new session announcement.
+                </p>
+            </div>
+         @endif
     </div>
 </div>
