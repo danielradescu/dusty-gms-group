@@ -165,14 +165,21 @@
                 <p>
                     🔔 <b>Any Day Notifications</b>: You’ll receive alerts for <b>any new game session</b> — even if you didn’t select a specific day.
                 </p>
-                <br>
+                <br/>
                 <p>
                     ⏱️ These notifications are <b>delayed by about 2 hours</b> after the day-specific notifications are sent.
                     This encourages players to <b>vote for specific days</b>, helping organizers plan better.
                 </p>
-                <br>
+                <br/>
                 <p>
                     You can enable this as a general backup to make sure you never miss a new session announcement.
+                </p>
+                <br/>
+                <p class="text-xs text-gray-600 dark:text-gray-400 italic mt-2">
+                    💡 This setting works the same way as the <b>“Always notify me about new game sessions”</b> option in your
+                    <a href="{{ route('notification-subscription.edit') }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                        Email Settings
+                    </a>.
                 </p>
             </div>
          @endif
