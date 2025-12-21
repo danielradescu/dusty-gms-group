@@ -97,6 +97,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return explode(' ', trim($this->name))[0];
     }
 
+    public function organizedSessions()
+    {
+        return $this->hasMany(GameSession::class, 'organized_by');
+    }
+
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);

@@ -132,12 +132,6 @@
 
                                 <td class="py-2 px-2">
                                     <div class="flex items-center gap-2">
-                                        @if(auth()->id() === $organizer->id)
-                                            {{-- "YOU" badge --}}
-                                            <span class="bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold animate-pulse">
-                                                    YOU
-                                                </span>
-                                        @endif
                                         <img src="{{ asset($organizer->getPhotoURL()) }}" alt="{{ $organizer->name }}'s avatar"
                                              class="w-8 h-8 rounded-full ring-2
                                                     {{ auth()->id() === $organizer->id
