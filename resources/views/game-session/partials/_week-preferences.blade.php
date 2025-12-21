@@ -65,30 +65,64 @@
                         @endif
                     </h4>
 
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-2">
-                            <input type="radio" name="{{ $name }}" value="auto"
-                                   class="accent-indigo-600" {{ $slot['value'] == "auto" ? 'checked' : '' }} {{ $disabled ? 'disabled' : '' }}>
-                            <span class="text-sm text-gray-700 dark:text-gray-300">🟢 Join & Notify</span>
-                        </label>
+                    @php
+                        $total = $slot['total_interested'] ?? 0;
+                        $auto = $slot['auto_joiners'] ?? 0;
 
-                        <label class="flex items-center gap-2">
-                            <input type="radio" name="{{ $name }}" value="notify"
-                                   class="accent-indigo-600" {{ $slot['value'] == "notify" ? 'checked' : '' }} {{ $disabled ? 'disabled' : '' }}>
-                            <span class="text-sm text-gray-700 dark:text-gray-300">🔔 Notify Only</span>
-                        </label>
+                        // Determine text color based on the user's selection
+                        $textColor = match ($slot['value']) {
+                            'auto' => 'text-green-600 dark:text-green-400',
+                            'notify' => 'text-yellow-600 dark:text-yellow-400',
+                            default => 'text-gray-400 dark:text-gray-500',
+                        };
 
-                        <label class="flex items-center gap-2">
-                            <input type="radio" name="{{ $name }}" value=""
-                                   class="accent-indigo-600" {{ $slot['value'] == "" ? 'checked' : '' }} {{ $disabled ? 'disabled' : '' }}>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">🚫 Not Available</span>
-                        </label>
+                        // Display placeholder if 0
+                        $displayTotal = $total > 0 ? $total : '-';
+                    @endphp
+
+                    <div class="flex items-start justify-between gap-4">
+                        {{-- LEFT COLUMN - Radio options --}}
+                        <div class="space-y-2">
+                            {{-- 🟢 Join & Notify --}}
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="{{ $name }}" value="auto"
+                                       class="accent-indigo-600"
+                                    {{ $slot['value'] == 'auto' ? 'checked' : '' }}
+                                    {{ $disabled ? 'disabled' : '' }}>
+                                <span class="text-sm text-gray-700 dark:text-gray-300">🟢 Join & Notify</span>
+                            </label>
+
+                            {{-- 🔔 Notify Only --}}
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="{{ $name }}" value="notify"
+                                       class="accent-indigo-600"
+                                    {{ $slot['value'] == 'notify' ? 'checked' : '' }}
+                                    {{ $disabled ? 'disabled' : '' }}>
+                                <span class="text-sm text-gray-700 dark:text-gray-300">🔔 Notify Only</span>
+                            </label>
+
+                            {{-- 🚫 Not Available --}}
+                            <label class="flex items-center gap-2">
+                                <input type="radio" name="{{ $name }}" value=""
+                                       class="accent-indigo-600"
+                                    {{ $slot['value'] == '' ? 'checked' : '' }}
+                                    {{ $disabled ? 'disabled' : '' }}>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">🚫 Not Available</span>
+                            </label>
+                        </div>
+
+                        {{-- RIGHT COLUMN - Total count --}}
+                        <div class="flex flex-col justify-center min-w-[4rem] text-center">
+                            <span class="text-5xl font-bold leading-none {{ $textColor }}">
+                                {{ $displayTotal }}
+                            </span>
+                            <span class="text-xs text-gray-400 dark:text-gray-500">
+                                ({{ $auto }} auto-join)
+                            </span>
+                        </div>
                     </div>
 
-                    <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">
-                        👥 {{ $slot['total_interested'] ?? 0 }}
-                        <span class="text-gray-400 dark:text-gray-500">({{ $slot['auto_joiners'] ?? 0 }} auto-join)</span>
-                    </p>
+
                 </div>
             @endforeach
             @if (! auth()->user()->notifications_disabled)
@@ -167,8 +201,8 @@
                 </p>
                 <br/>
                 <p>
-                    ⏱️ These notifications are <b>delayed by about 2 hours</b> after the day-specific notifications are sent.
-                    This encourages players to <b>vote for specific days</b>, helping organizers plan better.
+                    ⏱️ These notifications are <b>delayed by about 2 up to 6 hours randomly chose</b> after the day-specific notifications are sent.
+                    This is to encourages players to <b>vote for specific days</b>, helping organizers plan better.
                 </p>
                 <br/>
                 <p>

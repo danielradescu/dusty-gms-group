@@ -27,8 +27,19 @@ class GameSessionSlotService
 
         // Get the next 6 days starting from tomorrow
         $days = collect();
+
+        $nextWeekStart = $reference->copy()->addWeek()->startOfWeek();
+        $nextWeekWednesday = $nextWeekStart->copy()->addDays(2)->endOfDay();
+
         for ($i = 1; $i <= 6; $i++) {
-            $days->push($reference->copy()->addDays($i)->startOfDay());
+            $day = $reference->copy()->addDays($i)->startOfDay();
+
+            // Stop if we are past next week's Wednesday
+            if ($day->greaterThan($nextWeekWednesday)) {
+                break;
+            }
+
+            $days->push($day);
         }
 
         // Get all playable weekdays from DayWePlay
