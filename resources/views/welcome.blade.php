@@ -19,7 +19,7 @@
     <meta property="og:title" content="Comunitatea de Board Games Iași — Joacă, Conectează-te, Relaxează-te!">
     <meta property="og:description"
           content="Alătură-te comunității de board games din Iași și descoperă oameni, jocuri și momente de relaxare offline.">
-    <meta property="og:image" content="{{ asset('images/logo_dusty_gms.png') }}">
+    <meta property="og:image" content="{{ asset('images/logo.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="Comunitatea Board Games Iași">
 
@@ -28,7 +28,7 @@
     <meta name="twitter:title" content="Comunitatea de Board Games Iași">
     <meta name="twitter:description"
           content="Descoperă comunitatea de jocuri de societate din Iași — pasionați de distracție offline!">
-    <meta name="twitter:image" content="{{ asset('images/logo_dusty_gms.png') }}">
+    <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
 
 
     <title>Comunitatea de Board Games Iași — Joacă, Conectează-te, Relax!</title>
@@ -67,7 +67,7 @@
          class="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-15">
 
     <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
-        <img src="/images/logo_dusty_gms.png" alt="Logo"
+        <img src="/images/logo.png" alt="Logo"
              class="mx-auto w-24 h-auto mb-8 opacity-90">
 
         <h1 class="text-3xl sm:text-6xl font-semibold mb-6">
@@ -292,6 +292,14 @@
             Cu drag din Iași 💙 — pentru pasionații de board games.
         </p>
 
+        <div class="mt-8 flex justify-center">
+            <a href="https://boardgamegeek.com/" target="_blank" rel="noopener noreferrer"
+               class="opacity-70 hover:opacity-100 transition duration-300">
+                <img src="{{ asset('images/powered_by_K_01_SM.png') }}"
+                     alt="BoardGameGeek Logo"
+                     class="h-16 sm:h-10 w-auto">
+            </a>
+        </div>
     </div>
 </section>
 
@@ -301,7 +309,7 @@
         '@type' => 'Organization',
         'name' => 'Comunitatea Board Games Iași',
         'url' => url('/'),
-        'logo' => asset('images/logo_dusty_gms.png'),
+        'logo' => asset('images/logo.png'),
         'description' => 'Comunitatea de Board Games Iași — locul unde pasionații de jocuri de societate se întâlnesc pentru a juca, socializa și descoperi noi aventuri offline.',
         'foundingDate' => '2025',
         'address' => [
