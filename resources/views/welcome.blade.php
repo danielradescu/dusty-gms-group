@@ -297,7 +297,7 @@
                class="opacity-70 hover:opacity-100 transition duration-300">
                 <img src="{{ asset('images/powered_by_K_01_SM.png') }}"
                      alt="BoardGameGeek Logo"
-                     class="h-16 sm:h-10 w-auto">
+                     class="h-16 w-auto">
             </a>
         </div>
     </div>
