@@ -97,6 +97,12 @@ Route::middleware('auth', 'verified', 'verified.reviewer')->group(function () {
 
     //ranking
     Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
+
+    //boardgame
+    Route::get('/boardgames', [\App\Http\Controllers\BoardgameController::class, 'index'])
+        ->name('boardgames.index');
+    Route::post('/bgg/profile', [\App\Http\Controllers\BoardgameController::class, 'saveBggProfile'])
+        ->name('bgg.profile.save');
 });
 
 //Pages:

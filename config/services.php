@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'bgg' => [
+        'token' => env('BGG_TOKEN'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

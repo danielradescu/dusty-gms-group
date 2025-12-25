@@ -55,6 +55,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'info',
         'role',
         'is_blocked',
+        'bgg_username',
+        'last_bgg_sync_at',
     ];
 
     /**
@@ -76,6 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_bgg_sync_at' => 'datetime',
             'password' => 'hashed',
             'role' => Role::class,
         ];
@@ -160,5 +163,19 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasExternalNotifications(): bool
     {
         return ! $this->notifications_disabled;
+    }
+
+    public function boardgames()
+    {
+        return $this->belongsToMany(Boardgame::class);
+    }
+
+    public function canSyncBgg(): bool
+    {
+        if (app()->environment('local')) {
+            return true;
+        }
+
+        return !$this->last_bgg_sync_at || $this->last_bgg_sync_at->isBefore(now()->startOfDay());
     }
 }

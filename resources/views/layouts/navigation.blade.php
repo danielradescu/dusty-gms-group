@@ -2,6 +2,10 @@
     $coreLinks = [
         ['route' => 'dashboard', 'label' => 'Dashboard'],
         ['route' => 'notification-subscription.edit', 'label' => 'Email settings'],
+    ];
+
+    $communityLinks = [
+        ['route' => 'boardgames.index', 'label' => 'Boardgames'],
         ['route' => 'member-invite-create', 'label' => 'Invitations', 'permission' => 'canInvite'],
         ['route' => 'ranking.index', 'label' => 'Ranking'],
         ['route' => 'contact.create', 'label' => 'Contact'],
@@ -33,10 +37,11 @@
                             class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"/>
                     </a>
                 </div>
+
                 <!-- Desktop Navigation Links -->
                 <div class="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex items-center">
                     @if ($user && $user->isReviewed())
-                        {{-- Core Navigation --}}
+                        {{-- Core Links --}}
                         @foreach ($coreLinks as $link)
                             @php
                                 $canShow = !isset($link['permission']) || ($user && $user->{$link['permission']}());
@@ -48,7 +53,39 @@
                             @endif
                         @endforeach
 
-                        {{-- Organizer Dropdown --}}
+                        {{-- 🎲 Community Dropdown --}}
+                        <x-dropdown align="bottom" width="48">
+                            <x-slot name="trigger">
+                                <button
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md
+                                           text-gray-600 dark:text-gray-300 bg-transparent hover:text-gray-800 dark:hover:text-gray-100
+                                           focus:outline-none transition ease-in-out duration-150">
+                                    🎲 {{ __('Community') }}
+                                    <svg class="ms-1 h-4 w-4 fill-current"
+                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                              d="M5.23 7.21a1 1 0 011.4-.02L10 10.168l3.37-2.98a1 1 0 111.32 1.5l-4 3.5a1 1 0 01-1.32 0l-4-3.5a1 1 0 01-.14-1.48z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                @foreach ($communityLinks as $link)
+                                    @php
+                                        $canShow = !isset($link['permission']) || ($user && $user->{$link['permission']}());
+                                    @endphp
+                                    @if ($canShow)
+                                        <x-dropdown-link :href="route($link['route'])"
+                                                         :active="request()->routeIs($link['route'])">
+                                            {{ __($link['label']) }}
+                                        </x-dropdown-link>
+                                    @endif
+                                @endforeach
+                            </x-slot>
+                        </x-dropdown>
+
+                        {{-- ⚙️ Organizer Dropdown --}}
                         @if ($user->hasOrganizerPermission())
                             <x-dropdown align="bottom" width="48">
                                 <x-slot name="trigger">
@@ -77,7 +114,7 @@
                             </x-dropdown>
                         @endif
 
-                        {{-- Admin Dropdown --}}
+                        {{-- 🧩 Admin Dropdown --}}
                         @if ($user->hasAdminPermission())
                             <x-dropdown align="bottom" width="48">
                                 <x-slot name="trigger">
@@ -196,17 +233,33 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            {{-- Core --}}
             @foreach ($coreLinks as $link)
-                @php
-                    $canShow = !isset($link['permission']) || ($user && $user->{$link['permission']}());
-                @endphp
-                @if ($canShow)
-                    <x-responsive-nav-link :href="route($link['route'])" :active="request()->routeIs($link['route'])">
-                        {{ __($link['label']) }}
-                    </x-responsive-nav-link>
-                @endif
+                <x-responsive-nav-link :href="route($link['route'])"
+                                       :active="request()->routeIs($link['route'])">
+                    {{ __($link['label']) }}
+                </x-responsive-nav-link>
             @endforeach
 
+            {{-- Community --}}
+            <div class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
+                <div class="px-4 text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+                    Community
+                </div>
+                @foreach ($communityLinks as $link)
+                    @php
+                        $canShow = !isset($link['permission']) || ($user && $user->{$link['permission']}());
+                    @endphp
+                    @if ($canShow)
+                        <x-responsive-nav-link :href="route($link['route'])"
+                                               :active="request()->routeIs($link['route'])">
+                            {{ __($link['label']) }}
+                        </x-responsive-nav-link>
+                    @endif
+                @endforeach
+            </div>
+
+            {{-- Organizer --}}
             @if ($user->hasOrganizerPermission())
                 <div class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
                     <div class="px-4 text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
@@ -221,6 +274,7 @@
                 </div>
             @endif
 
+            {{-- Admin --}}
             @if ($user->hasAdminPermission())
                 <div class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
                     <div class="px-4 text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
