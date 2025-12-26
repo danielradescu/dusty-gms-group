@@ -82,20 +82,20 @@
 
 
 <!-- Banner -->
-{{--<section--}}
-{{--    class="w-full bg-amber-200 dark:bg-amber-700 py-6 shadow-inner border-y border-amber-400 dark:border-amber-600">--}}
-{{--    <div class="max-w-6xl mx-auto px-6 text-center">--}}
-{{--        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">--}}
-{{--            <span class="text-3xl">🚧</span>--}}
-{{--            <p class="text-lg font-semibold text-amber-900 dark:text-amber-100">--}}
-{{--                {{ __('landing.under_construction.title') }}--}}
-{{--            </p>--}}
-{{--        </div>--}}
-{{--        <p class="mt-3 text-sm text-amber-800 dark:text-amber-200">--}}
-{{--            {{ __('landing.under_construction.subtitle') }}--}}
-{{--        </p>--}}
-{{--    </div>--}}
-{{--</section>--}}
+<section
+    class="w-full bg-amber-200 dark:bg-amber-700 py-6 shadow-inner border-y border-amber-400 dark:border-amber-600">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <span class="text-3xl">🚧</span>
+            <p class="text-lg font-semibold text-amber-900 dark:text-amber-100">
+                {{ __('landing.under_construction.title') }}
+            </p>
+        </div>
+        <p class="mt-3 text-sm text-amber-800 dark:text-amber-200">
+            {{ __('landing.under_construction.subtitle') }}
+        </p>
+    </div>
+</section>
 
 <!-- HERO -->
 <section class="w-full py-20 sm:py-28 bg-white dark:bg-gray-900 shadow-sm relative overflow-hidden">
