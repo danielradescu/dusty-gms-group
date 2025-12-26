@@ -64,24 +64,24 @@
                                         You can view or share your BGG collection link below. This link shows only owned board games.
                                     </p>
 
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
                                         <input
                                             id="bggCollectionLink"
                                             type="text"
                                             readonly
                                             value="{{ $collectionLink }}"
                                             class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700
-                                                        bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-sm"
-                                                    >
+                                                bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-sm w-full"
+                                        >
 
                                         {{-- 📋 Copy Button --}}
                                         <x-button
                                             x-data
                                             @click="navigator.clipboard.writeText(document.getElementById('bggCollectionLink').value);
                                                     $dispatch('notify', { message: 'BGG collection link copied!' })"
-                                            class="!w-auto"
                                             variant="secondary"
-                                            :disableOnClick="false">
+                                            :disableOnClick="false"
+                                            class="sm:!w-auto">
                                             Copy
                                         </x-button>
 
@@ -89,24 +89,25 @@
                                         <x-button
                                             x-data
                                             @click="
-                                                    const link = document.getElementById('bggCollectionLink').value;
-                                                    if (navigator.share) {
-                                                        navigator.share({
-                                                            title: 'My BoardGameGeek Collection',
-                                                            text: 'Check out my BGG board game collection!',
-                                                            url: link
-                                                        }).catch(() => {});
-                                                    } else {
-                                                        navigator.clipboard.writeText(link);
-                                                        $dispatch('notify', { message: 'Link copied (sharing not supported)' });
-                                                    }
-                                                "
-                                            class="!w-auto"
+                                                const link = document.getElementById('bggCollectionLink').value;
+                                                if (navigator.share) {
+                                                    navigator.share({
+                                                        title: 'My BoardGameGeek Collection',
+                                                        text: 'Check out my BGG board game collection!',
+                                                        url: link
+                                                    }).catch(() => {});
+                                                } else {
+                                                    navigator.clipboard.writeText(link);
+                                                    $dispatch('notify', { message: 'Link copied (sharing not supported)' });
+                                                }
+                                            "
                                             variant="primary"
-                                            :disableOnClick="false">
+                                            :disableOnClick="false"
+                                            class="sm:!w-auto">
                                             Share
                                         </x-button>
                                     </div>
+
 
 
                                     <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -133,13 +134,13 @@
                                         value="{{ request('search') }}"
                                         placeholder="Search by name..."
                                         class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800
-                       text-sm text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500"
-                                    >
+                                            text-sm text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500"
+                                            >
 
                                     {{-- Number of Players --}}
                                     <select name="players"
                                             class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800
-                           text-sm text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500">
+                                                text-sm text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500">
                                         <option value="">All players</option>
                                         @for ($i = 1; $i <= 10; $i++)
                                             <option value="{{ $i }}" @selected(request('players') == $i)>{{ $i }} players</option>
@@ -149,7 +150,7 @@
                                     {{-- Filter by user --}}
                                     <select name="user" id="user"
                                             class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800
-                           text-sm text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500">
+                                                text-sm text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500">
                                         <option value="">All users</option>
                                         @foreach($usersWithGames as $u)
                                             <option value="{{ $u->bgg_username }}" @selected(request('user') == $u->bgg_username)>
