@@ -3,6 +3,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\MagicLink;
+use Illuminate\Support\Facades\Log;
 
 class CleanupMagicLinks extends Command
 {
@@ -12,6 +13,6 @@ class CleanupMagicLinks extends Command
     public function handle()
     {
         $count = MagicLink::where('expires_at', '<', now())->delete();
-        $this->info("Deleted {$count} expired links.");
+        Log::info("Deleted {$count} expired links.");
     }
 }

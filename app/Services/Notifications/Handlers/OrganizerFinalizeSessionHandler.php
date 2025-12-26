@@ -41,7 +41,7 @@ class OrganizerFinalizeSessionHandler extends NotificationHandlerBase
             [GameSessionStatus::RECRUITING_PARTICIPANTS, GameSessionStatus::CONFIRMED_BY_ORGANIZER],
             true
         )) {
-            return RelevanceResult::fail('Session not in a finalizable state');
+            return RelevanceResult::fail('Session already finalized or cancelled.');
         }
 
         // Ensure this user is the organizer

@@ -134,6 +134,13 @@ return [
             'days' => 14, // keep 2 weeks of logs
         ],
 
+        'bggsync' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/bggsync.log'),
+            'level' => env('LOG_LEVEL', 'info'),
+            'days' => 14, // keep 2 weeks of logs
+        ],
+
     ],
 
 ];
