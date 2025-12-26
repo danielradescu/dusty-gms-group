@@ -126,6 +126,7 @@ class BoardgameController extends Controller
                 $message = 'Your BGG profile was saved, but we could not sync your collection. Please check profile name try again later.';
             }
         } else {
+            $user->boardgames()->detach();
             $message = 'Your BoardGameGeek profile has been successfully updated!';
         }
 
