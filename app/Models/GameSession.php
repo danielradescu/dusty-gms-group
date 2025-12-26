@@ -25,7 +25,6 @@ class GameSession extends Model
         'description',
         'min_players',
         'max_players',
-        'event_type_id',
         'complexity',
         'organized_by',
         'delay_until',

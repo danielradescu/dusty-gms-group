@@ -1,12 +1,12 @@
 @if ($games->count())
     <section class="w-full py-20 bg-gray-50 dark:bg-gray-800 relative overflow-hidden">
         <div class="max-w-6xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-semibold mb-10">🎲 Colecția comunității</h2>
+            <h2 class="text-3xl font-semibold mb-10">{{ __('landing.community_games.title') }}</h2>
 
             {{-- Scrollable container --}}
             <div
                 x-data
-                @wheel.prevent="$el.scrollLeft += $event.deltaY" {{-- desktop scroll support --}}
+                @wheel.prevent="$el.scrollLeft += $event.deltaY"
                 class="relative overflow-x-auto no-scrollbar"
             >
                 <div class="flex gap-6 px-6 sm:px-10 py-6 min-w-max snap-x snap-mandatory">
@@ -38,13 +38,13 @@
                                 </h3>
 
                                 <p class="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-1">
-                                    ⧉ Deschide pe BGG
+                                    {{ __('landing.community_games.open_bgg') }}
                                 </p>
                             </div>
                         </a>
                     @empty
                         <div class="w-full py-10 text-gray-500 dark:text-gray-400 text-center">
-                            Momentan nu există jocuri în colecția comunității.
+                            {{ __('landing.community_games.empty') }}
                         </div>
                     @endforelse
 
@@ -58,10 +58,10 @@
                         <div class="flex flex-col items-center justify-center px-4 py-10">
                             <div class="text-5xl text-indigo-500 dark:text-indigo-400 mb-2">🎯</div>
                             <h3 class="text-base font-semibold text-indigo-600 dark:text-indigo-400 mb-1">
-                                100+ jocuri în plus
+                                {{ __('landing.community_games.join_title') }}
                             </h3>
                             <p class="text-xs text-gray-600 dark:text-gray-300">
-                                Alătură-te comunității și descoperă-le!
+                                {{ __('landing.community_games.join_text') }}
                             </p>
                         </div>
                     </a>
@@ -69,7 +69,7 @@
             </div>
 
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-6">
-                Derulează lateral pentru a vedea mai multe jocuri →
+                {{ __('landing.community_games.scroll_hint') }}
             </p>
         </div>
     </section>

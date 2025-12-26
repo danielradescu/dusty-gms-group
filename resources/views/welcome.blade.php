@@ -1,8 +1,7 @@
-<html lang="ro">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +29,6 @@
           content="Descoperă comunitatea de jocuri de societate din Iași — pasionați de distracție offline!">
     <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
 
-
     <title>Comunitatea de Board Games Iași — Joacă, Conectează-te, Relax!</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -41,28 +39,66 @@
 
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
 
-<!-- Banner -->
-<section
-    class="w-full bg-amber-200 dark:bg-amber-700 py-6 shadow-inner border-y border-amber-400 dark:border-amber-600">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <span class="text-3xl">🚧</span>
-            <p class="text-lg font-semibold text-amber-900 dark:text-amber-100">
-                Platforma este în prezent în <strong>dezvoltare</strong>.
-            </p>
-        </div>
-        <p class="mt-3 text-sm text-amber-800 dark:text-amber-200">
-            Funcționalitățile și designul sunt încă în lucru. Îți mulțumim pentru răbdare și implicare în construirea
-            celei mai bune experiențe pentru comunitatea noastră.
-        </p>
-    </div>
-</section>
+<!-- Language Switcher -->
+<div class="absolute top-6 right-6 z-30">
+    <form method="get" action="{{ url()->current() }}" class="relative group">
+        <div class="relative flex items-center">
+            <div class="relative">
+                <select name="lang" id="lang"
+                        onchange="this.form.submit()"
+                        style="color-scheme: light dark;"
+                        class="appearance-none text-sm font-medium cursor-pointer
+                   text-gray-900 dark:text-gray-100
+                   bg-white dark:bg-gray-900
+                   rounded-md pr-10 pl-3 py-1.5
+                   border-0 outline-none ring-0
+                   focus:outline-none focus:ring-2 focus:ring-indigo-500
+                   transition">
+                    <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>🇬🇧 English</option>
+                    <option value="ro" {{ app()->getLocale() === 'ro' ? 'selected' : '' }}>🇷🇴 Română</option>
+                </select>
 
-<!-- =============================== -->
+                <!-- Custom caret -->
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                     fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+
+
+            <!-- Custom caret -->
+            <svg class="absolute right-3 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+
+<!-- Banner -->
+{{--<section--}}
+{{--    class="w-full bg-amber-200 dark:bg-amber-700 py-6 shadow-inner border-y border-amber-400 dark:border-amber-600">--}}
+{{--    <div class="max-w-6xl mx-auto px-6 text-center">--}}
+{{--        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">--}}
+{{--            <span class="text-3xl">🚧</span>--}}
+{{--            <p class="text-lg font-semibold text-amber-900 dark:text-amber-100">--}}
+{{--                {{ __('landing.under_construction.title') }}--}}
+{{--            </p>--}}
+{{--        </div>--}}
+{{--        <p class="mt-3 text-sm text-amber-800 dark:text-amber-200">--}}
+{{--            {{ __('landing.under_construction.subtitle') }}--}}
+{{--        </p>--}}
+{{--    </div>--}}
+{{--</section>--}}
+
 <!-- HERO -->
-<!-- =============================== -->
 <section class="w-full py-20 sm:py-28 bg-white dark:bg-gray-900 shadow-sm relative overflow-hidden">
-    <!-- Background Image of Iași -->
     <img src="/images/palat.png" alt="Palatul Culturii Iași"
          class="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-15">
 
@@ -71,116 +107,108 @@
              class="mx-auto w-24 h-auto mb-8 opacity-90">
 
         <h1 class="text-3xl sm:text-6xl font-semibold mb-6">
-            Joacă, conectează-te și relaxează-te — împreună, la Iași.
+            {{ __('landing.hero.title') }}
         </h1>
 
         <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Suntem o comunitate de pasionați de board games din Iași care ne propunem să ne întâlnim cât mai des, pentru
-            a ne bucura de jocuri, prieteni și momente de relaxare offline.
+            {{ __('landing.hero.subtitle') }}
         </p>
 
         <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-            Jocurile ne aduc împreună — fie că ești nou în oraș sau locuiești aici de o viață.
+            {{ __('landing.hero.note') }}
         </p>
     </div>
 </section>
 
 <x-community-games />
 
-<!-- =============================== -->
 <!-- LOGIN / INVITE -->
-<!-- =============================== -->
 <section class="w-full py-16 bg-gray-50 dark:bg-gray-800">
     <div class="max-w-xl mx-auto px-6 text-center">
-        <h2 class="text-2xl font-semibold mb-4">Alătură-te comunității noastre</h2>
+        <h2 class="text-2xl font-semibold mb-4">{{ __('landing.join.title') }}</h2>
 
         <p class="text-gray-600 dark:text-gray-300 mb-8">
-            Ești deja membru sau vrei să ni te alături?<br>
-            Trimite o cerere și te vom contacta cu drag!
+            {!! __('landing.join.text') !!}
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <x-link-button href="{{ route('login') }}" variant="primary">
-                Autentificare
+                {{ __('ui.buttons.login') }}
             </x-link-button>
 
             <x-link-button href="{{ route('public-join-create') }}" variant="secondary">
-                Cere o invitație
+                {{ __('ui.buttons.invite') }}
             </x-link-button>
         </div>
     </div>
 </section>
 
-<!-- =============================== -->
 <!-- WHAT WE DO -->
-<!-- =============================== -->
 <section class="w-full py-20 bg-white dark:bg-gray-900">
     <div class="max-w-6xl mx-auto px-6">
-        <h2 class="text-center text-3xl font-semibold mb-12">Ce poți face aici</h2>
+        <h2 class="text-center text-3xl font-semibold mb-12">{{ __('landing.features.title') }}</h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div
                 class="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="text-4xl mb-3">📆</div>
-                <h3 class="text-lg font-semibold mb-2">Propune o sesiune</h3>
+                <h3 class="text-lg font-semibold mb-2">{{ __('landing.features.propose.title') }}</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Sugerează zilele de weekend în care vrei să joci și ajută organizatorii să aleagă momentul potrivit.
+                    {{ __('landing.features.propose.text') }}
                 </p>
             </div>
 
             <div
                 class="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="text-4xl mb-3">🔍</div>
-                <h3 class="text-lg font-semibold mb-2">Descoperă sesiuni</h3>
+                <h3 class="text-lg font-semibold mb-2">{{ __('landing.features.discover.title') }}</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Răsfoiește rapid sesiunile următoare și vezi cine participă.
+                    {{ __('landing.features.discover.text') }}
                 </p>
             </div>
 
             <div
                 class="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="text-4xl mb-3">✔️</div>
-                <h3 class="text-lg font-semibold mb-2">Confirmă participarea</h3>
+                <h3 class="text-lg font-semibold mb-2">{{ __('landing.features.confirm.title') }}</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Un singur click pentru „Vin”, „Interesat” sau „Nu pot”.
+                    {{ __('landing.features.confirm.text') }}
                 </p>
             </div>
 
             <div
                 class="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <div class="text-4xl mb-3">🔔</div>
-                <h3 class="text-lg font-semibold mb-2">Primește notificări</h3>
+                <h3 class="text-lg font-semibold mb-2">{{ __('landing.features.notify.title') }}</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Primești memento-uri prietenoase înaintea sesiunilor — să nu ratezi nicio partidă.
+                    {{ __('landing.features.notify.text') }}
                 </p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- =============================== -->
 <!-- JOIN INFO -->
-<!-- =============================== -->
 <section class="w-full py-20 bg-gray-50 dark:bg-gray-800">
     <div class="max-w-6xl mx-auto px-6">
-        <h2 class="text-3xl font-semibold text-center mb-12">Cum te poți alătura</h2>
+        <h2 class="text-3xl font-semibold text-center mb-12">{{ __('landing.howto.title') }}</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
-                <h3 class="text-xl font-semibold mb-3">1. Invitație de la un membru</h3>
+                <h3 class="text-xl font-semibold mb-3">{{ __('landing.howto.invite.title') }}</h3>
                 <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    Dacă cunoști pe cineva din grup, poate trimite o invitație — membrii activi pot adăuga persoane noi.
+                    {{ __('landing.howto.invite.text') }}
                 </p>
             </div>
 
             <div>
-                <h3 class="text-xl font-semibold mb-3">2. Cere să te alături</h3>
+                <h3 class="text-xl font-semibold mb-3">{{ __('landing.howto.request.title') }}</h3>
                 <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-                    Lasă-ne datele de contact și te vom contacta pentru o scurtă discuție prietenoasă.
+                    {{ __('landing.howto.request.text') }}
                 </p>
 
                 <x-link-button href="{{ route('public-join-create') }}" variant="primary">
-                    Cere o invitație
+                    {{ __('ui.buttons.invite') }}
                 </x-link-button>
             </div>
         </div>
@@ -195,9 +223,6 @@
 @endphp
 
 @if ($galleryImages->isNotEmpty())
-    <!-- =============================== -->
-    <!-- GALLERY / COMMUNITY MOMENTS -->
-    <!-- =============================== -->
     <section class="w-full py-5 bg-gray-100 dark:bg-gray-900 relative">
         <div class="max-w-6xl mx-auto text-center relative">
             <div
@@ -213,10 +238,8 @@
                        shadow-[0_0_20px_rgba(0,0,0,0.4)] ring-1 ring-gray-300/40 dark:ring-gray-700/50
                        before:absolute before:inset-0 before:rounded-2xl before:shadow-inner before:shadow-black/40"
             >
-                <!-- Placeholder while loading -->
                 <div class="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" x-show="!loaded"></div>
 
-                <!-- Carousel Images -->
                 <template x-for="(image, index) in images" :key="index">
                     <img
                         x-show="active === index"
@@ -231,10 +254,8 @@
                     >
                 </template>
 
-                <!-- Subtle gradient overlay for contrast -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent rounded-2xl pointer-events-none"></div>
 
-                <!-- Navigation Dots -->
                 <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-20">
                     <template x-for="(image, index) in images" :key="index">
                         <button
@@ -245,7 +266,6 @@
                     </template>
                 </div>
 
-                <!-- Destination Iași Logo (only for this section) -->
                 <div class="absolute bottom-2 right-2 opacity-50 z-30">
                     <picture>
                         <img src="{{ asset('images/logo-iasi-stacked-dark.png') }}"
@@ -258,40 +278,40 @@
     </section>
 @endif
 
-
-
-<!-- =============================== -->
 <!-- FOOTER -->
-<!-- =============================== -->
 <section class="w-full py-20 bg-white dark:bg-gray-800 text-center dark:border-gray-700">
     <div class="max-w-4xl mx-auto px-6">
         <h2 class="text-2xl sm:text-3xl font-semibold mb-6">
-            „Ne jucăm ca să ne deconectăm de la ecrane și să ne reconectăm cu oamenii.”
+            {{ __('landing.footer.quote') }}
         </h2>
 
         <div class="flex flex-wrap items-center justify-center gap-6 mt-10 mb-6 text-sm">
-            <a href="/about-us"
-               class="text-indigo-600 dark:text-indigo-400 hover:underline">Despre noi</a>
+            <a href="/about-us" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                {{ __('ui.links.about') }}
+            </a>
 
-            <a href="/privacy-policy"
-               class="text-indigo-600 dark:text-indigo-400 hover:underline">Politica de confidențialitate</a>
+            <a href="/privacy-policy" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                {{ __('ui.links.privacy') }}
+            </a>
 
-            <a href="/terms-of-service"
-               class="text-indigo-600 dark:text-indigo-400 hover:underline">Termeni și condiții</a>
+            <a href="/terms-of-service" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                {{ __('ui.links.terms') }}
+            </a>
         </div>
 
         <p class="text-sm text-gray-600 dark:text-gray-400">
-            Contact: <a href="mailto:{{ config('app.contact_email') }}"
-                        class="text-indigo-600 dark:text-indigo-400 hover:underline">
+            {{ __('landing.footer.contact') }}
+            <a href="mailto:{{ config('app.contact_email') }}"
+               class="text-indigo-600 dark:text-indigo-400 hover:underline">
                 {{ config('app.contact_email') }}
             </a>
         </p>
 
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            © {{ date('Y') }} Comunitatea Board Games Iași. Toate drepturile rezervate.
+            © {{ date('Y') }} Comunitatea Board Games Iași. {{ __('landing.footer.rights') }}
         </p>
         <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-            Cu drag din Iași 💙 — pentru pasionații de board games.
+            {{ __('landing.footer.signature') }}
         </p>
 
         <div class="mt-8 flex justify-center">

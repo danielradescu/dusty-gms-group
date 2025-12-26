@@ -79,7 +79,7 @@
 
                     <section>
                         <h2 class="text-xl font-semibold mb-2">8. Cookies</h2>
-                        <p>We use only essential cookies required for login sessions, authentication, and security.
+                        <p>We use only essential cookies required for login sessions, authentication, language preference and security.
                             No advertising, analytics, or third-party tracking cookies are used on this site.</p>
                     </section>
 
