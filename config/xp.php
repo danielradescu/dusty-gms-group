@@ -11,6 +11,7 @@ return [
         'request_session_weekly' => 5, //week
         'participate_completed_successful_session' => 15, //every time
         'invited_new_member_plays_a_session' => 1, //per successfully game session
+        'link_bgg_profile_weekly' => 3, //week
 
         // Organizer actions
         'organizer_create_session' => 5, //every time

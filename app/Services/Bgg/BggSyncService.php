@@ -4,6 +4,7 @@ namespace App\Services\Bgg;
 
 use App\Models\User;
 use App\Models\Boardgame;
+use App\Services\XP;
 use Illuminate\Support\Facades\DB;
 
 class BggSyncService
@@ -69,6 +70,10 @@ class BggSyncService
 
             // Update sync time
             $user->update(['last_bgg_sync_at' => now()]);
+
+            //reward for having profile linked:
+            XP::grantOncePerWeek($user, 'link_bgg_profile_weekly');
+
         });
     }
 }
