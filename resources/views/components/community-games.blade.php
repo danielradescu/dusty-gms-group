@@ -69,7 +69,7 @@
             </div>
 
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-6">
-                Derulează lateral pentru a vedea nmai multe jocuri →
+                Derulează lateral pentru a vedea mai multe jocuri →
             </p>
         </div>
     </section>
