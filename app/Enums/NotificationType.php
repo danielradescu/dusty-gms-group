@@ -20,4 +20,5 @@ enum NotificationType: int
     case NEW_JOIN_COMMUNITY_REQUEST = 13;// possible a new member to join us
     case ORGANIZER_FINALIZE_SESSION = 14;// Organizer is notified to finalize his session
     case ADMIN_FINALIZE_SESSION = 15;// Admin is notified about a session that is not finalized
+    case USER_SHARED_COLLECTION = 16; //User shared his game collection
 }

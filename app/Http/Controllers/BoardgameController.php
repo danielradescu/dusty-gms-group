@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\NotificationSubscriptionType;
+use App\Enums\NotificationType;
 use App\Models\Boardgame;
+use App\Models\InAppNotification;
+use App\Models\User;
 use App\Services\Bgg\BggSyncService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class BoardgameController extends Controller
 {
@@ -73,20 +78,23 @@ class BoardgameController extends Controller
     public function saveBggProfile(Request $request)
     {
 
-
-        $request->validate([
-            'bgg_username' => ['nullable', 'string', 'max:50'],
-        ]);
-
         $user = auth()->user();
 
-
+        $request->validate([
+            'bgg_username' => ['nullable', 'string', 'max:50', Rule::unique('users', 'bgg_username')->ignore($user->id),],
+        ]);
 
         $bggUsername = $request->input('bgg_username');
 
-        // Save the username first
-        $user->bgg_username = $bggUsername;
-        $user->save();
+        $collectionChanged = false;
+
+        // Update only if the username actually changed
+        if ($user->bgg_username !== $bggUsername) {
+            $user->bgg_username = $bggUsername;
+            $user->save();
+
+            $collectionChanged = true;
+        }
 
         if (!$user->canSyncBgg()) {
             return redirect()
@@ -99,6 +107,20 @@ class BoardgameController extends Controller
             try {
                 $this->bggSyncService->syncUserCollection($user);
                 $message = 'Your BoardGameGeek collection has been successfully synchronized!';
+
+                if ($collectionChanged) {
+                    //notify all users
+                    foreach (User::all() as $recipient) {
+                        InAppNotification::create([
+                            'user_id' => $recipient->id,
+                            'type' => NotificationType::USER_SHARED_COLLECTION->value,
+                            'title' => '📦 ' . $user->shortName . ' shared his collection (' . $bggUsername . ')',
+                            'message' => "You can now check out this awesome board game collection!",
+                            'sent_at' => now(),
+                            'link' => route('boardgames.index'),
+                        ]);
+                    }
+                }
             } catch (\Throwable $e) {
                 Log::error("BGG Sync failed for {$bggUsername}: {$e->getMessage()}");
                 $message = 'Your BGG profile was saved, but we could not sync your collection. Please check profile name try again later.';

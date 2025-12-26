@@ -26,6 +26,7 @@
                 <!-- ========================= -->
                 <!-- BGG Profile + Filters -->
                 <!-- ========================= -->
+                    @include('partials._errors')
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         <!-- 🧩 BGG Profile Section -->
