@@ -41,4 +41,12 @@
         </p>
 
     </div>
+    <div class="mt-8 flex justify-center">
+        <a href="https://boardgamegeek.com/" target="_blank" rel="noopener noreferrer"
+           class="opacity-70 hover:opacity-100 transition duration-300">
+            <img src="{{ asset('images/powered_by_K_01_SM.png') }}"
+                 alt="BoardGameGeek Logo"
+                 class="h-16 w-auto">
+        </a>
+    </div>
 </footer>
