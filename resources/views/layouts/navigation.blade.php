@@ -48,7 +48,7 @@
                             @endphp
                             @if ($canShow)
                                 <x-nav-link :href="route($link['route'])" :active="request()->routeIs($link['route'])">
-                                    {{ __($link['label']) }}
+                                    {{ $link['label'] }}
                                 </x-nav-link>
                             @endif
                         @endforeach
@@ -78,7 +78,7 @@
                                     @if ($canShow)
                                         <x-dropdown-link :href="route($link['route'])"
                                                          :active="request()->routeIs($link['route'])">
-                                            {{ __($link['label']) }}
+                                            {{ $link['label'] }}
                                         </x-dropdown-link>
                                     @endif
                                 @endforeach
@@ -107,7 +107,7 @@
                                     @foreach ($organizerLinks as $link)
                                         <x-dropdown-link :href="route($link['route'])"
                                                          :active="request()->routeIs($link['route'])">
-                                            {{ __($link['label']) }}
+                                            {{ $link['label'] }}
                                         </x-dropdown-link>
                                     @endforeach
                                 </x-slot>
@@ -136,7 +136,7 @@
                                     @foreach ($adminLinks as $link)
                                         <x-dropdown-link :href="route($link['route'])"
                                                          :active="request()->routeIs($link['route'])">
-                                            {{ __($link['label']) }}
+                                            {{ $link['label'] }}
                                         </x-dropdown-link>
                                     @endforeach
                                 </x-slot>
@@ -237,7 +237,7 @@
             @foreach ($coreLinks as $link)
                 <x-responsive-nav-link :href="route($link['route'])"
                                        :active="request()->routeIs($link['route'])">
-                    {{ __($link['label']) }}
+                    {{ $link['label'] }}
                 </x-responsive-nav-link>
             @endforeach
 
@@ -253,7 +253,7 @@
                     @if ($canShow)
                         <x-responsive-nav-link :href="route($link['route'])"
                                                :active="request()->routeIs($link['route'])">
-                            {{ __($link['label']) }}
+                            {{ $link['label'] }}
                         </x-responsive-nav-link>
                     @endif
                 @endforeach
@@ -268,7 +268,7 @@
                     @foreach ($organizerLinks as $link)
                         <x-responsive-nav-link :href="route($link['route'])"
                                                :active="request()->routeIs($link['route'])">
-                            {{ __($link['label']) }}
+                            {{ $link['label'] }}
                         </x-responsive-nav-link>
                     @endforeach
                 </div>
@@ -283,7 +283,7 @@
                     @foreach ($adminLinks as $link)
                         <x-responsive-nav-link :href="route($link['route'])"
                                                :active="request()->routeIs($link['route'])">
-                            {{ __($link['label']) }}
+                            {{ $link['label'] }}
                         </x-responsive-nav-link>
                     @endforeach
                 </div>

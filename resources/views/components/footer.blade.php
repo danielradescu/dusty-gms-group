@@ -3,7 +3,7 @@
 
         <!-- Copyright -->
         <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-            © {{ date('Y') }} Iași Board Gaming Community. All rights reserved.
+            {!! __('footer.copyright', ['year' => date('Y')]) !!}
         </p>
 
         <!-- Links -->
@@ -11,41 +11,43 @@
 
             <a href="{{ route('about-us') }}"
                class="text-indigo-600 dark:text-indigo-400 hover:underline hover:text-indigo-700 dark:hover:text-indigo-300">
-                🌟 About Us
+                {{ __('ui.links.about') }}
             </a>
 
             <a href="{{ route('privacy-policy') }}"
                class="text-indigo-600 dark:text-indigo-400 hover:underline hover:text-indigo-700 dark:hover:text-indigo-300">
-                Privacy Policy
+                {{ __('ui.links.privacy') }}
             </a>
 
             <a href="{{ route('terms-of-service') }}"
                class="text-indigo-600 dark:text-indigo-400 hover:underline hover:text-indigo-700 dark:hover:text-indigo-300">
-                Terms of Service
+                {{ __('ui.links.terms') }}
             </a>
-{{--            @if(! Auth::check())--}}
-{{--                <a href="{{ route('register') }}"--}}
-{{--                   class="text-green-600 dark:text-green-400 hover:underline hover:text-green-700 dark:hover:text-green-300 text-xs sm:text-sm">--}}
-{{--                    ➕ Register--}}
-{{--                </a>--}}
-{{--            @endif--}}
+
+            {{-- Optional register link --}}
+            {{-- @if(! Auth::check()) --}}
+            {{-- <a href="{{ route('register') }}" class="text-green-600 dark:text-green-400 hover:underline hover:text-green-700 dark:hover:text-green-300"> --}}
+            {{--     {{ __('ui.links.register') }} --}}
+            {{-- </a> --}}
+            {{-- @endif --}}
         </div>
 
         <!-- Contact Email -->
         <p class="text-xs text-gray-500 dark:text-gray-400">
-            Contact us:
-            <a href="mailto:{{config('app.contact_email')}}"
+            {{ __('footer.contact.label') }}
+            <a href="mailto:{{ config('app.contact_email') }}"
                class="text-indigo-600 dark:text-indigo-400 hover:underline">
-                {{config('app.contact_email')}}
+                {{ config('app.contact_email') }}
             </a>
         </p>
 
     </div>
+
     <div class="mt-8 flex justify-center">
         <a href="https://boardgamegeek.com/" target="_blank" rel="noopener noreferrer"
            class="opacity-70 hover:opacity-100 transition duration-300">
             <img src="{{ asset('images/powered_by_K_01_SM.png') }}"
-                 alt="BoardGameGeek Logo"
+                 alt="{{ __('footer.powered_by.alt') }}"
                  class="h-16 w-auto">
         </a>
     </div>

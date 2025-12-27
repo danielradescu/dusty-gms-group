@@ -57,6 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_blocked',
         'bgg_username',
         'last_bgg_sync_at',
+        'locale',
     ];
 
     /**

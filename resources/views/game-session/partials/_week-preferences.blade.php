@@ -2,13 +2,13 @@
     <div class="mb-3">
         <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                This Week Session Request
+                {{ __('dashboard.this_week_title') }}
             </h3>
             <p class="text-sm text-gray-500 dark:text-gray-400">
             @if($gameSessionRequests->count())
                 <div class="space-y-2">
                     <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">
-                        ✅ You’ve requested game sessions for:
+                        {{ __('dashboard.requested_sessions_intro') }}
                     </p>
 
                     <ul class="space-y-1">
@@ -17,22 +17,22 @@
                                border border-gray-200 dark:border-gray-700 rounded-md px-3 py-2 text-sm">
                                 <div class="flex items-center gap-2">
                                     <span class="w-20 text-indigo-600 dark:text-indigo-400 font-semibold">
-                                        {{ $req->preferred_time->format('l') }}
+                                        {{ $req->preferred_time->translatedFormat('l') }}
                                     </span>
                                     <span class="text-gray-600 dark:text-gray-300">
-                                        {{ $req->preferred_time->format('d F') }}
+                                        {{ $req->preferred_time->translatedFormat('d F') }}
                                     </span>
                                 </div>
 
                                 @if($req->auto_join)
                                     <span
                                         class="inline-flex items-center gap-1 text-xs font-medium text-green-700 dark:text-green-300">
-                                        ⚡Auto-join
+                                        {{ __('dashboard.auto_join') }}
                                     </span>
                                 @else
                                     <span
                                         class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 dark:text-amber-300">
-                                        🔔Notify only
+                                        {{ __('dashboard.notify_only') }}
                                     </span>
                                 @endif
                             </li>
@@ -40,18 +40,17 @@
                     </ul>
                 </div>
             @else
-                🎯 You have no sessions requested yet — ready to roll? Pick your ideal play day!
+                {{ __('dashboard.no_requests') }}
             @endif
         </div>
     </div>
 
-    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Pick the days you're interested in.</h3>
-    <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">The organizer selects the initial start time. You can later request a change or communicate your planned arrival time.</p>
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('dashboard.pick_days_title') }}</h3>
+    <p class="text-sm text-gray-600 dark:text-gray-300 font-medium">{{ __('dashboard.pick_days_subtitle') }}</p>
     <form action="{{ route('game-session-request.store') }}" method="POST" class="space-y-6">
         @csrf
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Per-Day Cards -->
             @foreach($slots as $slot)
                 @php
                     $disabled = false;
@@ -69,77 +68,68 @@
                         $total = $slot['total_interested'] ?? 0;
                         $auto = $slot['auto_joiners'] ?? 0;
 
-                        // Determine text color based on the user's selection
                         $textColor = match ($slot['value']) {
                             'auto' => 'text-green-600 dark:text-green-400',
                             'notify' => 'text-yellow-600 dark:text-yellow-400',
                             default => 'text-gray-400 dark:text-gray-500',
                         };
 
-                        // Display placeholder if 0
                         $displayTotal = $total > 0 ? $total : '-';
                     @endphp
 
                     <div class="flex items-start justify-between gap-4">
-                        {{-- LEFT COLUMN - Radio options --}}
                         <div class="space-y-2">
-                            {{-- 🟢 Join & Notify --}}
                             <label class="flex items-center gap-2">
                                 <input type="radio" name="{{ $name }}" value="auto"
                                        class="accent-indigo-600"
                                     {{ $slot['value'] == 'auto' ? 'checked' : '' }}
                                     {{ $disabled ? 'disabled' : '' }}>
-                                <span class="text-sm text-gray-700 dark:text-gray-300">🟢 Join & Notify</span>
+                                <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('dashboard.join_and_notify') }}</span>
                             </label>
 
-                            {{-- 🔔 Notify Only --}}
                             <label class="flex items-center gap-2">
                                 <input type="radio" name="{{ $name }}" value="notify"
                                        class="accent-indigo-600"
                                     {{ $slot['value'] == 'notify' ? 'checked' : '' }}
                                     {{ $disabled ? 'disabled' : '' }}>
-                                <span class="text-sm text-gray-700 dark:text-gray-300">🔔 Notify Only</span>
+                                <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('dashboard.notify_only_label') }}</span>
                             </label>
 
-                            {{-- 🚫 Not Available --}}
                             <label class="flex items-center gap-2">
                                 <input type="radio" name="{{ $name }}" value=""
                                        class="accent-indigo-600"
                                     {{ $slot['value'] == '' ? 'checked' : '' }}
                                     {{ $disabled ? 'disabled' : '' }}>
-                                <span class="text-sm text-gray-500 dark:text-gray-400">🚫 Not Available</span>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('dashboard.not_available_label') }}</span>
                             </label>
                         </div>
 
-                        {{-- RIGHT COLUMN - Total count --}}
                         <div class="flex flex-col justify-center min-w-[4rem] text-center">
                             <span class="text-5xl font-bold leading-none {{ $textColor }}">
                                 {{ $displayTotal }}
                             </span>
                             <span class="text-xs text-gray-400 dark:text-gray-500">
-                                ({{ $auto }} auto-join)
+                                {{ __('dashboard.auto_join_label', ['count' => $auto]) }}
                             </span>
                         </div>
                     </div>
-
-
                 </div>
             @endforeach
+
             @if (! auth()->user()->notifications_disabled)
-                <!-- Global Notifications Card -->
                 <div class="rounded-xl border border-indigo-200 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-900/20 p-5 shadow-sm hover:shadow-md transition">
                     <h4 class="text-base font-semibold text-indigo-700 dark:text-indigo-300 mb-3 flex items-center gap-2">
-                        🌍 Any Day Notifications
+                        {{ __('dashboard.any_day_title') }}
                     </h4>
 
                     <p class="text-sm text-indigo-800 dark:text-indigo-200 mb-4">
-                        Get a delayed notification about <strong>any new session</strong> — even if you haven’t selected a specific day yet.
+                        {!! __('dashboard.any_day_description') !!}
                     </p>
 
                     <label class="flex items-center gap-2">
                         <input type="checkbox" name="notify_all_days" value="1" class="accent-indigo-600"
                             {{ old('notify_all_days', $notifyAllDays ?? false) ? 'checked' : '' }}>
-                        <span class="text-sm text-indigo-800 dark:text-indigo-200">🔔 Enable All-Session Notifications</span>
+                        <span class="text-sm text-indigo-800 dark:text-indigo-200">{{ __('dashboard.any_day_enable') }}</span>
                     </label>
                 </div>
             @endif
@@ -147,75 +137,47 @@
 
         <div class="flex flex-col items-center md:items-start text-center md:text-left pt-2 gap-3">
             <x-button class="w-full md:w-1/5 min-w-[10rem]" variant="primary">
-                💾 Save Preferences
+                {{ __('dashboard.save_preferences') }}
             </x-button>
             <div class="text-xs text-gray-500 dark:text-gray-400">
-                You can change these preferences anytime.
+                {{ __('dashboard.preferences_hint') }}
             </div>
         </div>
-
     </form>
 
-    <!-- Info Section -->
-
     <h3 class="mt-5 text-base font-semibold text-gray-800 dark:text-gray-100 mb-4">
-        Understanding Your Notification Settings:
+        {{ __('dashboard.understanding_title') }}
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
 
-        <!-- Day Preferences -->
         <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm">
             <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                Day Preferences
+                {{ __('dashboard.day_preferences_title') }}
             </h4>
-            <p>
-                🟢 <b>Join &amp; Notify</b>: You’ll be auto-joined for the first session created this day that has
-                <b>Casual</b> or <b>Flexible</b> complexity. You’ll still receive notifications for
-                <b>Competitive</b> sessions or any other session created this day.
-            </p>
+            <p>{!! __('dashboard.day_preferences_description.auto') !!}</p>
             <br>
-            <p>
-                🔔 <b>Notify Only</b>: You’ll receive an <b>instant notification</b> whenever a new session
-                is created for this day, inviting you to join.
-            </p>
+            <p>{!! __('dashboard.day_preferences_description.notify') !!}</p>
             <br>
-            <p>
-                🚫 <b>Not Available</b>: This will <b>reset</b> any of your existing preferences for this day —
-                you won’t receive auto-joins or notifications until you change it again.
-            </p>
+            <p>{!! __('dashboard.day_preferences_description.none') !!}</p>
             <br>
-            <p>
-                After joining a session, your setting will automatically switch to <b>Notify Only</b>.
-                Users who have selected a day will always receive notifications first, giving them early access
-                to join or auto-join new sessions.
-            </p>
+            <p>{!! __('dashboard.day_preferences_description.after_join') !!}</p>
         </div>
+
         @if (! auth()->user()->notifications_disabled)
-            <!-- Any Day Notifications -->
             <div class="bg-indigo-50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800 rounded-lg p-4 shadow-sm">
                 <h4 class="font-semibold text-indigo-800 dark:text-indigo-300 mb-2">
-                    Any Day Notifications
+                    {{ __('dashboard.any_day_preferences_title') }}
                 </h4>
-                <p>
-                    🔔 <b>Any Day Notifications</b>: You’ll receive alerts for <b>any new game session</b> — even if you didn’t select a specific day.
-                </p>
+                <p>{!! __('dashboard.any_day_preferences_description.main') !!}</p>
                 <br/>
-                <p>
-                    ⏱️ These notifications are <b>delayed by about 2 up to 6 hours randomly chose</b> after the day-specific notifications are sent.
-                    This is to encourages players to <b>vote for specific days</b>, helping organizers plan better.
-                </p>
+                <p>{!! __('dashboard.any_day_preferences_description.delay') !!}</p>
                 <br/>
-                <p>
-                    You can enable this as a general backup to make sure you never miss a new session announcement.
-                </p>
+                <p>{!! __('dashboard.any_day_preferences_description.backup') !!}</p>
                 <br/>
                 <p class="text-xs text-gray-600 dark:text-gray-400 italic mt-2">
-                    💡 This setting works the same way as the <b>“Always notify me about new game sessions”</b> option in your
-                    <a href="{{ route('notification-subscription.edit') }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
-                        Email Settings
-                    </a>.
+                    {!! __('dashboard.any_day_preferences_description.tip', ['link' => route('notification-subscription.edit')]) !!}
                 </p>
             </div>
-         @endif
+        @endif
     </div>
 </div>

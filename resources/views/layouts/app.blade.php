@@ -18,6 +18,43 @@
         @endisset
     </head>
     <body class="font-sans antialiased">
+    <!-- Language Switcher -->
+    <div class="absolute top-6 right-6 z-30">
+        <form method="get" action="{{ url()->current() }}" class="relative group">
+            <div class="relative flex items-center">
+                <div class="relative">
+                    <select name="lang" id="lang"
+                            onchange="this.form.submit()"
+                            style="color-scheme: light dark;"
+                            class="appearance-none text-sm font-medium cursor-pointer
+                   text-gray-900 dark:text-gray-100
+                   bg-white dark:bg-gray-900
+                   rounded-md pr-10 pl-3 py-1.5
+                   border-0 outline-none ring-0
+                   focus:outline-none focus:ring-2 focus:ring-indigo-500
+                   transition">
+                        <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>🇬🇧 English</option>
+                        <option value="ro" {{ app()->getLocale() === 'ro' ? 'selected' : '' }}>🇷🇴 Română</option>
+                    </select>
+
+                    <!-- Custom caret -->
+                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                         fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+
+
+
+                <!-- Custom caret -->
+                <svg class="absolute right-3 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                     fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+        </form>
+    </div>
+
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
 
             @if (Auth::user())

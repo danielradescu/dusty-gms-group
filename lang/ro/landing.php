@@ -18,7 +18,7 @@ return [
 
     // Secțiunea Hero
     'hero.title' => 'Joacă, conectează-te și relaxează-te — împreună, la Iași.',
-    'hero.subtitle' => 'Suntem o comunitate de pasionați de board games din Iași care ne propunem să ne întâlnim cât mai des, pentru a ne bucura de jocuri, prieteni și momente de relaxare offline.',
+    'hero.subtitle' => 'Suntem o comunitate de pasionați de jocuri de societate din Iași care ne propunem să ne întâlnim cât mai des, pentru a ne bucura de jocuri, prieteni și momente de relaxare offline.',
     'hero.note' => 'Jocurile ne aduc împreună — fie că ești nou în oraș sau locuiești aici de o viață.',
 
     // Secțiunea Alătură-te

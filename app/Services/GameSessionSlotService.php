@@ -93,7 +93,7 @@ class GameSessionSlotService
             $requestsForDay = $requests->get($dateKey, collect());
 
             $result[] = [
-                'label'            => $date->format('l · d M'),
+                'label'            => $date->translatedFormat('l · d M'),
                 'dt'               => $date->copy(),
                 'value'            => $value,
                 'total_interested' => $requestsForDay->count(),
